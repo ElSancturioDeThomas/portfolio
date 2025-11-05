@@ -1,5 +1,7 @@
 # Social Network Project
 
+![Screenshot](screenshot.png)
+
 A Django-based social network application with a unique Schoolyard Yellow Notepad aesthetic.
 
 ## Styling
