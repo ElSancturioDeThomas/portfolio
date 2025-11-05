@@ -387,6 +387,10 @@ body {
     margin-top: 0;
 }
 
+.follow-btn {
+    margin-bottom: 10px;
+}
+
 .profile-info {
     display: flex;
     flex-direction: column;
@@ -584,3 +588,4 @@ strong {
 
 .all-posts-title {
     margin-top: 20px;
+}
