@@ -1,0 +1,82 @@
+{% extends 'portfolio/base.html' %}
+
+{% load static %}
+
+{% block title %}Skills - Portfolio{% endblock %}
+
+{% block content %}
+    <section class="page-hero-section">
+        <div class="page-hero-overlay"></div>
+        <div class="page-hero-content">
+            <h1>Skills & Languages</h1>
+            <p class="page-subtitle">Technical skills and programming languages</p>
+        </div>
+    </section>
+
+    <section class="skills-page-section">
+        <div class="container">
+            <div class="content">
+                <!-- Programming Languages Section -->
+                <div class="skills-section">
+                    <h2>Programming Languages</h2>
+                    {% if languages %}
+                        <div class="languages-grid">
+                            {% for language in languages %}
+                                <div class="skill-item">
+                                    <div class="skill-header">
+                                        <h3>{{ language.name }}</h3>
+                                        {% if language.years_experience %}
+                                            <span class="experience-badge">{{ language.years_experience }} years</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="proficiency-bar">
+                                        <div class="proficiency-fill" style="width: {{ language.proficiency_level|floatformat:0|add:0 }}0%"></div>
+                                    </div>
+                                    <div class="proficiency-level">Level: {{ language.proficiency_level }}/10</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="empty-message">No programming languages listed yet.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills-section">
+                    <h2>Skills</h2>
+                    {% if skills %}
+                        {% regroup skills by category as skills_by_category %}
+                        {% for category_group in skills_by_category %}
+                            <div class="category-group">
+                                {% if category_group.grouper %}
+                                    <h3 class="category-title">{{ category_group.grouper }}</h3>
+                                {% else %}
+                                    <h3 class="category-title">General</h3>
+                                {% endif %}
+                                <div class="skills-grid">
+                                    {% for skill in category_group.list %}
+                                        <div class="skill-item">
+                                            <div class="skill-header">
+                                                <h4>{{ skill.name }}</h4>
+                                            </div>
+                                            {% if skill.description %}
+                                                <p class="skill-description">{{ skill.description }}</p>
+                                            {% endif %}
+                                            <div class="proficiency-bar">
+                                                <div class="proficiency-fill" style="width: {{ skill.proficiency_level|floatformat:0|add:0 }}0%"></div>
+                                            </div>
+                                            <div class="proficiency-level">Level: {{ skill.proficiency_level }}/10</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="empty-message">No skills listed yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

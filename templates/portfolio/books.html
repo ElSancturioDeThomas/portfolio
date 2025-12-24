@@ -1,0 +1,70 @@
+{% extends 'portfolio/base.html' %}
+
+{% load static %}
+
+{% block title %}Books - Portfolio{% endblock %}
+
+{% block content %}
+    <section class="page-hero-section">
+        <div class="page-hero-overlay"></div>
+        <div class="page-hero-content">
+            <h1>Books</h1>
+            <p class="page-subtitle">My reading journey and recommendations</p>
+        </div>
+    </section>
+
+    <section class="books-page-section">
+        <div class="container">
+            <div class="content">
+                {% if books %}
+                    <div class="books-grid">
+                        {% for book in books %}
+                            <div class="book-card">
+                                {% if book.cover_image %}
+                                    <div class="book-cover">
+                                        <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                                    </div>
+                                {% else %}
+                                    <div class="book-cover-placeholder">
+                                        <span>{{ book.title|first|upper }}</span>
+                                    </div>
+                                {% endif %}
+                                <div class="book-content">
+                                    <h3>{{ book.title }}</h3>
+                                    <p class="book-author">by {{ book.author }}</p>
+                                    {% if book.rating %}
+                                        <div class="book-rating">
+                                            <span class="rating-label">Rating:</span>
+                                            <div class="stars">
+                                                {% for i in "12345" %}
+                                                    {% if forloop.counter <= book.rating %}
+                                                        <span class="star filled">★</span>
+                                                    {% else %}
+                                                        <span class="star">★</span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if book.read_date %}
+                                        <p class="book-date">Read: {{ book.read_date|date:"F Y" }}</p>
+                                    {% endif %}
+                                    {% if book.review %}
+                                        <div class="book-review">
+                                            <p>{{ book.review|truncatewords:30 }}</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <p>No books in the library yet. Check back soon!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

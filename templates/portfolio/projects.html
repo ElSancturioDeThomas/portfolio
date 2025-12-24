@@ -1,0 +1,61 @@
+{% extends 'portfolio/base.html' %}
+
+{% load static %}
+
+{% block title %}Projects - Portfolio{% endblock %}
+
+{% block content %}
+    <section class="page-hero-section">
+        <div class="page-hero-overlay"></div>
+        <div class="page-hero-content">
+            <h1>Projects</h1>
+            <p class="page-subtitle">Explore my work and creations</p>
+        </div>
+    </section>
+
+    <section class="projects-page-section">
+        <div class="container">
+            <div class="content">
+                {% if projects %}
+                    <div class="projects-grid">
+                        {% for project in projects %}
+                            <div class="project-card">
+                                {% if project.image %}
+                                    <div class="project-image">
+                                        <img src="{{ project.image.url }}" alt="{{ project.title }}">
+                                    </div>
+                                {% endif %}
+                                <div class="project-content">
+                                    <h3>{{ project.title }}</h3>
+                                    <p class="project-description">{{ project.description }}</p>
+                                    {% if project.technologies %}
+                                        <div class="project-technologies">
+                                            <strong>Technologies:</strong>
+                                            <span>{{ project.technologies }}</span>
+                                        </div>
+                                    {% endif %}
+                                    <div class="project-links">
+                                        {% if project.project_link %}
+                                            <a href="{{ project.project_link }}" target="_blank" class="btn btn-primary">View Project</a>
+                                        {% endif %}
+                                        {% if project.github_link %}
+                                            <a href="{{ project.github_link }}" target="_blank" class="btn btn-secondary">GitHub</a>
+                                        {% endif %}
+                                    </div>
+                                    {% if project.featured %}
+                                        <span class="featured-badge">Featured</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <p>No projects available yet. Check back soon!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
