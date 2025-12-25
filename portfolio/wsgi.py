@@ -16,6 +16,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "portfolio.settings")
 application = get_wsgi_application()
 
 # Vercel requires 'handler' or 'app' variable
-# Export application as 'handler' for Vercel compatibility
-handler = application
+# For Vercel, we need to export the WSGI application directly
+# The @vercel/python runtime will handle WSGI applications correctly
 app = application
