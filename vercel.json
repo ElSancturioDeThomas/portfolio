@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "pip install -r requirements.txt && python manage.py collectstatic --noinput",
   "builds": [
     {
       "src": "api/vercel.py",
@@ -13,7 +14,7 @@
   "routes": [
     {
       "src": "/static/(.*)",
-      "dest": "/static/$1"
+      "dest": "/staticfiles/$1"
     },
     {
       "src": "/(.*)",
