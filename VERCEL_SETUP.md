@@ -25,15 +25,45 @@ Set these in your Vercel project settings (Dashboard → Settings → Environmen
 
 ### Recommended Solutions:
 
-1. **Use PostgreSQL** (Recommended):
-   - Add Vercel Postgres addon
-   - Update `DATABASES` in `settings.py` to use PostgreSQL
-   - Install `psycopg2-binary` in requirements.txt
+1. **Use PostgreSQL with External Providers** (Recommended):
+   - **Supabase** (free tier available, easy setup)
+     - Sign up at supabase.com
+     - Create a new project
+     - Get connection string from Settings → Database
+   - **Neon** (serverless Postgres, free tier)
+     - Sign up at neon.tech
+     - Create a project and get connection string
+   - **Railway** (PostgreSQL, simple setup)
+     - Sign up at railway.app
+     - Create PostgreSQL service
+   - **PlanetScale** (MySQL, serverless)
+   - **Render** (PostgreSQL, free tier)
 
-2. **Use an external database service**:
-   - Supabase (free tier available)
-   - Railway PostgreSQL
-   - Neon (serverless Postgres)
+2. **Update your `settings.py`** to use PostgreSQL:
+   ```python
+   DATABASES = {
+       'default': {
+           'ENGINE': 'django.db.backends.postgresql',
+           'NAME': os.environ.get('DB_NAME'),
+           'USER': os.environ.get('DB_USER'),
+           'PASSWORD': os.environ.get('DB_PASSWORD'),
+           'HOST': os.environ.get('DB_HOST'),
+           'PORT': os.environ.get('DB_PORT', '5432'),
+       }
+   }
+   ```
+
+3. **Add to `requirements.txt`**:
+   ```
+   psycopg2-binary==2.9.9
+   ```
+
+4. **Set Database Environment Variables in Vercel**:
+   - `DB_NAME`: Database name
+   - `DB_USER`: Database user
+   - `DB_PASSWORD`: Database password
+   - `DB_HOST`: Database host (from provider)
+   - `DB_PORT`: Database port (usually 5432)
 
 ## Deployment Steps
 

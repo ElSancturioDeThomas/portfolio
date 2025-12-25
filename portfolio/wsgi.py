@@ -14,3 +14,8 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "portfolio.settings")
 
 application = get_wsgi_application()
+
+# Vercel requires 'handler' or 'app' variable
+# Export application as 'handler' for Vercel compatibility
+handler = application
+app = application
