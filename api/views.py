@@ -29,9 +29,11 @@ def index(request):
 
 def skills_view(request):
     """Skills page view"""
+    import time
     skills = Skills.objects.all().order_by('category', 'name')
     spoken_languages = SpokenLanguage.objects.all().order_by('-is_native', 'name')
     context = {
+        'timestamp': int(time.time()),
         'skills': skills,
         'spoken_languages': spoken_languages
     }
@@ -40,10 +42,12 @@ def skills_view(request):
 
 def library_view(request):
     """Library page view - combines Projects, Books, and Photos"""
+    import time
     projects = Project.objects.all().order_by('-created_at')
     books = Book.objects.all().order_by('-read_date', '-created_at')
     project_photos = Project.objects.exclude(image='').order_by('-created_at')
     context = {
+        'timestamp': int(time.time()),
         'projects': projects,
         'books': books,
         'project_photos': project_photos

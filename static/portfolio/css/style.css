@@ -1792,12 +1792,13 @@ body.home-page.navbar-animated .main-navigation {
     padding-bottom: 15vh;
     overflow: visible;
     background: #2a2a2a;
+    position: relative;
 }
 
 .page-hero-image {
     position: absolute;
     left: 0;
-    top: -20%;
+    top: -5%;
     width: 100%;
     height: calc(100vh + 20vh + 15vh);
     object-fit: cover;
