@@ -158,7 +158,9 @@ STATICFILES_DIRS = [
 ]
 
 # WhiteNoise configuration for serving static files on Vercel
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Use CompressedStaticFilesStorage (without manifest) for easier debugging
+# Manifest storage can cause issues if files aren't found
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Media files (User uploaded content)
 MEDIA_URL = "media/"

@@ -31,7 +31,8 @@ urlpatterns = [
     path("api/", include("api.urls")),
 ]
 
-# Serve static and media files in development
+# WhiteNoise will serve static files in production (Vercel)
+# Only add static file serving in development if DEBUG is True
 if settings.DEBUG:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
     urlpatterns += staticfiles_urlpatterns()
