@@ -5,42 +5,11 @@
 {% block title %}Skills - Portfolio{% endblock %}
 
 {% block content %}
-    <section class="page-hero-section">
+    <section class="page-hero-section skills-hero-section">
+        <img src="{% static 'portfolio/assets/SkillsBackdrop.png' %}" alt="Background" class="page-hero-image">
         <div class="page-hero-overlay"></div>
-        <div class="page-hero-content">
-            <h1>Skills & Languages</h1>
-            <p class="page-subtitle">Technical skills and programming languages</p>
-        </div>
-    </section>
-
-    <section class="skills-page-section">
         <div class="container">
             <div class="content">
-                <!-- Programming Languages Section -->
-                <div class="skills-section">
-                    <h2>Programming Languages</h2>
-                    {% if languages %}
-                        <div class="languages-grid">
-                            {% for language in languages %}
-                                <div class="skill-item">
-                                    <div class="skill-header">
-                                        <h3>{{ language.name }}</h3>
-                                        {% if language.years_experience %}
-                                            <span class="experience-badge">{{ language.years_experience }} years</span>
-                                        {% endif %}
-                                    </div>
-                                    <div class="proficiency-bar">
-                                        <div class="proficiency-fill" style="width: {{ language.proficiency_level|floatformat:0|add:0 }}0%"></div>
-                                    </div>
-                                    <div class="proficiency-level">Level: {{ language.proficiency_level }}/10</div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p class="empty-message">No programming languages listed yet.</p>
-                    {% endif %}
-                </div>
-
                 <!-- Skills Section -->
                 <div class="skills-section">
                     <h2>Skills</h2>
@@ -62,10 +31,6 @@
                                             {% if skill.description %}
                                                 <p class="skill-description">{{ skill.description }}</p>
                                             {% endif %}
-                                            <div class="proficiency-bar">
-                                                <div class="proficiency-fill" style="width: {{ skill.proficiency_level|floatformat:0|add:0 }}0%"></div>
-                                            </div>
-                                            <div class="proficiency-level">Level: {{ skill.proficiency_level }}/10</div>
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -73,6 +38,38 @@
                         {% endfor %}
                     {% else %}
                         <p class="empty-message">No skills listed yet.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Spoken Languages Section -->
+                <div class="skills-section">
+                    <h2>Spoken Languages</h2>
+                    {% if spoken_languages %}
+                        <div class="languages-table-container">
+                            <div class="languages-table">
+                                <div class="languages-table-header">
+                                    <div class="languages-header-cell">Language</div>
+                                    <div class="languages-header-cell">Proficiency</div>
+                                </div>
+                                <div class="languages-table-body">
+                                    {% for language in spoken_languages %}
+                                        <div class="languages-table-row">
+                                            <div class="languages-table-cell">
+                                                <strong>{{ language.name }}</strong>
+                                                {% if language.is_native %}
+                                                    <span class="native-badge">Native</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="languages-table-cell">{{ language.get_proficiency_level_display }}</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <p>No spoken languages listed yet. Check back soon!</p>
+                        </div>
                     {% endif %}
                 </div>
             </div>

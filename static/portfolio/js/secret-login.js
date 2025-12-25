@@ -19,8 +19,8 @@
     const PIN_LENGTH = 6; // 6-digit PIN
     const CORRECT_PIN = '846627';
     
-    let hoverTimer = null;
-    let isHovering = false;
+    let holdTimer = null;
+    let isHolding = false;
     let pinInput = null;
     
     // Initialize PIN segments
@@ -157,49 +157,59 @@
         secretPanel.classList.remove('active');
     }
     
-    function startHoverTimer() {
-        if (hoverTimer) {
-            clearTimeout(hoverTimer);
+    function startHoldTimer() {
+        if (holdTimer) {
+            clearTimeout(holdTimer);
         }
-        hoverTimer = setTimeout(function() {
-            if (isHovering) {
+        holdTimer = setTimeout(function() {
+            if (isHolding) {
                 showPanel();
             }
         }, HOVER_DELAY);
     }
     
-    function cancelHoverTimer() {
-        if (hoverTimer) {
-            clearTimeout(hoverTimer);
-            hoverTimer = null;
+    function cancelHoldTimer() {
+        if (holdTimer) {
+            clearTimeout(holdTimer);
+            holdTimer = null;
         }
     }
     
-    // Detect mouse position on hero section
-    heroSection.addEventListener('mousemove', function(e) {
+    // Detect mouse down (hold) on hero section right edge
+    heroSection.addEventListener('mousedown', function(e) {
         const rect = heroSection.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const sectionWidth = rect.width;
         
         // Check if mouse is in the right edge area
         if (x >= sectionWidth - EDGE_WIDTH && !secretPanel.classList.contains('active')) {
-            if (!isHovering) {
-                isHovering = true;
-                startHoverTimer();
-            }
-        } else {
-            if (isHovering && !secretPanel.matches(':hover')) {
-                isHovering = false;
-                cancelHoverTimer();
-                hidePanel();
-            }
+            isHolding = true;
+            startHoldTimer();
+        }
+    });
+    
+    // Cancel hold on mouse up
+    heroSection.addEventListener('mouseup', function() {
+        if (isHolding && !secretPanel.classList.contains('active')) {
+            isHolding = false;
+            cancelHoldTimer();
+        }
+    });
+    
+    // Cancel hold if mouse leaves hero section
+    heroSection.addEventListener('mouseleave', function() {
+        if (isHolding && !secretPanel.classList.contains('active')) {
+            isHolding = false;
+            cancelHoldTimer();
         }
     });
     
     // Keep panel open when hovering over it
     secretPanel.addEventListener('mouseenter', function() {
-        cancelHoverTimer();
-        showPanel();
+        cancelHoldTimer();
+        if (!secretPanel.classList.contains('active')) {
+            showPanel();
+        }
     });
     
     // Hide panel when mouse leaves

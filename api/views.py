@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Project, Skills, ProgrammingLanguage, Book, Country
+from .models import Project, Skills, Book, Country, Post, Hobby, SpokenLanguage
 
 
 def index(request):
@@ -12,49 +12,43 @@ def index(request):
     # Get all countries from Country model with flag emojis
     countries_visited = Country.objects.all().order_by('name')
     
+    # Get published posts, ordered by published date
+    posts = Post.objects.filter(status='published').order_by('-published_date', '-created_at')
+    
+    # Get all hobbies, ordered by category
+    hobbies = Hobby.objects.all().order_by('category', 'name')
+    
     context = {
         'timestamp': int(time.time()),
-        'countries_visited': countries_visited
+        'countries_visited': countries_visited,
+        'posts': posts,
+        'hobbies': hobbies
     }
     return render(request, 'portfolio/index.html', context)
 
 
-def projects_view(request):
-    """Projects page view"""
-    projects = Project.objects.all().order_by('-created_at')
-    context = {
-        'projects': projects
-    }
-    return render(request, 'portfolio/projects.html', context)
-
-
 def skills_view(request):
-    """Skills page view - includes both skills and programming languages"""
-    skills = Skills.objects.all().order_by('category', '-proficiency_level', 'name')
-    languages = ProgrammingLanguage.objects.all().order_by('-proficiency_level', 'name')
+    """Skills page view"""
+    skills = Skills.objects.all().order_by('category', 'name')
+    spoken_languages = SpokenLanguage.objects.all().order_by('-is_native', 'name')
     context = {
         'skills': skills,
-        'languages': languages
+        'spoken_languages': spoken_languages
     }
     return render(request, 'portfolio/skills.html', context)
 
 
-def books_view(request):
-    """Books page view"""
+def library_view(request):
+    """Library page view - combines Projects, Books, and Photos"""
+    projects = Project.objects.all().order_by('-created_at')
     books = Book.objects.all().order_by('-read_date', '-created_at')
-    context = {
-        'books': books
-    }
-    return render(request, 'portfolio/books.html', context)
-
-
-def photos_view(request):
-    """Photos page view - displays images from projects"""
     project_photos = Project.objects.exclude(image='').order_by('-created_at')
     context = {
+        'projects': projects,
+        'books': books,
         'project_photos': project_photos
     }
-    return render(request, 'portfolio/photos.html', context)
+    return render(request, 'portfolio/library.html', context)
 
 
 @api_view(['GET'])
@@ -88,21 +82,8 @@ def skills_list(request):
         'id': s.id,
         'name': s.name,
         'category': s.category,
-        'proficiency_level': s.proficiency_level
+        'description': s.description
     } for s in skills]
-    return Response({'count': len(data), 'results': data})
-
-
-@api_view(['GET'])
-def programming_languages_list(request):
-    """Get list of all programming languages"""
-    languages = ProgrammingLanguage.objects.all()
-    data = [{
-        'id': l.id,
-        'name': l.name,
-        'proficiency_level': l.proficiency_level,
-        'years_experience': float(l.years_experience) if l.years_experience else None
-    } for l in languages]
     return Response({'count': len(data), 'results': data})
 
 

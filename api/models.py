@@ -40,31 +40,6 @@ class Project(models.Model):
         return self.title
 
 
-class Initiative(models.Model):
-    """Small projects or initiatives"""
-    project = models.ForeignKey(
-        Project,
-        on_delete=models.CASCADE,
-        related_name='initiatives',
-        null=True,
-        blank=True
-    )
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField(null=True, blank=True)
-    link = models.URLField(max_length=500, blank=True, null=True)
-    image = models.ImageField(upload_to='initiatives/', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ['-created_at']
-
-    def __str__(self):
-        return self.title
-
-
 class Book(models.Model):
     """Books read (Library)"""
     project = models.ForeignKey(
@@ -97,6 +72,12 @@ class Book(models.Model):
 
 class Hobby(models.Model):
     """Hobbies and interests"""
+    SOCIAL_CHOICES = [
+        ('yes', 'Yes'),
+        ('no', 'No'),
+        ('maybe', 'Maybe'),
+    ]
+    
     project = models.ForeignKey(
         Project,
         on_delete=models.SET_NULL,
@@ -105,7 +86,20 @@ class Hobby(models.Model):
         blank=True
     )
     name = models.CharField(max_length=100, unique=True)
-    description = models.TextField(blank=True)
+    reason = models.TextField(blank=True, help_text="Why this hobby is important")
+    value = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        default=3,
+        help_text="Likert scale value from 1-5"
+    )
+    social = models.CharField(max_length=10, choices=SOCIAL_CHOICES, default='maybe', help_text="Is this a social activity?")
+    time_per_week = models.DecimalField(
+        max_digits=4,
+        decimal_places=1,
+        null=True,
+        blank=True,
+        help_text="Hours per week spent on this hobby"
+    )
     category = models.CharField(max_length=50, blank=True, help_text="e.g., Sports, Arts, Music")
     icon = models.CharField(max_length=100, blank=True, help_text="Icon class or name")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -113,30 +107,6 @@ class Hobby(models.Model):
     class Meta:
         ordering = ['category', 'name']
         verbose_name_plural = "Hobbies"
-
-    def __str__(self):
-        return self.name
-
-
-class ProgrammingLanguage(models.Model):
-    """Programming languages known"""
-    name = models.CharField(max_length=50, unique=True)
-    proficiency_level = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(10)],
-        help_text="Proficiency level from 1-10"
-    )
-    years_experience = models.DecimalField(
-        max_digits=4,
-        decimal_places=1,
-        null=True,
-        blank=True,
-        help_text="Years of experience"
-    )
-    icon = models.CharField(max_length=100, blank=True, help_text="Icon class or name")
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['-proficiency_level', 'name']
 
     def __str__(self):
         return self.name
@@ -165,44 +135,17 @@ class SpokenLanguage(models.Model):
 
 
 class Skills(models.Model):
-    """General skills and competencies - connects to programming languages, spoken languages, and business skills"""
-    SKILL_TYPES = [
-        ('programming', 'Programming Language'),
-        ('spoken', 'Spoken Language'),
-        ('business', 'Business Skill'),
-        ('other', 'Other'),
-    ]
+    """General skills and competencies"""
 
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
-    skill_type = models.CharField(max_length=20, choices=SKILL_TYPES, default='other')
     category = models.CharField(max_length=50, blank=True)
-    proficiency_level = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(10)],
-        help_text="Proficiency level from 1-10"
-    )
     icon = models.CharField(max_length=100, blank=True, help_text="Icon class or name")
-    
-    # Connections to other models
-    programming_language = models.ForeignKey(
-        ProgrammingLanguage,
-        on_delete=models.SET_NULL,
-        related_name='skills',
-        null=True,
-        blank=True
-    )
-    spoken_language = models.ForeignKey(
-        SpokenLanguage,
-        on_delete=models.SET_NULL,
-        related_name='skills',
-        null=True,
-        blank=True
-    )
     
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['skill_type', 'category', '-proficiency_level', 'name']
+        ordering = ['category', 'name']
         verbose_name = "Skill"
         verbose_name_plural = "Skills"
 

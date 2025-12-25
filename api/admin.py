@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
-    Country, Project, Initiative, Book, Hobby,
-    ProgrammingLanguage, SpokenLanguage, Skills, Post
+    Country, Project, Book, Hobby,
+    SpokenLanguage, Skills, Post
 )
 
 
@@ -21,15 +21,6 @@ class ProjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {}
 
 
-@admin.register(Initiative)
-class InitiativeAdmin(admin.ModelAdmin):
-    list_display = ['title', 'project', 'start_date', 'end_date', 'created_at']
-    list_filter = ['start_date', 'created_at']
-    search_fields = ['title', 'description']
-    raw_id_fields = ['project']
-    date_hierarchy = 'created_at'
-
-
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     list_display = ['title', 'author', 'project', 'read_date', 'rating', 'created_at']
@@ -41,17 +32,10 @@ class BookAdmin(admin.ModelAdmin):
 
 @admin.register(Hobby)
 class HobbyAdmin(admin.ModelAdmin):
-    list_display = ['name', 'project', 'category', 'created_at']
-    list_filter = ['category', 'created_at']
-    search_fields = ['name', 'description']
+    list_display = ['name', 'category', 'value', 'social', 'time_per_week', 'created_at']
+    list_filter = ['category', 'social', 'value', 'created_at']
+    search_fields = ['name', 'reason', 'description']
     raw_id_fields = ['project']
-
-
-@admin.register(ProgrammingLanguage)
-class ProgrammingLanguageAdmin(admin.ModelAdmin):
-    list_display = ['name', 'proficiency_level', 'years_experience', 'created_at']
-    list_filter = ['proficiency_level', 'created_at']
-    search_fields = ['name']
 
 
 @admin.register(SpokenLanguage)
@@ -63,10 +47,9 @@ class SpokenLanguageAdmin(admin.ModelAdmin):
 
 @admin.register(Skills)
 class SkillsAdmin(admin.ModelAdmin):
-    list_display = ['name', 'skill_type', 'category', 'proficiency_level', 'programming_language', 'spoken_language', 'created_at']
-    list_filter = ['skill_type', 'category', 'proficiency_level', 'created_at']
+    list_display = ['name', 'category', 'created_at']
+    list_filter = ['category', 'created_at']
     search_fields = ['name', 'description']
-    raw_id_fields = ['programming_language', 'spoken_language']
 
 
 @admin.register(Post)

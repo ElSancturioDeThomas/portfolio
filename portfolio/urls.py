@@ -23,10 +23,8 @@ from api import views
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("projects/", views.projects_view, name="projects"),
+    path("library/", views.library_view, name="library"),
     path("skills/", views.skills_view, name="skills"),
-    path("books/", views.books_view, name="books"),
-    path("photos/", views.photos_view, name="photos"),
     path("admin/", admin.site.urls),
     path("api/", include("api.urls")),
 ]

@@ -52,7 +52,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # Serve static files on Vercel
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -60,6 +59,15 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+# Add WhiteNoise middleware for production (Vercel)
+# Only add if not in DEBUG mode or if WhiteNoise is installed
+if not DEBUG:
+    try:
+        import whitenoise
+        MIDDLEWARE.insert(2, "whitenoise.middleware.WhiteNoiseMiddleware")
+    except ImportError:
+        pass  # WhiteNoise not installed, skip (for local dev without it)
 
 ROOT_URLCONF = "portfolio.urls"
 
@@ -158,9 +166,13 @@ STATICFILES_DIRS = [
 ]
 
 # WhiteNoise configuration for serving static files on Vercel
-# Use CompressedStaticFilesStorage (without manifest) for easier debugging
-# Manifest storage can cause issues if files aren't found
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# Only use WhiteNoise storage if not in DEBUG and WhiteNoise is available
+if not DEBUG:
+    try:
+        import whitenoise
+        STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+    except ImportError:
+        pass  # WhiteNoise not installed, use default storage
 
 # Media files (User uploaded content)
 MEDIA_URL = "media/"

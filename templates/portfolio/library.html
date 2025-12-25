@@ -1,0 +1,136 @@
+{% extends 'portfolio/base.html' %}
+
+{% load static %}
+
+{% block title %}Library - Portfolio{% endblock %}
+
+{% block content %}
+    <section class="page-hero-section library-hero-section">
+        <img src="{% static 'portfolio/assets/LibraryBackdrop.png' %}" alt="Background" class="page-hero-image">
+        <div class="page-hero-overlay"></div>
+        <div class="container">
+            <div class="content">
+                <!-- Projects Section -->
+                {% if projects %}
+                    <div class="library-section">
+                        <h2 class="library-section-title">Projects</h2>
+                        <div class="projects-grid">
+                            {% for project in projects %}
+                                <div class="project-card">
+                                    {% if project.image %}
+                                        <div class="project-image">
+                                            <img src="{{ project.image.url }}" alt="{{ project.title }}">
+                                        </div>
+                                    {% endif %}
+                                    <div class="project-content">
+                                        <h3>{{ project.title }}</h3>
+                                        <p class="project-description">{{ project.description }}</p>
+                                        {% if project.technologies %}
+                                            <div class="project-technologies">
+                                                <strong>Technologies:</strong>
+                                                <span>{{ project.technologies }}</span>
+                                            </div>
+                                        {% endif %}
+                                        <div class="project-links">
+                                            {% if project.project_link %}
+                                                <a href="{{ project.project_link }}" target="_blank" class="btn btn-primary">View Project</a>
+                                            {% endif %}
+                                            {% if project.github_link %}
+                                                <a href="{{ project.github_link }}" target="_blank" class="btn btn-secondary">GitHub</a>
+                                            {% endif %}
+                                        </div>
+                                        {% if project.featured %}
+                                            <span class="featured-badge">Featured</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Books Section -->
+                <div class="library-section">
+                    <h2 class="library-section-title">Books</h2>
+                    {% if books %}
+                        <div class="books-table-container">
+                            <div class="books-table">
+                                <div class="books-table-header">
+                                    <div class="books-header-cell">Title</div>
+                                    <div class="books-header-cell">Author</div>
+                                    <div class="books-header-cell">Rating</div>
+                                    <div class="books-header-cell">Read Date</div>
+                                </div>
+                                <div class="books-table-body">
+                                    {% for book in books %}
+                                        <div class="books-table-row">
+                                            <div class="books-table-cell">
+                                                <strong>{{ book.title }}</strong>
+                                            </div>
+                                            <div class="books-table-cell">{{ book.author }}</div>
+                                            <div class="books-table-cell">
+                                                {% if book.rating %}
+                                                    <div class="book-rating-stars">
+                                                        {% for i in "12345" %}
+                                                            {% if forloop.counter <= book.rating %}
+                                                                <span class="star filled">★</span>
+                                                            {% else %}
+                                                                <span class="star">★</span>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                {% else %}
+                                                    —
+                                                {% endif %}
+                                            </div>
+                                            <div class="books-table-cell">
+                                                {% if book.read_date %}
+                                                    {{ book.read_date|date:"F Y" }}
+                                                {% else %}
+                                                    —
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <p>No books in the library yet. Check back soon!</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Photos Section -->
+                {% if project_photos %}
+                    <div class="library-section">
+                        <h2 class="library-section-title">Photos</h2>
+                        <div class="photos-grid">
+                            {% for project in project_photos %}
+                                <div class="photo-card">
+                                    <div class="photo-image">
+                                        <img src="{{ project.image.url }}" alt="{{ project.title }}">
+                                    </div>
+                                    <div class="photo-info">
+                                        <h3>{{ project.title }}</h3>
+                                        {% if project.description %}
+                                            <p class="photo-description">{{ project.description|truncatewords:20 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if not projects and not books and not project_photos %}
+                    <div class="empty-state">
+                        <p>No content in the library yet. Check back soon!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
