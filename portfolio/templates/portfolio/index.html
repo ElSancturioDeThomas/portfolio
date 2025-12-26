@@ -5,7 +5,7 @@
 
 {% block content %}
     <section class="hero-section">
-        <img src="{% static 'portfolio/assets/GreenLadyOpTIMSED.png' %}?v={{ timestamp }}" alt="Background" class="hero-image">
+        <img src="{% static 'portfolio/assets/TigersOnFire.png' %}?v={{ timestamp }}" alt="Background" class="hero-image">
         <div class="hero-overlay"></div>
         <!-- Secret Login Panel -->
         <div class="secret-login-panel" id="secret-login-panel">
@@ -22,25 +22,313 @@
         </div>
         <header class="hero-header">
             <h1>Paradise Loading</h1>
-            <p class="subtitle hero-name">By Thomas Heal
+            <p class="subtitle hero-name">Thomas Heal
                 <span class="name-tooltip">Also known as Tom, Chop, and Thomalicious</span>
             </p>
         </header>
     </section>
 
-    <section class="balance-section content-section">
+    <!-- Photo Grid Section -->
+    <section class="photo-grid-section">
+        <div class="photo-grid-container">
+            <div class="photo-grid">
+                <div class="photo-item">
+                    <div class="photo-box">
+                        <img src="{% static 'portfolio/assets/ITravel.png' %}" alt="I Travel">
+                    </div>
+                    <div class="photo-tooltip">Travel</div>
+                </div>
+                <div class="photo-item">
+                    <div class="photo-box">
+                        <img src="{% static 'portfolio/assets/IWork.png' %}" alt="I Work">
+                    </div>
+                    <div class="photo-tooltip">Work</div>
+                </div>
+                <div class="photo-item">
+                    <div class="photo-box">
+                        <img src="{% static 'portfolio/assets/IParty.png' %}" alt="I Party">
+                    </div>
+                    <div class="photo-tooltip">Party</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section class="about-section content-section">
         <div class="container">
-            <div class="balance-content">
-                <div class="balance-column">
-                    <div class="balance-text-box">
-                        <p class="balance-quote">
-                            Enjoying clicking around my portfolio, exploring my work and interests.
+            <div class="content">
+                <div class="about-content glass-container">
+                    <h2>About Me</h2>
+                    <div class="about-text">
+                        <p>
+                            Welcome to my portfolio! I'm Thomas Heal, a passionate developer and lifelong learner 
+                            who enjoys building innovative projects and exploring new technologies. Through my work, 
+                            I strive to create meaningful solutions that make a difference.
+                        </p>
+                        <p>
+                            This website showcases my journey through various projects, skills I've developed, 
+                            books that have inspired me, and moments captured in photos. Feel free to explore 
+                            and learn more about my work and interests.
+                        </p>
+                        <p>
+                            Whether it's coding, learning new languages, reading thought-provoking books, or 
+                            capturing life's moments through photography, I believe in continuous growth and 
+                            sharing knowledge with others.
                         </p>
                     </div>
                 </div>
-                <div class="balance-column">
-                    <img src="{% static 'portfolio/assets/BalanceOptimised.png' %}" alt="Balance" class="balance-image">
+            </div>
+        </div>
+    </section>
+
+    <!-- Hobbies Section -->
+    <section class="hobbies-section content-section">
+        <!-- JSON Editor Panel -->
+        <div class="json-editor-panel" id="json-editor-panel">
+            <div class="json-editor-content">
+                <div class="json-editor-header">
+                    <span class="json-editor-title">hobbies.json</span>
+                    <button class="json-editor-close-btn" id="json-editor-close-btn">×</button>
                 </div>
+                <div class="json-editor-body">
+                    <pre class="json-content" id="json-content"><code>Loading...</code></pre>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="content">
+                <h2 class="hobbies-title">My Hobbies</h2>
+                {% if hobbies %}
+                    <div class="hobbies-database-container">
+                        <div class="hobbies-table">
+                            <div class="hobbies-table-header">
+                                <div class="hobbies-header-cell">Icon</div>
+                                <div class="hobbies-header-cell">Hobby</div>
+                                <div class="hobbies-header-cell">Reason</div>
+                                <div class="hobbies-header-cell">Category</div>
+                                <div class="hobbies-header-cell">Social</div>
+                            </div>
+                            <div class="hobbies-table-body">
+                                {% for hobby in hobbies %}
+                                    <div class="hobbies-table-row">
+                                        <div class="hobbies-table-cell" data-label="Icon">
+                                            {% if hobby.icon %}
+                                                <span class="hobby-icon">{{ hobby.icon }}</span>
+                                            {% else %}
+                                                —
+                                            {% endif %}
+                                        </div>
+                                        <div class="hobbies-table-cell" data-label="Hobby">
+                                            <strong>{{ hobby.name }}</strong>
+                                        </div>
+                                        <div class="hobbies-table-cell" data-label="Reason">{{ hobby.reason|default:"—" }}</div>
+                                        <div class="hobbies-table-cell" data-label="Category">
+                                            {% if hobby.category %}
+                                                <span class="hobby-category">{{ hobby.category }}</span>
+                                            {% else %}
+                                                —
+                                            {% endif %}
+                                        </div>
+                                        <div class="hobbies-table-cell" data-label="Social">
+                                            <span class="social-badge social-{{ hobby.social }}">
+                                                {{ hobby.get_social_display }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="hobbies-load-json-container">
+                            <button class="hobbies-load-json-btn" id="hobbies-load-json-btn">Load JSON</button>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <p>No hobbies listed yet. Check back soon!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Passion Section -->
+    <section class="technology-passion-section content-section">
+        <div class="container">
+            <div class="content">
+                <div class="technology-passion-content glass-container">
+                    <div class="technology-passion-text">
+                        <p>
+                            I've always loved technology, computers, sci-fi, etc. Since the inception of AI, halfway through my international business degree, 
+                            software engineering and data science have become my daily passion.
+                        </p>
+                        <p>
+                            The intersection 
+                            between databases and business requirements truly fascinates me and I hope to master this field.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GitHub Contributions Section -->
+    {% if github_weeks %}
+    <section class="contributions-section content-section">
+        <div class="container">
+            <div class="content">
+                <div class="contributions-header">
+                    <h2 class="contributions-title">GitHub Contributions</h2>
+                    {% if github_total %}
+                    {% endif %}
+                    <p class="contributions-count">This is a graph of my {{ github_total }} GitHub contributions in the last year.</p>
+                </div>
+                <div class="contributions-container">
+                    <div class="contribution-graph-wrapper">
+                        <div class="contribution-months"></div>
+                        <div class="contribution-graph-inner">
+                            <div class="contribution-days contribution-days-left">
+                                <span class="day-label">Mon</span>
+                                <span class="day-label">Wed</span>
+                                <span class="day-label">Fri</span>
+                            </div>
+                            <div class="contribution-graph">
+                                {% for week in github_weeks %}
+                                    <div class="week">
+                                        {% for day in week.contributionDays %}
+                                            <div class="day {{ day.contributionLevel }}" data-date="{{ day.date }}"></div>
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="contribution-days contribution-days-right">
+                                <span class="day-label">Mon</span>
+                                <span class="day-label">Wed</span>
+                                <span class="day-label">Fri</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contribution-footer">
+                        <div class="contribution-legend">
+                            <span class="legend-label">Less</span>
+                            <div class="legend-colors">
+                                <div class="legend-day NONE"></div>
+                                <div class="legend-day FIRST_QUARTILE"></div>
+                                <div class="legend-day SECOND_QUARTILE"></div>
+                                <div class="legend-day THIRD_QUARTILE"></div>
+                                <div class="legend-day FOURTH_QUARTILE"></div>
+                            </div>
+                            <span class="legend-label">More</span>
+                        </div>
+                        <span class="contribution-link">There's plenty more to come!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Additional Text Section -->
+    <section class="additional-text-section content-section">
+        <div class="container">
+            <div class="content">
+                <div class="additional-text-content glass-container">
+                    <h2>My Journey</h2>
+                    <div class="additional-text">
+                        <p>
+                            Every line of code, every project, and every contribution tells a story. 
+                            Through continuous learning and dedication, I've built a diverse portfolio 
+                            that reflects my passion for technology and innovation.
+                        </p>
+                        <p>
+                            The GitHub contributions graph above represents countless hours of coding, 
+                            problem-solving, and collaboration. Each commit is a step forward in my 
+                            journey as a developer, building towards creating impactful solutions.
+                        </p>
+                        <p>
+                            Below, you'll find my recent posts where I share insights, experiences, 
+                            and thoughts on technology, development practices, and the ever-evolving 
+                            world of software engineering.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Posts Section -->
+    <section class="posts-section content-section">
+        <div class="container">
+            <div class="content">
+                <h2>My Recent Posts</h2>
+                {% if posts %}
+                    <div class="posts-grid" id="posts-grid">
+                        {% for post in posts|slice:":3" %}
+                            <div class="post-card">
+                                {% if post.featured_image %}
+                                    <div class="post-image">
+                                        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                                    </div>
+                                {% endif %}
+                                <div class="post-content">
+                                    <h3>{{ post.title }}</h3>
+                                    {% if post.excerpt %}
+                                        <p class="post-excerpt">{{ post.excerpt|truncatewords:30 }}</p>
+                                    {% else %}
+                                        <p class="post-excerpt">{{ post.content|truncatewords:30|striptags }}</p>
+                                    {% endif %}
+                                    {% if post.published_date %}
+                                        <p class="post-date">{{ post.published_date|date:"F d, Y" }}</p>
+                                    {% endif %}
+                                    {% if post.tags %}
+                                        <div class="post-tags">
+                                            <span class="post-tag">{{ post.tags }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% if posts|length > 3 %}
+                            {% for post in posts|slice:"3:" %}
+                                <div class="post-card post-card-hidden">
+                                    {% if post.featured_image %}
+                                        <div class="post-image">
+                                            <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                                        </div>
+                                    {% endif %}
+                                    <div class="post-content">
+                                        <h3>{{ post.title }}</h3>
+                                        {% if post.excerpt %}
+                                            <p class="post-excerpt">{{ post.excerpt|truncatewords:30 }}</p>
+                                        {% else %}
+                                            <p class="post-excerpt">{{ post.content|truncatewords:30|striptags }}</p>
+                                        {% endif %}
+                                        {% if post.published_date %}
+                                            <p class="post-date">{{ post.published_date|date:"F d, Y" }}</p>
+                                        {% endif %}
+                                        {% if post.tags %}
+                                            <div class="post-tags">
+                                                <span class="post-tag">{{ post.tags }}</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% if posts|length > 3 %}
+                        <div class="posts-load-more-container">
+                            <button class="posts-load-more-btn" id="posts-load-more-btn">
+                                <span class="load-more-text">More</span>
+                                <span class="load-more-arrow">▼</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="empty-state">
+                        <p>No posts available yet. Check back soon!</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </section>
@@ -75,38 +363,15 @@
             </div>
         </div>
     </section>
-
-    <section class="about-section content-section">
-        <div class="container">
-            <div class="content">
-                <div class="about-content">
-                    <h2>About Me</h2>
-                    <div class="about-text">
-                        <p>
-                            Welcome to my portfolio! I'm Thomas Heal, a passionate developer and lifelong learner 
-                            who enjoys building innovative projects and exploring new technologies. Through my work, 
-                            I strive to create meaningful solutions that make a difference.
-                        </p>
-                        <p>
-                            This website showcases my journey through various projects, skills I've developed, 
-                            books that have inspired me, and moments captured in photos. Feel free to explore 
-                            and learn more about my work and interests.
-                        </p>
-                        <p>
-                            Whether it's coding, learning new languages, reading thought-provoking books, or 
-                            capturing life's moments through photography, I believe in continuous growth and 
-                            sharing knowledge with others.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 {% endblock %}
 
 {% block extra_js %}
+    <script src="{% static 'portfolio/js/github-contributions.js' %}"></script>
     <script src="{% static 'portfolio/js/hero-scroll.js' %}"></script>
     <script src="{% static 'portfolio/js/secret-login.js' %}"></script>
     <script src="{% static 'portfolio/js/location-map.js' %}"></script>
+    <script src="{% static 'portfolio/js/posts.js' %}"></script>
+    <script src="{% static 'portfolio/js/json-editor.js' %}"></script>
+    <script src="{% static 'portfolio/js/github-contributions.js' %}"></script>
     <script src="{% static 'portfolio/js/main.js' %}"></script>
 {% endblock %}

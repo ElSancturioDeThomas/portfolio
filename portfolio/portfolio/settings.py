@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +25,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-!1^b)wdp*5uh%#wr!h-w9_p*wcap8ze4$6hw6$pex-mn*53u8w"
+SECRET_KEY = os.environ.get('SECRET_KEY', "django-insecure-!1^b)wdp*5uh%#wr!h-w9_p*wcap8ze4$6hw6$pex-mn*53u8w")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# Allow Vercel domains
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.vercel.app',
+    '.now.sh',
+] + [host for host in os.environ.get('ALLOWED_HOSTS', '').split(',') if host]
 
 
 # Application definition
@@ -53,6 +64,15 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+# Add WhiteNoise middleware for production (Vercel)
+# Only add if not in DEBUG mode or if WhiteNoise is installed
+if not DEBUG:
+    try:
+        import whitenoise
+        MIDDLEWARE.insert(2, "whitenoise.middleware.WhiteNoiseMiddleware")
+    except ImportError:
+        pass  # WhiteNoise not installed, skip (for local dev without it)
+
 ROOT_URLCONF = "portfolio.urls"
 
 TEMPLATES = [
@@ -76,12 +96,37 @@ WSGI_APPLICATION = "portfolio.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+# Use PostgreSQL if database environment variables are set
+# On Vercel, we MUST use PostgreSQL (SQLite doesn't work on serverless)
+if os.environ.get('DB_NAME'):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ.get("DB_NAME"),
+            "USER": os.environ.get("DB_USER"),
+            "PASSWORD": os.environ.get("DB_PASSWORD"),
+            "HOST": os.environ.get("DB_HOST"),
+            "PORT": os.environ.get("DB_PORT", "5432"),
+        }
     }
-}
+elif os.environ.get('VERCEL'):
+    # On Vercel without DB config, use in-memory SQLite as fallback (read-only)
+    # This allows the app to start but database operations will fail
+    # User should configure PostgreSQL for full functionality
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+        }
+    }
+else:
+    # SQLite for local development only
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
 # Password validation
@@ -118,11 +163,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+# WhiteNoise configuration for serving static files on Vercel
+# Only use WhiteNoise storage if not in DEBUG and WhiteNoise is available
+if not DEBUG:
+    try:
+        import whitenoise
+        STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+    except ImportError:
+        pass  # WhiteNoise not installed, use default storage
 
 # Media files (User uploaded content)
 MEDIA_URL = "media/"
@@ -170,3 +224,15 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
 ]
+
+# GitHub API Configuration
+GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', '')
+GITHUB_USERNAME = os.environ.get('GITHUB_USERNAME', 'ElSancturioDeThomas')
+
+# Caching for GitHub contributions
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}

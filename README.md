@@ -1,107 +1,163 @@
-# Social Network Project
+# Django + React Full-Stack Application
 
-![Screenshot](screenshot.png)
-
-A Django-based social network application with a unique Schoolyard Yellow Notepad aesthetic.
-
-## Styling
-
-The project features a complete custom styling theme inspired by a schoolyard yellow notepad with neobrutalist design elements.
-
-### Design Theme
-
-**Last styling prompt:**
-> "Lets change the styling of the project completely. We are going for a Schoolyard Yellow Notepad feel with ruled lines, Make the buttons neobrutalist with yellow, orange and red as the main colours"
-
-### Visual Features
-
-- **Notepad Background**: Yellow notepad background (#FEF9E7) with horizontal ruled lines and a red vertical margin line on the left
-- **Neobrutalist Buttons**: 
-  - Yellow (#FFD60A) for primary actions
-  - Orange (#FF9500) for secondary actions and hover states
-  - Red (#FF0050) for danger actions and links
-  - Bold black borders (4px) with heavy drop shadows (6px offset)
-  - Square corners, uppercase text, monospace font
-  - Interactive press-down effect on hover/click
-
-### Typography
-
-- **Font**: Courier Prime (monospace typewriter font)
-- **Style**: Bold, uppercase headings with increased letter spacing
-
-### Color Palette
-
-- Notepad Yellow: `#FEF9E7`
-- Neobrutalist Yellow: `#FFD60A`
-- Neobrutalist Orange: `#FF9500`
-- Neobrutalist Red: `#FF0050`
-- Ruled Line Blue: `#B8D4E3`
-- Margin Red: `#E63946`
-- Text Dark: `#2C3E50`
-- Black: `#000000`
+A full-stack web application with Django REST Framework backend and React frontend.
 
 ## Project Structure
 
 ```
-project4/
-├── network/
-│   ├── static/
-│   │   └── network/
-│   │       └── styles.css       # Complete custom styling
-│   ├── templates/
-│   │   └── network/
-│   │       ├── layout.html      # Base template
-│   │       ├── index.html       # All posts page
-│   │       ├── login.html       # Login page
-│   │       ├── register.html    # Registration page
-│   │       ├── profile.html     # User profile page
-│   │       └── following.html   # Following feed page
-│   ├── models.py
-│   ├── views.py
-│   └── urls.py
-├── project4/
-│   ├── settings.py
-│   └── urls.py
-└── manage.py
+.
+├── portfolio/        # Django backend
+│   ├── portfolio/    # Django project settings
+│   ├── api/          # API app with endpoints
+│   ├── manage.py     # Django management script
+│   └── requirements.txt
+├── frontend/         # React frontend
+│   ├── public/       # Static files
+│   ├── src/          # React source code
+│   └── package.json
+└── README.md
 ```
+
+## Prerequisites
+
+- Python 3.8+ and pip
+- Node.js 16+ and npm
+- Virtual environment tool (venv or virtualenv)
+
+## Backend Setup (Django)
+
+1. **Navigate to portfolio directory:**
+   ```bash
+   cd portfolio
+   ```
+
+2. **Create and activate virtual environment:**
+   ```bash
+   python -m venv venv
+   # On macOS/Linux:
+   source venv/bin/activate
+   # On Windows:
+   venv\Scripts\activate
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set up environment variables:**
+   ```bash
+   cp .env.example .env
+   # Edit .env and set your SECRET_KEY
+   ```
+
+5. **Run migrations:**
+   ```bash
+   python manage.py migrate
+   ```
+
+6. **Create superuser (optional):**
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+7. **Start Django development server:**
+   ```bash
+   python manage.py runserver
+   ```
+
+   The backend will run on `http://localhost:8000`
+
+## Frontend Setup (React)
+
+1. **Navigate to frontend directory:**
+   ```bash
+   cd frontend
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start React development server:**
+   ```bash
+   npm start
+   ```
+
+   The frontend will run on `http://localhost:3000`
+
+## Running the Application
+
+1. **Start Django backend** (in one terminal):
+   ```bash
+   cd portfolio
+   source venv/bin/activate  # or venv\Scripts\activate on Windows
+   python manage.py runserver
+   ```
+
+2. **Start React frontend** (in another terminal):
+   ```bash
+   cd frontend
+   npm start
+   ```
+
+3. **Open your browser:**
+   Navigate to `http://localhost:3000` to see the application.
+
+## API Endpoints
+
+- `GET /api/hello/` - Test endpoint that returns a hello message
 
 ## Features
 
-- User registration and authentication
-- Create, edit, and delete posts
-- Like and unlike posts
-- Comment on posts
-- Follow and unfollow users
-- View user profiles
-- View posts from users you follow
-- Pagination for posts
+- ✅ Django REST Framework for API
+- ✅ CORS configured for React frontend
+- ✅ Example API endpoint and React component
+- ✅ Axios for API calls
+- ✅ Modern React hooks (useState, useEffect)
+- ✅ Error handling and loading states
 
-## Setup
+## Development
 
-1. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+### Adding New API Endpoints
 
-2. Run migrations:
-```bash
-python manage.py migrate
-```
+1. Create views in `portfolio/api/views.py`
+2. Add URL patterns in `portfolio/api/urls.py`
+3. Create corresponding API service functions in `frontend/src/services/api.js`
+4. Use the API service in your React components
 
-3. Create a superuser (optional):
-```bash
-python manage.py createsuperuser
-```
+### Environment Variables
 
-4. Run the development server:
-```bash
-python manage.py runserver
-```
+**Backend (.env):**
+- `SECRET_KEY` - Django secret key
+- `DEBUG` - Debug mode (True/False)
 
-## Technologies Used
+**Frontend (.env):**
+- `REACT_APP_API_URL` - Backend API URL (defaults to http://localhost:8000/api)
 
-- Django (Python web framework)
-- Bootstrap 4 (base CSS framework, heavily customized)
-- CSS3 (custom styling with gradients, shadows, and animations)
-- JavaScript (for dynamic interactions like likes and comments)
+## Troubleshooting
+
+### CORS Issues
+If you encounter CORS errors, ensure:
+- Django CORS settings are configured in `portfolio/portfolio/settings.py`
+- React app is running on port 3000
+- Django is running on port 8000
+
+### Port Already in Use
+- Django: Change port with `python manage.py runserver 8001`
+- React: Change port by setting `PORT=3001` in `.env` or using `PORT=3001 npm start`
+
+## Next Steps
+
+- Add authentication (JWT tokens)
+- Create database models
+- Add more API endpoints
+- Implement CRUD operations
+- Add form validation
+- Deploy to production
+
+## License
+
+MIT
 
