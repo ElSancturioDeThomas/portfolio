@@ -13,6 +13,9 @@
         
         // Navbar animation state management
         initNavbarAnimation();
+        
+        // Home link scroll-to-top functionality
+        initHomeLinkScroll();
     });
 
     /**
@@ -42,6 +45,41 @@
                 body.classList.add('navbar-animated');
             }, 1200); // Wait for animation to complete (1.1s + 0.1s buffer)
         }
+    }
+
+    /**
+     * Home Link Scroll to Top
+     * If user is on home page and clicks home link, scroll to top instead of navigating
+     */
+    function initHomeLinkScroll() {
+        const navLinks = document.querySelectorAll('.nav-link');
+        const currentPath = window.location.pathname;
+        const isHomePage = currentPath === '/' || currentPath === '';
+        
+        if (!isHomePage) {
+            return; // Only handle on home page
+        }
+        
+        navLinks.forEach(function(link) {
+            const href = link.getAttribute('href');
+            
+            // Check if this link points to the home page
+            // Django's {% url 'index' %} generates "/" as the href
+            const pointsToHome = href === '/' || href === '';
+            
+            if (pointsToHome) {
+                link.addEventListener('click', function(e) {
+                    // Prevent default navigation
+                    e.preventDefault();
+                    
+                    // Smooth scroll to top
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+        });
     }
 })();
 

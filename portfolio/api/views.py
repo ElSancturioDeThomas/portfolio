@@ -1,11 +1,16 @@
 from django.shortcuts import render
 from django.core.cache import cache
 from django.conf import settings
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Project, Skills, Book, Country, Post, Hobby, SpokenLanguage
 import requests
+import json
 
 
 def get_github_contributions():
@@ -192,3 +197,133 @@ def hobbies_json(request):
         'created_at': h.created_at.isoformat() if h.created_at else None
     } for h in hobbies]
     return Response({'hobbies': data, 'count': len(data)})
+
+
+@csrf_exempt
+def create_hobby(request):
+    """Create a new hobby"""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+    
+    # Check if user is authenticated
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
+    
+    try:
+        data = json.loads(request.body)
+        name = data.get('name', '').strip()
+        
+        if not name:
+            return JsonResponse({'success': False, 'error': 'Name is required'}, status=400)
+        
+        # Check if hobby with same name already exists
+        if Hobby.objects.filter(name=name).exists():
+            return JsonResponse({'success': False, 'error': 'Hobby with this name already exists'}, status=400)
+        
+        hobby = Hobby.objects.create(
+            name=name,
+            reason=data.get('reason', ''),
+            category=data.get('category', ''),
+            icon=data.get('icon', ''),
+            social=data.get('social', 'maybe')
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Hobby created successfully',
+            'hobby': {
+                'id': hobby.id,
+                'name': hobby.name,
+                'reason': hobby.reason,
+                'category': hobby.category,
+                'social': hobby.social,
+                'icon': hobby.icon
+            }
+        })
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@csrf_exempt
+def create_country(request):
+    """Create a new country"""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+    
+    # Check if user is authenticated
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
+    
+    try:
+        data = json.loads(request.body)
+        name = data.get('name', '').strip()
+        
+        if not name:
+            return JsonResponse({'success': False, 'error': 'Name is required'}, status=400)
+        
+        # Check if country with same name already exists
+        if Country.objects.filter(name=name).exists():
+            return JsonResponse({'success': False, 'error': 'Country with this name already exists'}, status=400)
+        
+        country = Country.objects.create(
+            name=name,
+            code=data.get('code', '').strip().upper()[:2] if data.get('code') else '',
+            flag_emoji=data.get('flag_emoji', '').strip()[:10] if data.get('flag_emoji') else '',
+            thoughts=data.get('thoughts', '').strip()[:50] if data.get('thoughts') else ''
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Country created successfully',
+            'country': {
+                'id': country.id,
+                'name': country.name,
+                'code': country.code,
+                'flag_emoji': country.flag_emoji,
+                'thoughts': country.thoughts
+            }
+        })
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@csrf_exempt
+def secret_login(request):
+    """Handle secret login authentication"""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+    
+    try:
+        data = json.loads(request.body)
+        username = data.get('username', '')
+        password = data.get('password', '')
+        
+        if not username or not password:
+            return JsonResponse({'success': False, 'error': 'Username and password required'}, status=400)
+        
+        # Authenticate user
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            # Login successful
+            login(request, user)
+            return JsonResponse({
+                'success': True,
+                'message': 'Login successful',
+                'redirect_url': '/admin/'
+            })
+        else:
+            # Invalid credentials
+            return JsonResponse({
+                'success': False,
+                'error': 'Invalid username or password'
+            }, status=401)
+            
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
