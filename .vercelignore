@@ -1,0 +1,16 @@
+# Vercel ignore file
+db.sqlite3
+db.sqlite3-journal
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+media/
+staticfiles/
+.DS_Store
+*.log
+

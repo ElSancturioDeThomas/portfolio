@@ -1,0 +1,79 @@
+{% extends 'portfolio/base.html' %}
+
+{% load static %}
+
+{% block title %}Skills - Portfolio{% endblock %}
+
+{% block content %}
+    <section class="page-hero-section skills-hero-section">
+        <img src="{% static 'portfolio/assets/TokyoYellow.png' %}?v={{ timestamp|default:'' }}" alt="Background" class="page-hero-image">
+        <div class="page-hero-overlay"></div>
+        <div class="container">
+            <div class="content">
+                <!-- Skills Section -->
+                <div class="skills-section">
+                    <h2>Skills</h2>
+                    {% if skills %}
+                        {% regroup skills by category as skills_by_category %}
+                        {% for category_group in skills_by_category %}
+                            <div class="category-group">
+                                {% if category_group.grouper %}
+                                    <h3 class="category-title">{{ category_group.grouper }}</h3>
+                                {% else %}
+                                    <h3 class="category-title">General</h3>
+                                {% endif %}
+                                <div class="skills-grid">
+                                    {% for skill in category_group.list %}
+                                        <div class="skill-item">
+                                            <div class="skill-header">
+                                                <h4>{{ skill.name }}</h4>
+                                            </div>
+                                            {% if skill.description %}
+                                                <p class="skill-description">{{ skill.description }}</p>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="empty-message">No skills listed yet.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Spoken Languages Section -->
+                <div class="skills-section">
+                    <h2>Spoken Languages</h2>
+                    {% if spoken_languages %}
+                        <div class="languages-table-container">
+                            <div class="languages-table">
+                                <div class="languages-table-header">
+                                    <div class="languages-header-cell">Language</div>
+                                    <div class="languages-header-cell">Proficiency</div>
+                                </div>
+                                <div class="languages-table-body">
+                                    {% for language in spoken_languages %}
+                                        <div class="languages-table-row">
+                                            <div class="languages-table-cell">
+                                                <strong>{{ language.name }}</strong>
+                                                {% if language.is_native %}
+                                                    <span class="native-badge">Native</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="languages-table-cell">{{ language.get_proficiency_level_display }}</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <p>No spoken languages listed yet. Check back soon!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
