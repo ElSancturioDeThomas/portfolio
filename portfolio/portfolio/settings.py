@@ -225,38 +225,44 @@ except ImportError:
     pass  # WhiteNoise not installed, use default storage
 
 # Media files (User uploaded content)
-# Use Cloudinary for production (Vercel), local storage for development
-if os.environ.get('VERCEL') or os.environ.get('CLOUDINARY_CLOUD_NAME'):
-    # Cloudinary configuration for production
+# Use Cloudinary ONLY if all required environment variables are set
+# Otherwise, use local storage (will fail in production Vercel due to read-only filesystem)
+cloudinary_cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME', '').strip()
+cloudinary_api_key = os.environ.get('CLOUDINARY_API_KEY', '').strip()
+cloudinary_api_secret = os.environ.get('CLOUDINARY_API_SECRET', '').strip()
+
+if cloudinary_cloud_name and cloudinary_api_key and cloudinary_api_secret:
+    # All Cloudinary credentials are provided - use Cloudinary
     try:
         import cloudinary
         import cloudinary.uploader
         import cloudinary.api
         
         CLOUDINARY_STORAGE = {
-            'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
-            'API_KEY': os.environ.get('CLOUDINARY_API_KEY', ''),
-            'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', ''),
+            'CLOUD_NAME': cloudinary_cloud_name,
+            'API_KEY': cloudinary_api_key,
+            'API_SECRET': cloudinary_api_secret,
         }
         
         # Use Cloudinary for media files
         DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
         
-        # Cloudinary settings (only if credentials are provided)
-        if CLOUDINARY_STORAGE['CLOUD_NAME']:
-            cloudinary.config(
-                cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
-                api_key=CLOUDINARY_STORAGE['API_KEY'],
-                api_secret=CLOUDINARY_STORAGE['API_SECRET'],
-            )
+        # Configure Cloudinary
+        cloudinary.config(
+            cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
+            api_key=CLOUDINARY_STORAGE['API_KEY'],
+            api_secret=CLOUDINARY_STORAGE['API_SECRET'],
+        )
         
         MEDIA_URL = '/media/'  # Cloudinary will handle the actual URL
     except ImportError:
-        # Cloudinary not installed, fall back to local storage
+        # Cloudinary packages not installed, fall back to local storage
         MEDIA_URL = "media/"
         MEDIA_ROOT = BASE_DIR / "media"
 else:
-    # Local storage for development
+    # Cloudinary not configured - use local storage
+    # Note: This will fail in Vercel production (read-only filesystem)
+    # To enable file uploads in production, configure Cloudinary environment variables
     MEDIA_URL = "media/"
     MEDIA_ROOT = BASE_DIR / "media"
 
