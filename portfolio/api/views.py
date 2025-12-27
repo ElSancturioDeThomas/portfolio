@@ -136,15 +136,32 @@ def get_github_contributions():
 def index(request):
     """Home page view with brief description"""
     import time
+    import logging
+    from django.db import DatabaseError
+    
+    logger = logging.getLogger(__name__)
     
     # Get all countries from Country model with flag emojis
-    countries_visited = Country.objects.all().order_by('name')
+    # Wrap in try/except to handle database connection issues gracefully
+    try:
+        countries_visited = Country.objects.all().order_by('name')
+    except (DatabaseError, Exception) as e:
+        logger.error(f"Error fetching countries: {e}")
+        countries_visited = []
     
     # Get all hobbies, ordered by category
-    hobbies = Hobby.objects.all().order_by('category', 'name')
+    try:
+        hobbies = Hobby.objects.all().order_by('category', 'name')
+    except (DatabaseError, Exception) as e:
+        logger.error(f"Error fetching hobbies: {e}")
+        hobbies = []
     
-    # Get GitHub contributions
-    github_data = get_github_contributions()
+    # Get GitHub contributions (already has error handling)
+    try:
+        github_data = get_github_contributions()
+    except Exception as e:
+        logger.error(f"Error fetching GitHub contributions: {e}")
+        github_data = {'weeks': [], 'total_contributions': 0}
     
     context = {
         'timestamp': int(time.time()),
@@ -159,10 +176,18 @@ def index(request):
 def skills_view(request):
     """Skills page view"""
     import time
+    import logging
     from itertools import groupby
+    from django.db import DatabaseError
+    
+    logger = logging.getLogger(__name__)
     
     # Get all skills ordered by category and name
-    skills = Skills.objects.all().order_by('category', 'name')
+    try:
+        skills = Skills.objects.all().order_by('category', 'name')
+    except (DatabaseError, Exception) as e:
+        logger.error(f"Error fetching skills: {e}")
+        skills = []
     
     # Group skills by category
     skills_by_category = {}
@@ -201,7 +226,11 @@ def skills_view(request):
 def library_view(request):
     """Library page view - combines Projects, Books, Photos, and Posts"""
     import time
+    import logging
     from django.template.loader import render_to_string
+    from django.db import DatabaseError
+    
+    logger = logging.getLogger(__name__)
     
     # Get section from query parameter, default to 'projects'
     section = request.GET.get('section', 'projects')
@@ -211,10 +240,24 @@ def library_view(request):
     if section not in valid_sections:
         section = 'projects'
     
-    # Fetch data from Django
-    projects = Project.objects.all().order_by('-created_at')
-    books = Book.objects.all().order_by('-created_at')
-    photos = Photo.objects.all().order_by('-created_at')
+    # Fetch data from Django with error handling
+    try:
+        projects = Project.objects.all().order_by('-created_at')
+    except (DatabaseError, Exception) as e:
+        logger.error(f"Error fetching projects: {e}")
+        projects = []
+    
+    try:
+        books = Book.objects.all().order_by('-created_at')
+    except (DatabaseError, Exception) as e:
+        logger.error(f"Error fetching books: {e}")
+        books = []
+    
+    try:
+        photos = Photo.objects.all().order_by('-created_at')
+    except (DatabaseError, Exception) as e:
+        logger.error(f"Error fetching photos: {e}")
+        photos = []
     
     context = {
         'timestamp': int(time.time()),
