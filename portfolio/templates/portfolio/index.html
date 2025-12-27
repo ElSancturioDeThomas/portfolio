@@ -105,22 +105,21 @@
         </div>
     </section>
 
-    <!-- Hobbies Section -->
-    <section class="hobbies-section content-section">
-        <!-- JSON Editor Panel -->
-        <div class="json-editor-panel" id="json-editor-panel">
-            <div class="json-editor-content">
-                <div class="json-editor-header">
-                    <span class="json-editor-title">hobbies.json</span>
-                    <button class="json-editor-close-btn" id="json-editor-close-btn">×</button>
-                </div>
-                <div class="json-editor-body">
-                    <pre class="json-content" id="json-content"><code>Loading...</code></pre>
-                </div>
+    <!-- Admin Panels - Moved outside sections to avoid stacking context issues -->
+    <!-- JSON Editor Panel -->
+    <div class="json-editor-panel" id="json-editor-panel">
+        <div class="json-editor-content">
+            <div class="json-editor-header">
+                <span class="json-editor-title">hobbies.json</span>
+                <button class="json-editor-close-btn" id="json-editor-close-btn">×</button>
+            </div>
+            <div class="json-editor-body">
+                <pre class="json-content" id="json-content"><code>Loading...</code></pre>
             </div>
         </div>
-        <!-- Add Hobby Terminal Panel -->
-        <div class="hobby-add-panel" id="hobby-add-panel">
+    </div>
+    <!-- Add Hobby Terminal Panel -->
+    <div class="hobby-add-panel" id="hobby-add-panel">
             <div class="hobby-add-content">
                 <div class="hobby-add-header">
                     <span class="hobby-add-title">add_hobby.sh</span>
@@ -164,7 +163,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+    </div>
+
+    <!-- Hobbies Section -->
+    <section class="hobbies-section content-section">
         <div class="container">
             <div class="content">
                 <h2 class="hobbies-title">My Hobbies</h2>
@@ -327,44 +329,6 @@
     </section>
 
     <section class="location-section content-section">
-        <!-- Add Country Terminal Panel -->
-        <div class="country-add-panel" id="country-add-panel">
-            <div class="country-add-content">
-                <div class="country-add-header">
-                    <span class="country-add-title">add_country.sh</span>
-                    <button class="country-add-close-btn" id="country-add-close-btn">×</button>
-                </div>
-                <form class="country-add-form" id="country-add-form">
-                    <div class="country-form-group">
-                        <label for="country-name">Name *</label>
-                        <input type="text" id="country-name" name="name" class="country-input" value="" required>
-                    </div>
-                    <div class="country-form-group">
-                        <label for="country-code">Code</label>
-                        <input type="text" id="country-code" name="code" class="country-input" value="" placeholder="e.g., US, AU, GB" maxlength="2">
-                    </div>
-                    <div class="country-form-group">
-                        <label for="country-flag">Flag Emoji</label>
-                        <input type="text" id="country-flag" name="flag_emoji" class="country-input" value="" placeholder="e.g., 🇺🇸, 🇦🇺, 🇬🇧" maxlength="10">
-                    </div>
-                    <div class="country-form-group">
-                        <label for="country-thoughts">Thoughts</label>
-                        <input type="text" id="country-thoughts" name="thoughts" class="country-input" value="" placeholder="One word opinion" maxlength="50">
-                    </div>
-                    <button type="submit" class="country-submit-btn">Submit</button>
-                </form>
-                <div class="country-add-status" id="country-add-status" style="display: none;">
-                    <div class="country-loading" id="country-loading">
-                        <div class="loading-spinner"></div>
-                        <p class="loading-text">Submitting...</p>
-                    </div>
-                    <div class="country-submitted" id="country-submitted" style="display: none;">
-                        <div class="verified-icon">✓</div>
-                        <p class="verified-text">Submitted</p>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="container">
             <div class="location-content">
                 <!-- Countries Visited Section -->
