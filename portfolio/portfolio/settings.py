@@ -60,9 +60,25 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
-    "cloudinary_storage",  # Must be before 'django.contrib.staticfiles' for media files
     "api",
 ]
+
+# Only add cloudinary_storage if Cloudinary is configured
+# Check if all Cloudinary environment variables are set
+cloudinary_cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME', '').strip()
+cloudinary_api_key = os.environ.get('CLOUDINARY_API_KEY', '').strip()
+cloudinary_api_secret = os.environ.get('CLOUDINARY_API_SECRET', '').strip()
+
+if cloudinary_cloud_name and cloudinary_api_key and cloudinary_api_secret:
+    # All Cloudinary credentials are provided - try to add cloudinary_storage to INSTALLED_APPS
+    # Must be inserted before 'django.contrib.staticfiles' for media files
+    # Only add if the package is actually installed
+    try:
+        import cloudinary_storage
+        INSTALLED_APPS.insert(INSTALLED_APPS.index('django.contrib.staticfiles'), 'cloudinary_storage')
+    except ImportError:
+        # cloudinary_storage not installed - skip adding it
+        pass
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -227,9 +243,17 @@ except ImportError:
 # Media files (User uploaded content)
 # Use Cloudinary ONLY if all required environment variables are set
 # Otherwise, use local storage (will fail in production Vercel due to read-only filesystem)
+# Check Cloudinary credentials early (before INSTALLED_APPS is used)
 cloudinary_cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME', '').strip()
 cloudinary_api_key = os.environ.get('CLOUDINARY_API_KEY', '').strip()
 cloudinary_api_secret = os.environ.get('CLOUDINARY_API_SECRET', '').strip()
+
+# Only add cloudinary_storage to INSTALLED_APPS if Cloudinary is configured
+# This prevents import errors when Cloudinary packages aren't installed
+if cloudinary_cloud_name and cloudinary_api_key and cloudinary_api_secret:
+    # Insert cloudinary_storage before 'django.contrib.staticfiles' for media files
+    staticfiles_index = INSTALLED_APPS.index('django.contrib.staticfiles')
+    INSTALLED_APPS.insert(staticfiles_index, 'cloudinary_storage')
 
 if cloudinary_cloud_name and cloudinary_api_key and cloudinary_api_secret:
     # All Cloudinary credentials are provided - use Cloudinary
