@@ -110,15 +110,42 @@ if os.environ.get('DB_NAME'):
         }
     }
 elif os.environ.get('VERCEL'):
-    # On Vercel without DB config, use in-memory SQLite as fallback (read-only)
-    # This allows the app to start but database operations will fail
-    # User should configure PostgreSQL for full functionality
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": ":memory:",
+    # On Vercel without DB config, try to use PostgreSQL with connection pooling
+    # If DB env vars are missing, provide a helpful error message
+    db_name = os.environ.get('DB_NAME')
+    if not db_name:
+        # Log warning but don't crash - allow app to start
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.warning(
+            "VERCEL environment detected but DB_NAME not set. "
+            "Please configure Neon database environment variables in Vercel."
+        )
+    
+    # Try to use PostgreSQL if credentials are available
+    if db_name:
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.postgresql",
+                "NAME": os.environ.get("DB_NAME"),
+                "USER": os.environ.get("DB_USER"),
+                "PASSWORD": os.environ.get("DB_PASSWORD"),
+                "HOST": os.environ.get("DB_HOST"),
+                "PORT": os.environ.get("DB_PORT", "5432"),
+                "OPTIONS": {
+                    "connect_timeout": 10,
+                    "sslmode": "require",
+                },
+            }
         }
-    }
+    else:
+        # Fallback to in-memory SQLite (read-only, allows app to start)
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": ":memory:",
+            }
+        }
 else:
     # SQLite for local development only
     DATABASES = {
