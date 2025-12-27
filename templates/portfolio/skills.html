@@ -6,74 +6,90 @@
 
 {% block content %}
     <section class="page-hero-section skills-hero-section">
-        <img src="{% static 'portfolio/assets/TokyoYellow.png' %}?v={{ timestamp|default:'' }}" alt="Background" class="page-hero-image">
+        <img src="{% static 'portfolio/assets/TigersOnFire.png' %}?v={{ timestamp|default:'' }}" alt="Background" class="page-hero-image">
         <div class="page-hero-overlay"></div>
-        <div class="container">
-            <div class="content">
-                <!-- Skills Section -->
-                <div class="skills-section">
-                    <h2>Skills</h2>
-                    {% if skills %}
-                        {% regroup skills by category as skills_by_category %}
-                        {% for category_group in skills_by_category %}
-                            <div class="category-group">
-                                {% if category_group.grouper %}
-                                    <h3 class="category-title">{{ category_group.grouper }}</h3>
-                                {% else %}
-                                    <h3 class="category-title">General</h3>
-                                {% endif %}
-                                <div class="skills-grid">
-                                    {% for skill in category_group.list %}
-                                        <div class="skill-item">
-                                            <div class="skill-header">
-                                                <h4>{{ skill.name }}</h4>
-                                            </div>
-                                            {% if skill.description %}
-                                                <p class="skill-description">{{ skill.description }}</p>
-                                            {% endif %}
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <p class="empty-message">No skills listed yet.</p>
+        <div class="skills-container">
+            <!-- Skills Section -->
+            <div class="skills-section">
+                <h2>
+                    Skills
+                    {% if user.is_authenticated %}
+                        <button class="add-button add-button-right" id="skills-add-btn" title="Add Skill">
+                            <i class="fas fa-plus"></i>
+                        </button>
                     {% endif %}
-                </div>
+                </h2>
+                
+                {% for category, skills_list in skills_by_category %}
+                    <div class="skill-category-group">
+                        <h3 class="skill-category-heading">{{ category }}</h3>
+                        <div class="skills-grid">
+                            {% for skill in skills_list %}
+                                <div class="skill-card glass-card glass-effect">
+                                    <div class="skill-card-content">
+                                        <h4 class="skill-card-title">{{ skill.name }}</h4>
+                                        {% if skill.description %}
+                                            <p class="skill-card-description">{{ skill.description }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p class="no-skills-message">No skills in this category yet.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="no-skills-message">No skills available yet.</p>
+                {% endfor %}
+            </div>
 
-                <!-- Spoken Languages Section -->
-                <div class="skills-section">
-                    <h2>Spoken Languages</h2>
-                    {% if spoken_languages %}
-                        <div class="languages-table-container">
-                            <div class="languages-table">
-                                <div class="languages-table-header">
-                                    <div class="languages-header-cell">Language</div>
-                                    <div class="languages-header-cell">Proficiency</div>
-                                </div>
-                                <div class="languages-table-body">
-                                    {% for language in spoken_languages %}
-                                        <div class="languages-table-row">
-                                            <div class="languages-table-cell">
-                                                <strong>{{ language.name }}</strong>
-                                                {% if language.is_native %}
-                                                    <span class="native-badge">Native</span>
-                                                {% endif %}
-                                            </div>
-                                            <div class="languages-table-cell">{{ language.get_proficiency_level_display }}</div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="empty-state">
-                            <p>No spoken languages listed yet. Check back soon!</p>
-                        </div>
-                    {% endif %}
+        </div>
+    </section>
+
+    <!-- Add Skill Popup Panel -->
+    <div class="skill-add-panel admin-panel admin-panel--center" id="skill-add-panel">
+        <div class="skill-add-content admin-panel-content">
+            <div class="skill-add-header admin-panel-header">
+                <span class="skill-add-title admin-panel-title">add_skill.sh</span>
+                <button class="skill-add-close-btn admin-panel-close-btn" id="skill-add-close-btn">×</button>
+            </div>
+            <form class="skill-add-form admin-panel-form" id="skill-add-form">
+                <div class="skill-form-group admin-form-group">
+                    <label for="skill-name">Name *</label>
+                    <input type="text" id="skill-name" name="name" class="skill-input admin-input" value="" required>
+                </div>
+                <div class="skill-form-group admin-form-group">
+                    <label for="skill-description">Description</label>
+                    <textarea id="skill-description" name="description" class="skill-input skill-textarea admin-input admin-textarea" rows="3" placeholder="Brief description of the skill..."></textarea>
+                </div>
+                <div class="skill-form-group admin-form-group">
+                    <label for="skill-category">Category</label>
+                    <select id="skill-category" name="category" class="skill-input admin-input">
+                        <option value="">Select a category</option>
+                        <option value="Programming Languages">Programming Languages</option>
+                        <option value="Packages">Packages</option>
+                        <option value="Soft">Soft</option>
+                        <option value="Hard">Hard</option>
+                        <option value="Spoken Languages">Spoken Languages</option>
+                    </select>
+                </div>
+                <button type="submit" class="skill-submit-btn admin-submit-btn">Submit</button>
+            </form>
+            <div class="skill-add-status admin-panel-status" id="skill-add-status" style="display: none;">
+                <div class="skill-loading admin-loading" id="skill-loading">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Submitting...</p>
+                </div>
+                <div class="skill-submitted admin-submitted" id="skill-submitted" style="display: none;">
+                    <div class="verified-icon">✓</div>
+                    <p class="verified-text">Submitted</p>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'portfolio/js/skill-add.js' %}"></script>
 {% endblock %}
 

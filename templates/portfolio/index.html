@@ -8,23 +8,44 @@
         <img src="{% static 'portfolio/assets/TigersOnFire.png' %}?v={{ timestamp }}" alt="Background" class="hero-image">
         <div class="hero-overlay"></div>
         <!-- Secret Login Panel -->
-        <div class="secret-login-panel" id="secret-login-panel">
-            <div class="secret-login-content">
-                <h3 class="secret-login-title">Admin Access</h3>
-                <form class="secret-login-form" id="secret-login-form">
-                    <div class="secret-form-group">
-                        <label for="secret-pin">Enter PIN</label>
-                        <div id="pin-container"></div>
+        <div class="secret-login-panel admin-panel admin-panel--right" id="secret-login-panel">
+            <div class="secret-login-content admin-panel-content">
+                <div class="secret-login-header admin-panel-header">
+                    <span class="secret-login-header-title admin-panel-title">Admin Access</span>
+                    <button class="secret-login-close-btn admin-panel-close-btn" id="secret-login-close-btn">×</button>
+                </div>
+                <form class="secret-login-form admin-panel-form" id="secret-login-form">
+                    <div class="secret-form-group admin-form-group">
+                        <label for="secret-username">Username</label>
+                        <input type="text" id="secret-username" name="username" class="secret-input admin-input" autocomplete="username" value="" required>
                     </div>
-                    <button type="submit" class="secret-login-btn">Login</button>
+                    <div class="secret-form-group admin-form-group">
+                        <label for="secret-password">Password</label>
+                        <input type="password" id="secret-password" name="password" class="secret-input admin-input" autocomplete="current-password" value="" required>
+                    </div>
+                    <button type="submit" class="secret-login-btn admin-submit-btn">Login</button>
                 </form>
+                <div class="secret-login-status" id="secret-login-status" style="display: none;">
+                    <div class="secret-loading" id="secret-loading">
+                        <div class="loading-spinner"></div>
+                        <p class="loading-text">Verifying...</p>
+                    </div>
+                    <div class="secret-verified" id="secret-verified" style="display: none;">
+                        <div class="verified-icon">✓</div>
+                        <p class="verified-text">Verified</p>
+                        <p class="verified-hint">Double-click to logout</p>
+                    </div>
+                </div>
             </div>
         </div>
         <header class="hero-header">
             <h1>Paradise Loading</h1>
-            <p class="subtitle hero-name">Thomas Heal
-                <span class="name-tooltip">Also known as Tom, Chop, and Thomalicious</span>
-            </p>
+            <div class="hero-subtitle-container">
+                <p class="subtitle hero-name">Thomas Heal</p>
+                <button class="secret-login-toggle" id="secret-login-toggle" aria-label="Toggle Admin Panel">
+                    <span class="toggle-icon">⚙</span>
+                </button>
+            </div>
         </header>
     </section>
 
@@ -58,7 +79,7 @@
     <section class="about-section content-section">
         <div class="container">
             <div class="content">
-                <div class="about-content">
+                <div class="about-content glass-container glass-effect">
                     <h2>About Me</h2>
                     <div class="about-text">
                         <p>
@@ -82,45 +103,159 @@
         </div>
     </section>
 
+    <!-- Admin Panels - Moved outside sections to avoid stacking context issues -->
+    <!-- JSON Editor Panel -->
+    <div class="json-editor-panel admin-panel admin-panel--right" id="json-editor-panel">
+        <div class="json-editor-content admin-panel-content">
+            <div class="json-editor-header admin-panel-header">
+                <span class="json-editor-title admin-panel-title">hobbies.json</span>
+                <button class="json-editor-close-btn admin-panel-close-btn" id="json-editor-close-btn">×</button>
+            </div>
+            <div class="json-editor-body">
+                <pre class="json-content" id="json-content"><code>Loading...</code></pre>
+            </div>
+        </div>
+    </div>
+    <!-- Add Hobby Terminal Panel -->
+    <div class="hobby-add-panel admin-panel admin-panel--left" id="hobby-add-panel">
+            <div class="hobby-add-content admin-panel-content">
+                <div class="hobby-add-header admin-panel-header">
+                    <span class="hobby-add-title admin-panel-title">add_hobby.sh</span>
+                    <button class="hobby-add-close-btn admin-panel-close-btn" id="hobby-add-close-btn">×</button>
+                </div>
+                <form class="hobby-add-form admin-panel-form" id="hobby-add-form">
+                    <div class="hobby-form-group admin-form-group">
+                        <label for="hobby-name">Name *</label>
+                        <input type="text" id="hobby-name" name="name" class="hobby-input admin-input" value="" required>
+                    </div>
+                    <div class="hobby-form-group admin-form-group">
+                        <label for="hobby-reason">Reason</label>
+                        <textarea id="hobby-reason" name="reason" class="hobby-input hobby-textarea admin-input admin-textarea" rows="3"></textarea>
+                    </div>
+                    <div class="hobby-form-group admin-form-group">
+                        <label for="hobby-category">Category</label>
+                        <input type="text" id="hobby-category" name="category" class="hobby-input admin-input" value="">
+                    </div>
+                    <div class="hobby-form-group admin-form-group">
+                        <label for="hobby-icon">Icon</label>
+                        <input type="text" id="hobby-icon" name="icon" class="hobby-input admin-input" value="" placeholder="e.g., 🎮, ⚽, 🎨">
+                    </div>
+                    <div class="hobby-form-group admin-form-group">
+                        <label for="hobby-social">Social</label>
+                        <select id="hobby-social" name="social" class="hobby-input admin-input">
+                            <option value="maybe">Maybe</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="hobby-submit-btn admin-submit-btn">Submit</button>
+                </form>
+                <div class="hobby-add-status admin-panel-status" id="hobby-add-status" style="display: none;">
+                    <div class="hobby-loading admin-loading" id="hobby-loading">
+                        <div class="loading-spinner"></div>
+                        <p class="loading-text">Submitting...</p>
+                    </div>
+                    <div class="hobby-submitted admin-submitted" id="hobby-submitted" style="display: none;">
+                        <div class="verified-icon">✓</div>
+                        <p class="verified-text">Submitted</p>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <!-- Add Country Terminal Panel -->
+    <div class="country-add-panel admin-panel admin-panel--left" id="country-add-panel">
+        <div class="country-add-content admin-panel-content">
+            <div class="country-add-header admin-panel-header">
+                <span class="country-add-title admin-panel-title">add_country.sh</span>
+                <button class="country-add-close-btn admin-panel-close-btn" id="country-add-close-btn">×</button>
+            </div>
+            <form class="country-add-form admin-panel-form" id="country-add-form">
+                <div class="country-form-group admin-form-group">
+                    <label for="country-name">Name *</label>
+                    <input type="text" id="country-name" name="name" class="country-input admin-input" value="" required>
+                </div>
+                <div class="country-form-group admin-form-group">
+                    <label for="country-code">Country Code</label>
+                    <input type="text" id="country-code" name="code" class="country-input admin-input" value="" placeholder="e.g., US, GB, JP" maxlength="2">
+                </div>
+                <div class="country-form-group admin-form-group">
+                    <label for="country-flag">Flag Emoji</label>
+                    <input type="text" id="country-flag" name="flag_emoji" class="country-input admin-input" value="" placeholder="e.g., 🇺🇸, 🇬🇧, 🇯🇵">
+                </div>
+                <div class="country-form-group admin-form-group">
+                    <label for="country-thoughts">Thoughts</label>
+                    <textarea id="country-thoughts" name="thoughts" class="country-input country-textarea admin-input admin-textarea" rows="3" placeholder="Your thoughts about this country..."></textarea>
+                </div>
+                <button type="submit" class="country-submit-btn admin-submit-btn">Submit</button>
+            </form>
+            <div class="country-add-status admin-panel-status" id="country-add-status" style="display: none;">
+                <div class="country-loading admin-loading" id="country-loading">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Submitting...</p>
+                </div>
+                <div class="country-submitted admin-submitted" id="country-submitted" style="display: none;">
+                    <div class="verified-icon">✓</div>
+                    <p class="verified-text">Submitted</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Hobbies Section -->
     <section class="hobbies-section content-section">
         <div class="container">
             <div class="content">
-                <h2 class="hobbies-title">My Hobbies</h2>
+                <h2 class="hobbies-title">
+                    My Hobbies
+                    {% if user.is_authenticated %}
+                        <button class="add-button add-button-right" id="hobbies-add-btn" title="Add Hobby">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    {% endif %}
+                </h2>
                 {% if hobbies %}
                     <div class="hobbies-database-container">
                         <div class="hobbies-table">
                             <div class="hobbies-table-header">
+                                <div class="hobbies-header-cell">Icon</div>
                                 <div class="hobbies-header-cell">Hobby</div>
                                 <div class="hobbies-header-cell">Reason</div>
+                                <div class="hobbies-header-cell">Category</div>
                                 <div class="hobbies-header-cell">Social</div>
-                                <div class="hobbies-header-cell">Time/Week</div>
                             </div>
                             <div class="hobbies-table-body">
                                 {% for hobby in hobbies %}
                                     <div class="hobbies-table-row">
-                                        <div class="hobbies-table-cell">
-                                            <strong>{{ hobby.name }}</strong>
-                                            {% if hobby.category %}
-                                                <span class="hobby-category">{{ hobby.category }}</span>
-                                            {% endif %}
-                                        </div>
-                                        <div class="hobbies-table-cell">{{ hobby.reason|default:"—" }}</div>
-                                        <div class="hobbies-table-cell">
-                                            <span class="social-badge social-{{ hobby.social }}">
-                                                {{ hobby.get_social_display }}
-                                            </span>
-                                        </div>
-                                        <div class="hobbies-table-cell">
-                                            {% if hobby.time_per_week %}
-                                                {{ hobby.time_per_week }} hrs
+                                        <div class="hobbies-table-cell" data-label="Icon">
+                                            {% if hobby.icon %}
+                                                <span class="hobby-icon">{{ hobby.icon }}</span>
                                             {% else %}
                                                 —
                                             {% endif %}
                                         </div>
+                                        <div class="hobbies-table-cell" data-label="Hobby">
+                                            <strong>{{ hobby.name }}</strong>
+                                        </div>
+                                        <div class="hobbies-table-cell" data-label="Reason">{{ hobby.reason|default:"—" }}</div>
+                                        <div class="hobbies-table-cell" data-label="Category">
+                                            {% if hobby.category %}
+                                                <span class="hobby-category">{{ hobby.category }}</span>
+                                            {% else %}
+                                                —
+                                            {% endif %}
+                                        </div>
+                                        <div class="hobbies-table-cell" data-label="Social">
+                                            <span class="social-badge social-{{ hobby.social }}">
+                                                {{ hobby.get_social_display }}
+                                            </span>
+                                        </div>
                                     </div>
                                 {% endfor %}
                             </div>
+                        </div>
+                        <div class="hobbies-load-json-container">
+                            <button class="hobbies-load-json-btn load-json-btn" id="hobbies-load-json-btn">Load JSON</button>
                         </div>
                     </div>
                 {% else %}
@@ -132,79 +267,110 @@
         </div>
     </section>
 
-    <!-- Posts Section -->
-    <section class="posts-section content-section">
+    <!-- Technology Passion Section -->
+    <section class="technology-passion-section content-section">
         <div class="container">
             <div class="content">
-                <h2>My Recent Posts</h2>
-                {% if posts %}
-                    <div class="posts-grid" id="posts-grid">
-                        {% for post in posts|slice:":3" %}
-                            <div class="post-card">
-                                {% if post.featured_image %}
-                                    <div class="post-image">
-                                        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
-                                    </div>
-                                {% endif %}
-                                <div class="post-content">
-                                    <h3>{{ post.title }}</h3>
-                                    {% if post.excerpt %}
-                                        <p class="post-excerpt">{{ post.excerpt|truncatewords:30 }}</p>
-                                    {% else %}
-                                        <p class="post-excerpt">{{ post.content|truncatewords:30|striptags }}</p>
-                                    {% endif %}
-                                    {% if post.published_date %}
-                                        <p class="post-date">{{ post.published_date|date:"F d, Y" }}</p>
-                                    {% endif %}
-                                    {% if post.tags %}
-                                        <div class="post-tags">
-                                            <span class="post-tag">{{ post.tags }}</span>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        {% endfor %}
-                        {% if posts|length > 3 %}
-                            {% for post in posts|slice:"3:" %}
-                                <div class="post-card post-card-hidden">
-                                    {% if post.featured_image %}
-                                        <div class="post-image">
-                                            <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
-                                        </div>
-                                    {% endif %}
-                                    <div class="post-content">
-                                        <h3>{{ post.title }}</h3>
-                                        {% if post.excerpt %}
-                                            <p class="post-excerpt">{{ post.excerpt|truncatewords:30 }}</p>
-                                        {% else %}
-                                            <p class="post-excerpt">{{ post.content|truncatewords:30|striptags }}</p>
-                                        {% endif %}
-                                        {% if post.published_date %}
-                                            <p class="post-date">{{ post.published_date|date:"F d, Y" }}</p>
-                                        {% endif %}
-                                        {% if post.tags %}
-                                            <div class="post-tags">
-                                                <span class="post-tag">{{ post.tags }}</span>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
+                <div class="technology-passion-content glass-container glass-effect">
+                    <div class="technology-passion-text">
+                        <p>
+                            I've always loved technology, computers, sci-fi, etc. Since the inception of AI, halfway through my international business degree, 
+                            software engineering and data science have become my daily passion.
+                        </p>
+                        <p>
+                            The intersection 
+                            between databases and business requirements truly fascinates me and I hope to master this field.
+                        </p>
                     </div>
-                    {% if posts|length > 3 %}
-                        <div class="posts-load-more-container">
-                            <button class="posts-load-more-btn" id="posts-load-more-btn">
-                                <span class="load-more-text">More</span>
-                                <span class="load-more-arrow">▼</span>
-                            </button>
-                        </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GitHub Contributions Section -->
+    {% if github_weeks %}
+    <section class="contributions-section content-section">
+        <div class="container">
+            <div class="content">
+                <div class="contributions-header">
+                    <h2 class="contributions-title">
+                        GitHub Contributions
+                    </h2>
+                    {% if github_total %}
                     {% endif %}
-                {% else %}
-                    <div class="empty-state">
-                        <p>No posts available yet. Check back soon!</p>
+                    <p class="contributions-count">This is a graph of my {{ github_total }} GitHub contributions in the last year.</p>
+                </div>
+                <div class="contributions-container">
+                    <div class="contribution-graph-wrapper">
+                        <div class="contribution-months"></div>
+                        <div class="contribution-graph-inner">
+                            <div class="contribution-days contribution-days-left">
+                                <span class="day-label">Mon</span>
+                                <span class="day-label">Wed</span>
+                                <span class="day-label">Fri</span>
+                            </div>
+                            <div class="contribution-graph">
+                                {% for week in github_weeks %}
+                                    <div class="week">
+                                        {% for day in week.contributionDays %}
+                                            <div class="day {{ day.contributionLevel }}" data-date="{{ day.date }}"></div>
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="contribution-days contribution-days-right">
+                                <span class="day-label">Mon</span>
+                                <span class="day-label">Wed</span>
+                                <span class="day-label">Fri</span>
+                            </div>
+                        </div>
                     </div>
-                {% endif %}
+                    <div class="contribution-footer">
+                        <div class="contribution-legend">
+                            <span class="legend-label">Less</span>
+                            <div class="legend-colors">
+                                <div class="legend-day NONE"></div>
+                                <div class="legend-day FIRST_QUARTILE"></div>
+                                <div class="legend-day SECOND_QUARTILE"></div>
+                                <div class="legend-day THIRD_QUARTILE"></div>
+                                <div class="legend-day FOURTH_QUARTILE"></div>
+                            </div>
+                            <span class="legend-label">More</span>
+                        </div>
+                        <span class="contribution-link">There's plenty more to come!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Additional Text Section -->
+    <section class="additional-text-section content-section">
+        <div class="container">
+            <div class="content">
+                <div class="additional-text-content glass-container glass-effect">
+                    <h2>
+                        My Journey
+                    </h2>
+                    <div class="additional-text">
+                        <p>
+                            Every line of code, every project, and every contribution tells a story. 
+                            Through continuous learning and dedication, I've built a diverse portfolio 
+                            that reflects my passion for technology and innovation.
+                        </p>
+                        <p>
+                            Currently, I'm building <a href="https://www.interlinked.global" target="_blank" rel="noopener noreferrer">Interlinked Global</a> with my friends. A startup with humble origins from an apartment. 
+                            This journey has taught me invaluable lessons about both technology and business, 
+                            shaping my understanding of how databases and business requirements intersect in real-world applications.
+                        </p>
+                        <p>
+                            The GitHub contributions graph above represents countless hours of coding, 
+                            problem-solving, and collaboration. Each commit is a step forward in my 
+                            journey as a developer, building towards creating impactful solutions.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -214,7 +380,16 @@
             <div class="location-content">
                 <!-- Countries Visited Section -->
                 <div class="countries-section">
-                    <h2 class="countries-title">Countries I've Visited</h2>
+                    <div class="countries-title-container">
+                        <h2 class="countries-title">
+                            Countries I've Visited
+                            {% if user.is_authenticated %}
+                                <button class="add-button add-button-right" id="countries-add-btn" title="Add Country">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            {% endif %}
+                        </h2>
+                    </div>
                     {% if countries_visited %}
                     <div class="countries-grid">
                         {% for country in countries_visited %}
@@ -235,16 +410,26 @@
                 </div>
                 
                 <div id="location-map"></div>
-                <button class="location-zoom-btn" onclick="zoomToGreenfields()">This is where I'm from</button>
+                <div class="location-button-container">
+                    <button class="location-zoom-btn" onclick="zoomToPinjarra()">My Origin</button>
+                    <button id="scroll-to-top-btn" class="scroll-to-top-btn" aria-label="Scroll to top">
+                        <span class="scroll-to-top-icon">↑</span>
+                    </button>
+                </div>
             </div>
         </div>
     </section>
 {% endblock %}
 
 {% block extra_js %}
+    <script src="{% static 'portfolio/js/github-contributions.js' %}"></script>
     <script src="{% static 'portfolio/js/hero-scroll.js' %}"></script>
     <script src="{% static 'portfolio/js/secret-login.js' %}"></script>
     <script src="{% static 'portfolio/js/location-map.js' %}"></script>
-    <script src="{% static 'portfolio/js/posts.js' %}"></script>
+    <script src="{% static 'portfolio/js/json-editor.js' %}"></script>
+    <script src="{% static 'portfolio/js/hobby-add.js' %}"></script>
+    <script src="{% static 'portfolio/js/countries-add.js' %}"></script>
+    <script src="{% static 'portfolio/js/github-contributions.js' %}"></script>
+    <script src="{% static 'portfolio/js/scroll-to-top.js' %}"></script>
     <script src="{% static 'portfolio/js/main.js' %}"></script>
 {% endblock %}

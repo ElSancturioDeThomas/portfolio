@@ -26,6 +26,34 @@
             maxZoom: 20
         }).addTo(locationMap);
         
+        // Add glass effect overlay after map is initialized
+        // Add overlay to Leaflet's overlayPane (above tiles, below controls)
+        setTimeout(() => {
+            // Check if overlay already exists
+            if (mapElement.querySelector('.location-map-glass-overlay')) {
+                return;
+            }
+            
+            // Get Leaflet's overlayPane - this is the correct pane for overlays
+            const overlayPane = locationMap.getPane('overlayPane');
+            if (!overlayPane) {
+                // Fallback: use map container if pane doesn't exist
+                console.warn('Leaflet overlayPane not found, using map container');
+                const glassElement = document.createElement('div');
+                glassElement.className = 'location-map-glass-overlay';
+                mapElement.appendChild(glassElement);
+                return;
+            }
+            
+            // Create glass overlay element
+            const glassElement = document.createElement('div');
+            glassElement.className = 'location-map-glass-overlay';
+            
+            // Add overlay to Leaflet's overlayPane
+            // This ensures it's positioned correctly above tiles but below controls
+            overlayPane.appendChild(glassElement);
+        }, 100);
+        
         // Load & style country borders with neon glow
         let countryBorders = null;
         fetch('https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_0_countries.geojson')
@@ -129,32 +157,32 @@
         }, { passive: true });
     }
     
-    function zoomToGreenfields() {
+    function zoomToPinjarra() {
         // Ensure map is initialized before zooming
         if (!locationMap) {
             initLocationMap();
             // Wait a moment for map to render before zooming
             setTimeout(() => {
                 if (locationMap) {
-                    // Coordinates for Greenfields, Western Australia
-                    // Greenfields is a suburb of Mandurah, approximately -32.54, 115.76
-                    locationMap.flyTo([-32.54, 115.76], 13, {
+                    // Coordinates for Pinjarra, Western Australia
+                    // Pinjarra is a town in Western Australia, approximately -32.63, 115.87
+                    locationMap.flyTo([-32.63, 115.87], 13, {
                         animate: true,
                         duration: 3 // Duration in seconds
                     });
                 }
             }, 100);
         } else {
-            // Coordinates for Greenfields, Western Australia
-            locationMap.flyTo([-32.54, 115.76], 13, {
+            // Coordinates for Pinjarra, Western Australia
+            locationMap.flyTo([-32.63, 115.87], 13, {
                 animate: true,
                 duration: 3 // Duration in seconds
             });
         }
     }
     
-    // Make zoomToGreenfields available globally for onclick handler
-    window.zoomToGreenfields = zoomToGreenfields;
+    // Make zoomToPinjarra available globally for onclick handler
+    window.zoomToPinjarra = zoomToPinjarra;
     
     // Initialize map when page loads
     document.addEventListener('DOMContentLoaded', function() {

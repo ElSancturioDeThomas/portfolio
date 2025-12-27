@@ -1,263 +1,284 @@
 /**
  * Secret Login Panel
- * Handles the secret admin login panel that slides out from the right edge
- * Includes PIN input with segmented display and validation
+ * Handles the secret admin login panel with username/password authentication
  */
 
 (function() {
     'use strict';
 
-    const heroSection = document.querySelector('.hero-section');
-    const secretPanel = document.getElementById('secret-login-panel');
-    const secretForm = document.getElementById('secret-login-form');
-    const pinContainer = document.getElementById('pin-container');
-    
-    if (!heroSection || !secretPanel) return;
-    
-    const HOVER_DELAY = 2000; // 2 seconds
-    const EDGE_WIDTH = 50; // Right edge detection width in pixels
-    const PIN_LENGTH = 6; // 6-digit PIN
-    const CORRECT_PIN = '846627';
-    
-    let holdTimer = null;
-    let isHolding = false;
-    let pinInput = null;
-    
-    // Initialize PIN segments
-    function initPinSegments() {
-        if (!pinContainer) return;
-        pinContainer.innerHTML = '';
+    function initSecretLogin() {
+        const secretPanel = document.getElementById('secret-login-panel');
+        const secretForm = document.getElementById('secret-login-form');
+        const toggleButton = document.getElementById('secret-login-toggle');
+        const closeButton = document.getElementById('secret-login-close-btn');
+        const usernameInput = document.getElementById('secret-username');
+        const passwordInput = document.getElementById('secret-password');
+        const statusContainer = document.getElementById('secret-login-status');
+        const loadingDiv = document.getElementById('secret-loading');
+        const verifiedDiv = document.getElementById('secret-verified');
         
-        // Create segments container
-        const segmentsDiv = document.createElement('div');
-        segmentsDiv.className = 'pin-input-container';
-        segmentsDiv.style.position = 'relative';
-        segmentsDiv.style.cursor = 'text';
-        
-        // Create the hidden input
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.id = 'secret-pin';
-        input.name = 'pin';
-        input.autocomplete = 'off';
-        input.maxLength = PIN_LENGTH;
-        input.inputMode = 'numeric';
-        input.pattern = '[0-9]*';
-        input.style.position = 'absolute';
-        input.style.opacity = '0';
-        input.style.width = '100%';
-        input.style.height = '100%';
-        input.style.border = 'none';
-        input.style.background = 'transparent';
-        input.style.cursor = 'text';
-        input.style.zIndex = '10';
-        input.style.fontSize = '16px'; // Prevent zoom on iOS
-        
-        // Create individual segments
-        for (let i = 0; i < PIN_LENGTH; i += 1) {
-            const segment = document.createElement('div');
-            segment.className = 'pin-segment';
-            segment.setAttribute('data-index', i);
-            segmentsDiv.appendChild(segment);
+        if (!secretPanel || !toggleButton) {
+            console.warn('Secret login: Panel or toggle button not found');
+            return;
         }
         
-        pinContainer.appendChild(segmentsDiv);
-        segmentsDiv.appendChild(input);
-        
-        // Store reference to input
-        pinInput = input;
-        
-        // Show cursor on first segment initially
-        const firstSegment = segmentsDiv.querySelector('.pin-segment');
-        if (firstSegment) {
-            firstSegment.classList.add('cursor');
+        // Initialize input fields to empty strings
+        if (usernameInput) {
+            usernameInput.value = '';
+        }
+        if (passwordInput) {
+            passwordInput.value = '';
         }
         
-        // Focus the hidden input when clicking on segments container
-        segmentsDiv.addEventListener('click', function(e) {
+        // Check if user is already verified in this session
+        const SESSION_STORAGE_KEY = 'secret_login_verified';
+        
+        function resetToFormState() {
+            // Reset to login form state - remove inline styles to let CSS handle it
+            if (secretForm) {
+                secretForm.style.display = '';
+            }
+            if (statusContainer) {
+                statusContainer.style.display = 'none';
+            }
+            if (loadingDiv) {
+                loadingDiv.style.display = 'none';
+            }
+            if (verifiedDiv) {
+                verifiedDiv.style.display = 'none';
+            }
+        }
+        
+        function showVerifiedState() {
+            // Show verified state
+            if (secretForm) {
+                secretForm.style.display = 'none';
+            }
+            if (statusContainer) {
+                statusContainer.style.display = 'flex';
+            }
+            if (loadingDiv) {
+                loadingDiv.style.display = 'none';
+            }
+            if (verifiedDiv) {
+                verifiedDiv.style.display = 'flex';
+            }
+        }
+        
+        function checkVerifiedState() {
+            const isVerified = sessionStorage.getItem(SESSION_STORAGE_KEY) === 'true';
+            if (isVerified) {
+                showVerifiedState();
+            } else {
+                resetToFormState();
+            }
+        }
+        
+        function setVerifiedState() {
+            sessionStorage.setItem(SESSION_STORAGE_KEY, 'true');
+            // Dispatch event to notify other modules
+            window.dispatchEvent(new CustomEvent('secret-login-verified'));
+        }
+        
+        function clearVerifiedState() {
+            sessionStorage.removeItem(SESSION_STORAGE_KEY);
+            // Dispatch event to notify other modules
+            window.dispatchEvent(new CustomEvent('secret-login-logout'));
+        }
+        
+        // Check verified state on page load
+        checkVerifiedState();
+        
+        // Add logout functionality - double-click verified icon to logout
+        if (verifiedDiv) {
+            let clickTimeout;
+            verifiedDiv.addEventListener('click', function(e) {
+                clearTimeout(clickTimeout);
+                clickTimeout = setTimeout(() => {
+                    // Single click - do nothing
+                }, 300);
+            });
+            
+            verifiedDiv.addEventListener('dblclick', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                clearTimeout(clickTimeout);
+                // Clear verified state
+                clearVerifiedState();
+                // Reset to login form
+                resetToFormState();
+                // Clear form fields
+                if (usernameInput) {
+                    usernameInput.value = '';
+                }
+                if (passwordInput) {
+                    passwordInput.value = '';
+                }
+                // Reset login button state
+                const loginBtn = secretForm ? secretForm.querySelector('.secret-login-btn') : null;
+                if (loginBtn) {
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Login';
+                    loginBtn.classList.remove('error-pulse');
+                }
+            });
+        }
+        
+        function togglePanel() {
+            const isActive = secretPanel.classList.contains('active');
+            if (isActive) {
+                secretPanel.classList.remove('active');
+                toggleButton.classList.remove('active');
+            } else {
+                secretPanel.classList.add('active');
+                toggleButton.classList.add('active');
+                // Check verified state when opening panel
+                checkVerifiedState();
+                // Focus the username input when opening (only if not verified)
+                const isVerified = sessionStorage.getItem(SESSION_STORAGE_KEY) === 'true';
+                if (!isVerified && usernameInput) {
+                    setTimeout(() => {
+                        usernameInput.focus();
+                    }, 300);
+                }
+            }
+        }
+        
+        // Toggle panel on button click
+        toggleButton.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            input.focus();
+            togglePanel();
         });
         
-        // Also focus when panel becomes active
-        const observer = new MutationObserver(function(mutations) {
-            if (secretPanel.classList.contains('active')) {
-                setTimeout(() => {
-                    input.focus();
-                    updatePinSegments(); // Update to show cursor
-                }, 200);
-            }
-        });
-        observer.observe(secretPanel, { attributes: true, attributeFilter: ['class'] });
-        
-        // Attach input event listeners immediately
-        input.addEventListener('input', function(e) {
-            updatePinSegments();
-        });
-        
-        input.addEventListener('keydown', function(e) {
-            // Handle backspace
-            if (e.key === 'Backspace') {
+        // Close panel on close button click
+        if (closeButton) {
+            closeButton.addEventListener('click', function(e) {
                 e.preventDefault();
-                input.value = input.value.slice(0, -1);
-                updatePinSegments();
-            }
-            // Only allow numbers
-            if (!/[0-9]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'Enter'].includes(e.key)) {
+                e.stopPropagation();
+                secretPanel.classList.remove('active');
+                toggleButton.classList.remove('active');
+            });
+        }
+        
+        // Handle form submission with Django authentication
+        if (secretForm) {
+            const loginBtn = secretForm.querySelector('.secret-login-btn');
+            
+            secretForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
-            }
-        });
-        
-        input.addEventListener('paste', function(e) {
-            e.preventDefault();
-            const pasted = (e.clipboardData || window.clipboardData).getData('text');
-            const numbers = pasted.replace(/\D/g, '').slice(0, PIN_LENGTH);
-            input.value = numbers;
-            updatePinSegments();
-        });
-        
-        input.addEventListener('focus', function() {
-            updatePinSegments();
-        });
-    }
-    
-    // Update PIN segments based on input
-    function updatePinSegments() {
-        if (!pinInput) return;
-        const pin = pinInput.value.replace(/\D/g, ''); // Only allow digits
-        pinInput.value = pin; // Update input with cleaned value
-        
-        const segments = document.querySelectorAll('.pin-segment');
-        
-        segments.forEach((segment, index) => {
-            // Remove all state classes first
-            segment.classList.remove('filled', 'active', 'cursor');
-            
-            if (index < pin.length) {
-                // Segment has a digit
-                segment.textContent = pin[index];
-                segment.classList.add('filled');
-            } else if (index === pin.length) {
-                // This is the next segment to be filled - show cursor
-                segment.textContent = '';
-                segment.classList.add('cursor');
-            } else {
-                // Empty segment
-                segment.textContent = '';
-            }
-        });
-    }
-    
-    function showPanel() {
-        secretPanel.classList.add('active');
-    }
-    
-    function hidePanel() {
-        secretPanel.classList.remove('active');
-    }
-    
-    function startHoldTimer() {
-        if (holdTimer) {
-            clearTimeout(holdTimer);
-        }
-        holdTimer = setTimeout(function() {
-            if (isHolding) {
-                showPanel();
-            }
-        }, HOVER_DELAY);
-    }
-    
-    function cancelHoldTimer() {
-        if (holdTimer) {
-            clearTimeout(holdTimer);
-            holdTimer = null;
-        }
-    }
-    
-    // Detect mouse down (hold) on hero section right edge
-    heroSection.addEventListener('mousedown', function(e) {
-        const rect = heroSection.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const sectionWidth = rect.width;
-        
-        // Check if mouse is in the right edge area
-        if (x >= sectionWidth - EDGE_WIDTH && !secretPanel.classList.contains('active')) {
-            isHolding = true;
-            startHoldTimer();
-        }
-    });
-    
-    // Cancel hold on mouse up
-    heroSection.addEventListener('mouseup', function() {
-        if (isHolding && !secretPanel.classList.contains('active')) {
-            isHolding = false;
-            cancelHoldTimer();
-        }
-    });
-    
-    // Cancel hold if mouse leaves hero section
-    heroSection.addEventListener('mouseleave', function() {
-        if (isHolding && !secretPanel.classList.contains('active')) {
-            isHolding = false;
-            cancelHoldTimer();
-        }
-    });
-    
-    // Keep panel open when hovering over it
-    secretPanel.addEventListener('mouseenter', function() {
-        cancelHoldTimer();
-        if (!secretPanel.classList.contains('active')) {
-            showPanel();
-        }
-    });
-    
-    // Hide panel when mouse leaves
-    secretPanel.addEventListener('mouseleave', function() {
-        hidePanel();
-    });
-    
-    // Initialize PIN segments and handle input
-    if (pinContainer) {
-        initPinSegments();
-        
-        // Initial update to show cursor after a brief delay
-        setTimeout(function() {
-            updatePinSegments();
-        }, 150);
-    }
-    
-    // Handle form submission with PIN validation
-    if (secretForm) {
-        const loginBtn = secretForm.querySelector('.secret-login-btn');
-        
-        secretForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const pinInputElement = document.getElementById('secret-pin');
-            const enteredPin = pinInputElement.value;
-            
-            if (enteredPin === CORRECT_PIN) {
-                // Correct PIN - redirect to admin
-                window.location.href = '/admin';
-            } else {
-                // Wrong PIN - pulse red
-                if (loginBtn) {
-                    loginBtn.classList.add('error-pulse');
-                    setTimeout(() => {
-                        loginBtn.classList.remove('error-pulse');
-                    }, 1000);
+                
+                const username = usernameInput ? usernameInput.value.trim() : '';
+                const password = passwordInput ? passwordInput.value : '';
+                
+                if (!username || !password) {
+                    // Show error
+                    if (loginBtn) {
+                        loginBtn.classList.add('error-pulse');
+                        setTimeout(() => {
+                            loginBtn.classList.remove('error-pulse');
+                        }, 1000);
+                    }
+                    return;
                 }
                 
-                // Clear the PIN input
-                pinInputElement.value = '';
-                updatePinSegments();
+                // Disable button during request
+                if (loginBtn) {
+                    loginBtn.disabled = true;
+                    loginBtn.textContent = 'Logging in...';
+                }
                 
-                // Refocus input
-                setTimeout(() => {
-                    pinInputElement.focus();
-                }, 100);
-            }
-        });
+                let loginSuccess = false;
+                
+                try {
+                    const response = await fetch('/api/secret-login/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify({
+                            username: username,
+                            password: password
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        loginSuccess = true;
+                        // Store verified state in sessionStorage
+                        setVerifiedState();
+                        
+                        // Login successful - hide form and show loading
+                        if (secretForm) {
+                            secretForm.style.display = 'none';
+                        }
+                        if (statusContainer) {
+                            statusContainer.style.display = 'flex';
+                        }
+                        // Ensure verified is hidden before showing loading
+                        if (verifiedDiv) {
+                            verifiedDiv.style.display = 'none';
+                        }
+                        if (loadingDiv) {
+                            loadingDiv.style.display = 'flex';
+                        }
+                        
+                        // After 1.5 seconds, hide loading and show verified
+                        setTimeout(() => {
+                            if (loadingDiv) {
+                                loadingDiv.style.display = 'none';
+                            }
+                            if (verifiedDiv) {
+                                verifiedDiv.style.display = 'flex';
+                            }
+                        }, 1500);
+                    } else {
+                        // Login failed - show error
+                        if (loginBtn) {
+                            loginBtn.classList.add('error-pulse');
+                            setTimeout(() => {
+                                loginBtn.classList.remove('error-pulse');
+                            }, 1000);
+                        }
+                        
+                        // Clear password field
+                        if (passwordInput) {
+                            passwordInput.value = '';
+                        }
+                        
+                        // Refocus username
+                        setTimeout(() => {
+                            if (usernameInput) {
+                                usernameInput.focus();
+                            }
+                        }, 100);
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    // Show error
+                    if (loginBtn) {
+                        loginBtn.classList.add('error-pulse');
+                        setTimeout(() => {
+                            loginBtn.classList.remove('error-pulse');
+                        }, 1000);
+                    }
+                } finally {
+                    // Re-enable button only if login failed
+                    if (loginBtn && !loginSuccess) {
+                        loginBtn.disabled = false;
+                        loginBtn.textContent = 'Login';
+                    }
+                }
+            });
+        }
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initSecretLogin);
+    } else {
+        initSecretLogin();
     }
 })();
-
