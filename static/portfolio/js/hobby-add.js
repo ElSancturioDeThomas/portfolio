@@ -167,6 +167,10 @@
             
             hobbyForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                
+                console.log('Form submit event triggered');
                 
                 const name = nameInput ? nameInput.value.trim() : '';
                 const reason = reasonInput ? reasonInput.value.trim() : '';
@@ -191,17 +195,40 @@
                     submitBtn.textContent = 'Submitting...';
                 }
                 
+                // Show loading state immediately
+                if (hobbyForm) {
+                    hobbyForm.style.display = 'none';
+                }
+                if (statusContainer) {
+                    statusContainer.style.display = 'flex';
+                }
+                if (submittedDiv) {
+                    submittedDiv.style.display = 'none';
+                }
+                if (loadingDiv) {
+                    loadingDiv.style.display = 'flex';
+                }
+                
                 let submitSuccess = false;
                 
                 try {
+                    // Get CSRF token from form or cookie
                     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
-                                     document.cookie.match(/csrftoken=([^;]+)/)?.[1];
+                                     document.cookie.match(/csrftoken=([^;]+)/)?.[1] ||
+                                     document.querySelector('meta[name=csrf-token]')?.getAttribute('content');
+                    
+                    if (!csrftoken) {
+                        console.error('CSRF token not found');
+                        throw new Error('CSRF token not found');
+                    }
+                    
+                    console.log('Submitting hobby:', { name, reason, category, icon, social });
                     
                     const response = await fetch('/api/hobbies/create/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRFToken': csrftoken || ''
+                            'X-CSRFToken': csrftoken
                         },
                         credentials: 'same-origin',
                         body: JSON.stringify({
@@ -213,7 +240,9 @@
                         })
                     });
                     
+                    console.log('Response status:', response.status);
                     const result = await response.json();
+                    console.log('Response data:', result);
                     
                     if (response.ok && result.success) {
                         submitSuccess = true;
@@ -267,6 +296,9 @@
                     } else {
                         // Submission failed - show error
                         console.error('Submission failed:', result);
+                        const errorMessage = result.error || 'Submission failed. Please try again.';
+                        alert('Error: ' + errorMessage);
+                        
                         if (submitBtn) {
                             submitBtn.classList.add('error-pulse');
                             setTimeout(() => {
@@ -274,17 +306,7 @@
                             }, 1000);
                         }
                         
-                        // Clear password field equivalent (reason field)
-                        if (reasonInput) {
-                            reasonInput.value = '';
-                        }
-                        if (categoryInput) {
-                            categoryInput.value = '';
-                        }
-                        if (iconInput) {
-                            iconInput.value = '';
-                        }
-                        
+                        // Don't clear form on error - let user fix it
                         // Refocus name input
                         setTimeout(() => {
                             if (nameInput) {
@@ -294,6 +316,8 @@
                     }
                 } catch (error) {
                     console.error('Submit error:', error);
+                    alert('Error submitting hobby: ' + error.message);
+                    
                     // Show error
                     if (submitBtn) {
                         submitBtn.classList.add('error-pulse');

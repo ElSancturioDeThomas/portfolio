@@ -428,27 +428,12 @@ def create_project(request):
         if not image:
             return JsonResponse({'success': False, 'error': 'Image is required'}, status=400)
         
-        # Check if we're in a read-only filesystem (e.g., Vercel serverless)
-        if os.environ.get('VERCEL'):
-            return JsonResponse({
-                'success': False, 
-                'error': 'File uploads are not supported in serverless environments. Please use cloud storage (S3, Cloudinary, etc.) for production.'
-            }, status=503)
-        
-        # Create project
-        try:
-            project = Project.objects.create(
-                title=title,
-                description=description,
-                image=image
-            )
-        except (OSError, IOError) as e:
-            if 'Read-only' in str(e) or 'read-only' in str(e).lower():
-                return JsonResponse({
-                    'success': False, 
-                    'error': 'File uploads are not supported in this environment. Please use cloud storage for production.'
-                }, status=503)
-            raise
+        # Create project (Cloudinary will handle uploads in production)
+        project = Project.objects.create(
+            title=title,
+            description=description,
+            image=image
+        )
         
         return JsonResponse({
             'success': True,
@@ -488,28 +473,13 @@ def create_book(request):
         if not cover_image:
             return JsonResponse({'success': False, 'error': 'Cover image is required'}, status=400)
         
-        # Check if we're in a read-only filesystem (e.g., Vercel serverless)
-        if os.environ.get('VERCEL'):
-            return JsonResponse({
-                'success': False, 
-                'error': 'File uploads are not supported in serverless environments. Please use cloud storage (S3, Cloudinary, etc.) for production.'
-            }, status=503)
-        
-        # Create book
-        try:
-            book = Book.objects.create(
-                title=title,
-                author=author,
-                rating=int(rating) if rating else None,
-                cover_image=cover_image
-            )
-        except (OSError, IOError) as e:
-            if 'Read-only' in str(e) or 'read-only' in str(e).lower():
-                return JsonResponse({
-                    'success': False, 
-                    'error': 'File uploads are not supported in this environment. Please use cloud storage for production.'
-                }, status=503)
-            raise
+        # Create book (Cloudinary will handle uploads in production)
+        book = Book.objects.create(
+            title=title,
+            author=author,
+            rating=int(rating) if rating else None,
+            cover_image=cover_image
+        )
         
         return JsonResponse({
             'success': True,
@@ -545,26 +515,11 @@ def create_photo(request):
         if not image:
             return JsonResponse({'success': False, 'error': 'Image is required'}, status=400)
         
-        # Check if we're in a read-only filesystem (e.g., Vercel serverless)
-        if os.environ.get('VERCEL'):
-            return JsonResponse({
-                'success': False, 
-                'error': 'File uploads are not supported in serverless environments. Please use cloud storage (S3, Cloudinary, etc.) for production.'
-            }, status=503)
-        
-        # Create photo
-        try:
-            photo = Photo.objects.create(
-                title=title,
-                image=image
-            )
-        except (OSError, IOError) as e:
-            if 'Read-only' in str(e) or 'read-only' in str(e).lower():
-                return JsonResponse({
-                    'success': False, 
-                    'error': 'File uploads are not supported in this environment. Please use cloud storage for production.'
-                }, status=503)
-            raise
+        # Create photo (Cloudinary will handle uploads in production)
+        photo = Photo.objects.create(
+            title=title,
+            image=image
+        )
         
         return JsonResponse({
             'success': True,
@@ -608,9 +563,16 @@ def create_skill(request):
         if Skills.objects.filter(name__iexact=name).exists():
             return JsonResponse({'success': False, 'error': 'Skill with this name already exists'}, status=400)
         
+        # Get description if provided (optional field)
+        if request.content_type and 'application/json' in request.content_type:
+            description = data.get('description', '').strip()
+        else:
+            description = request.POST.get('description', '').strip()
+        
         skill = Skills.objects.create(
             name=name,
             category=category,
+            description=description,
             icon=icon
         )
         

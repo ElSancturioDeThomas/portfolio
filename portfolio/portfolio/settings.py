@@ -42,7 +42,6 @@ ALLOWED_HOSTS = [
     '.vercel.app',
     'heal.industries',
     'www.heal.industries',
-    'testing.interlinked.global',
 ] + custom_hosts
 
 # Use X-Forwarded-Host header (Vercel sets this for custom domains)
@@ -61,6 +60,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
+    "cloudinary_storage",  # Must be before 'django.contrib.staticfiles' for media files
     "api",
 ]
 
@@ -225,8 +225,40 @@ except ImportError:
     pass  # WhiteNoise not installed, use default storage
 
 # Media files (User uploaded content)
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+# Use Cloudinary for production (Vercel), local storage for development
+if os.environ.get('VERCEL') or os.environ.get('CLOUDINARY_CLOUD_NAME'):
+    # Cloudinary configuration for production
+    try:
+        import cloudinary
+        import cloudinary.uploader
+        import cloudinary.api
+        
+        CLOUDINARY_STORAGE = {
+            'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
+            'API_KEY': os.environ.get('CLOUDINARY_API_KEY', ''),
+            'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', ''),
+        }
+        
+        # Use Cloudinary for media files
+        DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+        
+        # Cloudinary settings (only if credentials are provided)
+        if CLOUDINARY_STORAGE['CLOUD_NAME']:
+            cloudinary.config(
+                cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
+                api_key=CLOUDINARY_STORAGE['API_KEY'],
+                api_secret=CLOUDINARY_STORAGE['API_SECRET'],
+            )
+        
+        MEDIA_URL = '/media/'  # Cloudinary will handle the actual URL
+    except ImportError:
+        # Cloudinary not installed, fall back to local storage
+        MEDIA_URL = "media/"
+        MEDIA_ROOT = BASE_DIR / "media"
+else:
+    # Local storage for development
+    MEDIA_URL = "media/"
+    MEDIA_ROOT = BASE_DIR / "media"
 
 # File upload size limits (for Vercel compatibility)
 # Vercel has a 4.5MB limit for serverless functions, but we allow up to 10MB for images

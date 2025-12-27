@@ -101,6 +101,7 @@ class Skills(models.Model):
     ]
 
     name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True, default='', help_text="Description of the skill (optional)")
     icon = models.ImageField(upload_to='skills/icons/', blank=True, null=True, help_text="Icon/image for this skill")
     category = models.CharField(
         max_length=50, 

@@ -7,9 +7,14 @@
     <title>{% block title %}Portfolio{% endblock %}</title>
     
     <!-- Favicons -->
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'portfolio/assets/TigerFavicon32x32.png' %}">
-    <link rel="icon" type="image/svg+xml" href="{% static 'portfolio/assets/TigerSVG.svg' %}">
-    <link rel="apple-touch-icon" sizes="100x100" href="{% static 'portfolio/assets/Tiger-Icon100x100.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ request.scheme }}://{{ request.get_host }}{% static 'portfolio/assets/TigerFavicon32x32.png' %}">
+    <link rel="icon" type="image/svg+xml" href="{{ request.scheme }}://{{ request.get_host }}{% static 'portfolio/assets/TigerSVG.svg' %}">
+    <link rel="apple-touch-icon" sizes="100x100" href="{{ request.scheme }}://{{ request.get_host }}{% static 'portfolio/assets/Tiger-Icon100x100.png' %}">
+    <!-- Fallback favicon.ico for browser compatibility -->
+    <link rel="shortcut icon" href="{{ request.scheme }}://{{ request.get_host }}/favicon.ico">
+    
+    <!-- Preload critical images for faster navigation -->
+    <link rel="preload" as="image" href="{% static 'portfolio/assets/TigersOnFire.png' %}" fetchpriority="high">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">

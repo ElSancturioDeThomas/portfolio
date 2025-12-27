@@ -124,6 +124,7 @@
                     <button class="hobby-add-close-btn admin-panel-close-btn" id="hobby-add-close-btn">×</button>
                 </div>
                 <form class="hobby-add-form admin-panel-form" id="hobby-add-form">
+                    {% csrf_token %}
                     <div class="hobby-form-group admin-form-group">
                         <label for="hobby-name">Name *</label>
                         <input type="text" id="hobby-name" name="name" class="hobby-input admin-input" value="" required>
