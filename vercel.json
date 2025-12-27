@@ -1,9 +1,9 @@
 {
   "version": 2,
-  "buildCommand": "pip install -r requirements.txt && python manage.py collectstatic --noinput",
+  "buildCommand": "cd portfolio && pip install -r requirements.txt && python manage.py collectstatic --noinput || true",
   "builds": [
     {
-      "src": "api/vercel.py",
+      "src": "portfolio/api/vercel.py",
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "15mb",
@@ -14,7 +14,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "api/vercel.py"
+      "dest": "portfolio/api/vercel.py"
     }
   ]
 }
