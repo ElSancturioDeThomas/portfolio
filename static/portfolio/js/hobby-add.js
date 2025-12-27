@@ -194,10 +194,14 @@
                 let submitSuccess = false;
                 
                 try {
+                    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
+                                     document.cookie.match(/csrftoken=([^;]+)/)?.[1];
+                    
                     const response = await fetch('/api/hobbies/create/', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken || ''
                         },
                         credentials: 'same-origin',
                         body: JSON.stringify({

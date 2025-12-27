@@ -3,6 +3,9 @@
 import os
 import sys
 
+# Add the portfolio directory to Python path so Django can find the apps
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'portfolio'))
+
 
 def main():
     """Run administrative tasks."""

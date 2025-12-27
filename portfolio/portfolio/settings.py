@@ -30,13 +30,22 @@ SECRET_KEY = os.environ.get('SECRET_KEY', "django-insecure-!1^b)wdp*5uh%#wr!h-w9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-# Allow Vercel domains
+# Allow Vercel domains and custom domains
+# IMPORTANT: Optionally set ALLOWED_HOSTS environment variable in Vercel with your custom domain
+# Example: ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
+# If not set, the VercelCustomDomainMiddleware will handle custom domains automatically
+custom_hosts = [host.strip() for host in os.environ.get('ALLOWED_HOSTS', '').split(',') if host.strip()]
+
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '.vercel.app',
-    '.now.sh',
-] + [host for host in os.environ.get('ALLOWED_HOSTS', '').split(',') if host]
+    'heal.enterprises',
+] + custom_hosts
+
+# Use X-Forwarded-Host header (Vercel sets this for custom domains)
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
@@ -64,6 +73,11 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+# Add custom domain middleware for Vercel if in production
+if os.environ.get('VERCEL'):
+    # Insert after SecurityMiddleware to bypass ALLOWED_HOSTS check
+    MIDDLEWARE.insert(2, "api.middleware.VercelCustomDomainMiddleware")
 
 # WhiteNoise configuration - allow serving from STATICFILES_DIRS
 # This enables WhiteNoise to serve files even if collectstatic hasn't run
@@ -212,6 +226,13 @@ except ImportError:
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# File upload size limits (for Vercel compatibility)
+# Vercel has a 4.5MB limit for serverless functions, but we allow up to 10MB for images
+# Note: Large files should use cloud storage in production
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -226,11 +247,17 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
-# CORS settings - Configure for React frontend
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+# CORS settings - Configure for React frontend and custom domains
+# Allow all origins in production (Vercel) to support custom domains
+if os.environ.get('VERCEL'):
+    # In production, allow all origins (custom domains will work)
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    # In development, restrict to localhost
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ]
 
 CORS_ALLOW_CREDENTIALS = True
 

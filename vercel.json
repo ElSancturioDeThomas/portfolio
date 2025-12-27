@@ -7,14 +7,20 @@
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "15mb",
-        "runtime": "python3.12"
+        "runtime": "python3.12",
+        "maxDuration": 30
       }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "portfolio/api/vercel.py"
+      "dest": "portfolio/api/vercel.py",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization, X-CSRFToken"
+      }
     }
   ]
 }

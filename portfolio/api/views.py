@@ -428,12 +428,27 @@ def create_project(request):
         if not image:
             return JsonResponse({'success': False, 'error': 'Image is required'}, status=400)
         
+        # Check if we're in a read-only filesystem (e.g., Vercel serverless)
+        if os.environ.get('VERCEL'):
+            return JsonResponse({
+                'success': False, 
+                'error': 'File uploads are not supported in serverless environments. Please use cloud storage (S3, Cloudinary, etc.) for production.'
+            }, status=503)
+        
         # Create project
-        project = Project.objects.create(
-            title=title,
-            description=description,
-            image=image
-        )
+        try:
+            project = Project.objects.create(
+                title=title,
+                description=description,
+                image=image
+            )
+        except (OSError, IOError) as e:
+            if 'Read-only' in str(e) or 'read-only' in str(e).lower():
+                return JsonResponse({
+                    'success': False, 
+                    'error': 'File uploads are not supported in this environment. Please use cloud storage for production.'
+                }, status=503)
+            raise
         
         return JsonResponse({
             'success': True,
@@ -473,13 +488,28 @@ def create_book(request):
         if not cover_image:
             return JsonResponse({'success': False, 'error': 'Cover image is required'}, status=400)
         
+        # Check if we're in a read-only filesystem (e.g., Vercel serverless)
+        if os.environ.get('VERCEL'):
+            return JsonResponse({
+                'success': False, 
+                'error': 'File uploads are not supported in serverless environments. Please use cloud storage (S3, Cloudinary, etc.) for production.'
+            }, status=503)
+        
         # Create book
-        book = Book.objects.create(
-            title=title,
-            author=author,
-            rating=int(rating) if rating else None,
-            cover_image=cover_image
-        )
+        try:
+            book = Book.objects.create(
+                title=title,
+                author=author,
+                rating=int(rating) if rating else None,
+                cover_image=cover_image
+            )
+        except (OSError, IOError) as e:
+            if 'Read-only' in str(e) or 'read-only' in str(e).lower():
+                return JsonResponse({
+                    'success': False, 
+                    'error': 'File uploads are not supported in this environment. Please use cloud storage for production.'
+                }, status=503)
+            raise
         
         return JsonResponse({
             'success': True,
@@ -515,11 +545,26 @@ def create_photo(request):
         if not image:
             return JsonResponse({'success': False, 'error': 'Image is required'}, status=400)
         
+        # Check if we're in a read-only filesystem (e.g., Vercel serverless)
+        if os.environ.get('VERCEL'):
+            return JsonResponse({
+                'success': False, 
+                'error': 'File uploads are not supported in serverless environments. Please use cloud storage (S3, Cloudinary, etc.) for production.'
+            }, status=503)
+        
         # Create photo
-        photo = Photo.objects.create(
-            title=title,
-            image=image
-        )
+        try:
+            photo = Photo.objects.create(
+                title=title,
+                image=image
+            )
+        except (OSError, IOError) as e:
+            if 'Read-only' in str(e) or 'read-only' in str(e).lower():
+                return JsonResponse({
+                    'success': False, 
+                    'error': 'File uploads are not supported in this environment. Please use cloud storage for production.'
+                }, status=503)
+            raise
         
         return JsonResponse({
             'success': True,

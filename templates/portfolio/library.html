@@ -188,16 +188,7 @@
                 </div>
                 <div class="skill-form-group admin-form-group">
                     <label for="project-image">Image</label>
-                    <input type="file" id="project-image" name="image" class="skill-input admin-input" accept="image/*">
-                </div>
-                <div class="skill-form-group admin-form-group">
-                    <label for="project-skills">Skills *</label>
-                    <select id="project-skills" name="skills" class="skill-input admin-input" multiple required style="min-height: 100px;">
-                        {% for skill in skills %}
-                            <option value="{{ skill.id }}">{{ skill.name }} ({{ skill.category }})</option>
-                        {% endfor %}
-                    </select>
-                    <small style="color: rgba(255, 224, 20, 0.6); font-size: 0.8rem; margin-top: 0.25rem;">Hold Ctrl/Cmd to select multiple</small>
+                    <input type="file" id="project-image" name="image" class="skill-input admin-input" accept="image/*,.heic,.heif,image/heic,image/heif">
                 </div>
                 <button type="submit" class="skill-submit-btn admin-submit-btn">Submit</button>
             </form>
@@ -243,7 +234,7 @@
                 </div>
                 <div class="skill-form-group admin-form-group">
                     <label for="book-cover-image">Cover Image</label>
-                    <input type="file" id="book-cover-image" name="cover_image" class="skill-input admin-input" accept="image/*">
+                    <input type="file" id="book-cover-image" name="cover_image" class="skill-input admin-input" accept="image/*,.heic,.heif,image/heic,image/heif">
                 </div>
                 <button type="submit" class="skill-submit-btn admin-submit-btn">Submit</button>
             </form>
@@ -274,7 +265,7 @@
                 </div>
                 <div class="skill-form-group admin-form-group">
                     <label for="photo-image">Image *</label>
-                    <input type="file" id="photo-image" name="image" class="skill-input admin-input" accept="image/*" required>
+                    <input type="file" id="photo-image" name="image" class="skill-input admin-input" accept="image/*,.heic,.heif,image/heic,image/heif" required>
                 </div>
                 <button type="submit" class="skill-submit-btn admin-submit-btn">Submit</button>
             </form>
