@@ -8,16 +8,20 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Project, Skills, Book, Country, Post, Hobby, SpokenLanguage
+from .models import Project, Skills, Book, Country, Hobby, Photo
 import requests
 import json
 
 
 def get_github_contributions():
     """Fetch GitHub contributions using GraphQL API"""
+    import logging
+    logger = logging.getLogger(__name__)
+    
     # Check cache first
     cached_data = cache.get('github_contributions')
     if cached_data:
+        logger.debug("Returning cached GitHub contributions")
         return cached_data
     
     # Get GitHub token from settings
@@ -25,6 +29,7 @@ def get_github_contributions():
     username = getattr(settings, 'GITHUB_USERNAME', 'ElSancturioDeThomas')
     
     if not token:
+        logger.warning("GitHub token not configured - contributions will not be displayed")
         return {'weeks': [], 'total_contributions': 0}
     
     # GraphQL query
@@ -57,26 +62,75 @@ def get_github_contributions():
             timeout=10
         )
         
+        # Handle different HTTP status codes
         if response.status_code == 200:
             data = response.json()
-            if 'data' in data and 'user' in data['data']:
-                user_data = data['data']['user']['contributionsCollection']
-                calendar_data = user_data['contributionCalendar']
-                weeks = calendar_data['weeks']
+            
+            # Check for GraphQL errors (even with 200 status)
+            if 'errors' in data:
+                error_messages = [err.get('message', 'Unknown error') for err in data['errors']]
+                logger.error(f"GitHub GraphQL API errors: {', '.join(error_messages)}")
+                # Don't cache errors - return empty but don't cache
+                return {'weeks': [], 'total_contributions': 0}
+            
+            # Check if data structure is valid
+            if 'data' in data and data['data'] and 'user' in data['data']:
+                user_data = data['data']['user']
+                
+                # Check if user exists (might be None if user not found)
+                if user_data is None:
+                    logger.error(f"GitHub user '{username}' not found")
+                    return {'weeks': [], 'total_contributions': 0}
+                
+                contributions_collection = user_data.get('contributionsCollection')
+                if not contributions_collection:
+                    logger.error(f"No contributions collection found for user '{username}'")
+                    return {'weeks': [], 'total_contributions': 0}
+                
+                calendar_data = contributions_collection.get('contributionCalendar', {})
+                weeks = calendar_data.get('weeks', [])
                 total_contributions = calendar_data.get('totalContributions', 0)
+                
+                if not weeks:
+                    logger.warning(f"No contribution weeks found for user '{username}'")
+                    return {'weeks': [], 'total_contributions': 0}
                 
                 result = {
                     'weeks': weeks,
                     'total_contributions': total_contributions
                 }
                 
-                # Cache for 1 hour
+                # Cache for 1 hour only if we got valid data
                 cache.set('github_contributions', result, 3600)
+                logger.info(f"Successfully fetched GitHub contributions: {total_contributions} total")
                 return result
+            else:
+                logger.error(f"Invalid response structure from GitHub API: {data}")
+                return {'weeks': [], 'total_contributions': 0}
+                
+        elif response.status_code == 401:
+            logger.error("GitHub API authentication failed - token may be invalid or expired")
+            return {'weeks': [], 'total_contributions': 0}
+        elif response.status_code == 403:
+            logger.error("GitHub API access forbidden - token may lack required permissions")
+            return {'weeks': [], 'total_contributions': 0}
+        elif response.status_code == 429:
+            logger.warning("GitHub API rate limit exceeded - will retry after cache expires")
+            # Return empty but don't cache, so it retries sooner
+            return {'weeks': [], 'total_contributions': 0}
+        else:
+            logger.error(f"GitHub API returned status {response.status_code}: {response.text[:200]}")
+            return {'weeks': [], 'total_contributions': 0}
+            
+    except requests.exceptions.Timeout:
+        logger.error("GitHub API request timed out")
+        return {'weeks': [], 'total_contributions': 0}
+    except requests.exceptions.RequestException as e:
+        logger.error(f"GitHub API request failed: {e}")
+        return {'weeks': [], 'total_contributions': 0}
     except Exception as e:
-        print(f"Error fetching GitHub contributions: {e}")
-    
-    return {'weeks': [], 'total_contributions': 0}
+        logger.exception(f"Unexpected error fetching GitHub contributions: {e}")
+        return {'weeks': [], 'total_contributions': 0}
 
 
 def index(request):
@@ -85,9 +139,6 @@ def index(request):
     
     # Get all countries from Country model with flag emojis
     countries_visited = Country.objects.all().order_by('name')
-    
-    # Get published posts, ordered by published date
-    posts = Post.objects.filter(status='published').order_by('-published_date', '-created_at')
     
     # Get all hobbies, ordered by category
     hobbies = Hobby.objects.all().order_by('category', 'name')
@@ -98,7 +149,6 @@ def index(request):
     context = {
         'timestamp': int(time.time()),
         'countries_visited': countries_visited,
-        'posts': posts,
         'hobbies': hobbies,
         'github_weeks': github_data.get('weeks', []),
         'github_total': github_data.get('total_contributions', 0)
@@ -109,12 +159,42 @@ def index(request):
 def skills_view(request):
     """Skills page view"""
     import time
+    from itertools import groupby
+    
+    # Get all skills ordered by category and name
     skills = Skills.objects.all().order_by('category', 'name')
-    spoken_languages = SpokenLanguage.objects.all().order_by('-is_native', 'name')
+    
+    # Group skills by category
+    skills_by_category = {}
+    for skill in skills:
+        category = skill.category or 'Uncategorized'
+        if category not in skills_by_category:
+            skills_by_category[category] = []
+        skills_by_category[category].append(skill)
+    
+    # Define the order of categories
+    category_order = [
+        'Programming Languages',
+        'Packages',
+        'Soft',
+        'Hard',
+        'Spoken Languages'
+    ]
+    
+    # Sort categories according to the defined order
+    ordered_categories = []
+    for cat in category_order:
+        if cat in skills_by_category:
+            ordered_categories.append((cat, skills_by_category[cat]))
+    
+    # Add any uncategorized or other categories not in the list
+    for cat, skill_list in skills_by_category.items():
+        if cat not in category_order:
+            ordered_categories.append((cat, skill_list))
+    
     context = {
         'timestamp': int(time.time()),
-        'skills': skills,
-        'spoken_languages': spoken_languages
+        'skills_by_category': ordered_categories,
     }
     return render(request, 'portfolio/skills.html', context)
 
@@ -122,18 +202,45 @@ def skills_view(request):
 def library_view(request):
     """Library page view - combines Projects, Books, Photos, and Posts"""
     import time
+    from django.template.loader import render_to_string
+    
+    # Get section from query parameter, default to 'projects'
+    section = request.GET.get('section', 'projects')
+    
+    # Validate section
+    valid_sections = ['projects', 'books', 'photos']
+    if section not in valid_sections:
+        section = 'projects'
+    
+    # Fetch data from Django
     projects = Project.objects.all().order_by('-created_at')
-    books = Book.objects.all().order_by('-read_date', '-created_at')
-    project_photos = Project.objects.exclude(image='').order_by('-created_at')
-    # Get published posts, ordered by published date
-    posts = Post.objects.filter(status='published').order_by('-published_date', '-created_at')
+    books = Book.objects.all().order_by('-created_at')
+    photos = Photo.objects.all().order_by('-created_at')
+    skills = Skills.objects.all().order_by('category', 'name')
+    
     context = {
         'timestamp': int(time.time()),
         'projects': projects,
         'books': books,
-        'project_photos': project_photos,
-        'posts': posts
+        'photos': photos,
+        'skills': skills,
+        'active_section': section,  # Pass active section to template
     }
+    
+    # If AJAX request, return just the section HTML
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        # Render just the section content
+        section_html = render_to_string('portfolio/library_section.html', {
+            'section': section,
+            'projects': projects,
+            'books': books,
+            'photos': photos,
+            'skills': skills,
+            'user': request.user,
+        })
+        return JsonResponse({'html': section_html})
+    
+    # Normal request - return full page
     return render(request, 'portfolio/library.html', context)
 
 
@@ -154,8 +261,6 @@ def projects_list(request):
         'id': p.id,
         'title': p.title,
         'description': p.description,
-        'technologies': p.technologies,
-        'featured': p.featured
     } for p in projects]
     return Response({'count': len(data), 'results': data})
 
@@ -241,6 +346,180 @@ def create_hobby(request):
                 'category': hobby.category,
                 'social': hobby.social,
                 'icon': hobby.icon
+            }
+        })
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@csrf_exempt
+def create_project(request):
+    """Create a new project"""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+    
+    # Check if user is authenticated
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
+    
+    try:
+        title = request.POST.get('title', '').strip()
+        description = request.POST.get('description', '').strip()
+        skills_ids = request.POST.getlist('skills')
+        image = request.FILES.get('image', None)
+        
+        if not title:
+            return JsonResponse({'success': False, 'error': 'Title is required'}, status=400)
+        
+        if not description:
+            return JsonResponse({'success': False, 'error': 'Description is required'}, status=400)
+        
+        if not skills_ids:
+            return JsonResponse({'success': False, 'error': 'At least one skill is required'}, status=400)
+        
+        # Create project
+        project = Project.objects.create(
+            title=title,
+            description=description,
+            image=image
+        )
+        
+        # Add skills
+        skills = Skills.objects.filter(id__in=skills_ids)
+        project.skills.set(skills)
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Project created successfully',
+            'project': {
+                'id': project.id,
+                'title': project.title,
+                'description': project.description,
+            }
+        })
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@csrf_exempt
+def create_book(request):
+    """Create a new book"""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+    
+    # Check if user is authenticated
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
+    
+    try:
+        title = request.POST.get('title', '').strip()
+        author = request.POST.get('author', '').strip()
+        rating = request.POST.get('rating', '')
+        cover_image = request.FILES.get('cover_image', None)
+        
+        if not title:
+            return JsonResponse({'success': False, 'error': 'Title is required'}, status=400)
+        
+        if not author:
+            return JsonResponse({'success': False, 'error': 'Author is required'}, status=400)
+        
+        # Create book
+        book = Book.objects.create(
+            title=title,
+            author=author,
+            rating=int(rating) if rating else None,
+            cover_image=cover_image
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Book created successfully',
+            'book': {
+                'id': book.id,
+                'title': book.title,
+                'author': book.author,
+                'rating': book.rating,
+            }
+        })
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@csrf_exempt
+def create_photo(request):
+    """Create a new photo"""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+    
+    # Check if user is authenticated
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
+    
+    try:
+        title = request.POST.get('title', '').strip()
+        image = request.FILES.get('image', None)
+        
+        if not title:
+            return JsonResponse({'success': False, 'error': 'Title is required'}, status=400)
+        
+        if not image:
+            return JsonResponse({'success': False, 'error': 'Image is required'}, status=400)
+        
+        # Create photo
+        photo = Photo.objects.create(
+            title=title,
+            image=image
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Photo created successfully',
+            'photo': {
+                'id': photo.id,
+                'title': photo.title,
+            }
+        })
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@csrf_exempt
+def create_skill(request):
+    """Create a new skill"""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+    
+    # Check if user is authenticated
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
+    
+    try:
+        data = json.loads(request.body)
+        name = data.get('name', '').strip()
+        
+        if not name:
+            return JsonResponse({'success': False, 'error': 'Name is required'}, status=400)
+        
+        # Check if skill with same name already exists
+        if Skills.objects.filter(name=name).exists():
+            return JsonResponse({'success': False, 'error': 'Skill with this name already exists'}, status=400)
+        
+        skill = Skills.objects.create(
+            name=name,
+            description=data.get('description', ''),
+            category=data.get('category', '')
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Skill created successfully',
+            'skill': {
+                'id': skill.id,
+                'name': skill.name,
+                'description': skill.description,
+                'category': skill.category
             }
         })
     except json.JSONDecodeError:

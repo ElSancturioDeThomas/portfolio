@@ -16,6 +16,9 @@
         
         // Home link scroll-to-top functionality
         initHomeLinkScroll();
+        
+        // Note: Add button visibility is handled by add-button-auth.js
+        // which is loaded on all pages via base.html
     });
 
     /**
@@ -81,5 +84,8 @@
             }
         });
     }
+
+    // Note: Add button visibility is now handled by add-button-auth.js
+    // which is loaded on all pages via base.html
 })();
 

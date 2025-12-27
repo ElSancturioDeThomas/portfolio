@@ -41,9 +41,7 @@
         <header class="hero-header">
             <h1>Paradise Loading</h1>
             <div class="hero-subtitle-container">
-                <p class="subtitle hero-name">Thomas Heal
-                    <span class="name-tooltip">Also known as Tom, Chop, and Thomalicious</span>
-                </p>
+                <p class="subtitle hero-name">Thomas Heal</p>
                 <button class="secret-login-toggle" id="secret-login-toggle" aria-label="Toggle Admin Panel">
                     <span class="toggle-icon">⚙</span>
                 </button>
@@ -165,11 +163,57 @@
             </div>
     </div>
 
+    <!-- Add Country Terminal Panel -->
+    <div class="country-add-panel" id="country-add-panel">
+        <div class="country-add-content">
+            <div class="country-add-header">
+                <span class="country-add-title">add_country.sh</span>
+                <button class="country-add-close-btn" id="country-add-close-btn">×</button>
+            </div>
+            <form class="country-add-form" id="country-add-form">
+                <div class="country-form-group">
+                    <label for="country-name">Name *</label>
+                    <input type="text" id="country-name" name="name" class="country-input" value="" required>
+                </div>
+                <div class="country-form-group">
+                    <label for="country-code">Country Code</label>
+                    <input type="text" id="country-code" name="code" class="country-input" value="" placeholder="e.g., US, GB, JP" maxlength="2">
+                </div>
+                <div class="country-form-group">
+                    <label for="country-flag">Flag Emoji</label>
+                    <input type="text" id="country-flag" name="flag_emoji" class="country-input" value="" placeholder="e.g., 🇺🇸, 🇬🇧, 🇯🇵">
+                </div>
+                <div class="country-form-group">
+                    <label for="country-thoughts">Thoughts</label>
+                    <textarea id="country-thoughts" name="thoughts" class="country-input country-textarea" rows="3" placeholder="Your thoughts about this country..."></textarea>
+                </div>
+                <button type="submit" class="country-submit-btn">Submit</button>
+            </form>
+            <div class="country-add-status" id="country-add-status" style="display: none;">
+                <div class="country-loading" id="country-loading">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Submitting...</p>
+                </div>
+                <div class="country-submitted" id="country-submitted" style="display: none;">
+                    <div class="verified-icon">✓</div>
+                    <p class="verified-text">Submitted</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Hobbies Section -->
     <section class="hobbies-section content-section">
         <div class="container">
             <div class="content">
-                <h2 class="hobbies-title">My Hobbies</h2>
+                <h2 class="hobbies-title">
+                    My Hobbies
+                    {% if user.is_authenticated %}
+                        <button class="add-button add-button-right" id="hobbies-add-btn" title="Add Hobby">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    {% endif %}
+                </h2>
                 {% if hobbies %}
                     <div class="hobbies-database-container">
                         <div class="hobbies-table">
@@ -212,7 +256,6 @@
                         </div>
                         <div class="hobbies-load-json-container">
                             <button class="hobbies-load-json-btn" id="hobbies-load-json-btn">Load JSON</button>
-                            <button class="hobbies-add-btn" id="hobbies-add-btn" style="display: none;">+</button>
                         </div>
                     </div>
                 {% else %}
@@ -250,7 +293,9 @@
         <div class="container">
             <div class="content">
                 <div class="contributions-header">
-                    <h2 class="contributions-title">GitHub Contributions</h2>
+                    <h2 class="contributions-title">
+                        GitHub Contributions
+                    </h2>
                     {% if github_total %}
                     {% endif %}
                     <p class="contributions-count">This is a graph of my {{ github_total }} GitHub contributions in the last year.</p>
@@ -305,7 +350,9 @@
         <div class="container">
             <div class="content">
                 <div class="additional-text-content glass-container">
-                    <h2>My Journey</h2>
+                    <h2>
+                        My Journey
+                    </h2>
                     <div class="additional-text">
                         <p>
                             Every line of code, every project, and every contribution tells a story. 
@@ -334,8 +381,14 @@
                 <!-- Countries Visited Section -->
                 <div class="countries-section">
                     <div class="countries-title-container">
-                        <h2 class="countries-title">Countries I've Visited</h2>
-                        <button class="countries-add-btn" id="countries-add-btn" style="display: none;">+</button>
+                        <h2 class="countries-title">
+                            Countries I've Visited
+                            {% if user.is_authenticated %}
+                                <button class="add-button add-button-right" id="countries-add-btn" title="Add Country">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            {% endif %}
+                        </h2>
                     </div>
                     {% if countries_visited %}
                     <div class="countries-grid">
@@ -357,7 +410,12 @@
                 </div>
                 
                 <div id="location-map"></div>
-                <button class="location-zoom-btn" onclick="zoomToPinjarra()">My Origin</button>
+                <div class="location-button-container">
+                    <button class="location-zoom-btn" onclick="zoomToPinjarra()">My Origin</button>
+                    <button id="scroll-to-top-btn" class="scroll-to-top-btn" aria-label="Scroll to top">
+                        <span class="scroll-to-top-icon">↑</span>
+                    </button>
+                </div>
             </div>
         </div>
     </section>
@@ -372,5 +430,6 @@
     <script src="{% static 'portfolio/js/hobby-add.js' %}"></script>
     <script src="{% static 'portfolio/js/countries-add.js' %}"></script>
     <script src="{% static 'portfolio/js/github-contributions.js' %}"></script>
+    <script src="{% static 'portfolio/js/scroll-to-top.js' %}"></script>
     <script src="{% static 'portfolio/js/main.js' %}"></script>
 {% endblock %}

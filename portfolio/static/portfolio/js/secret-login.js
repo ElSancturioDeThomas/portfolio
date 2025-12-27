@@ -76,10 +76,14 @@
         
         function setVerifiedState() {
             sessionStorage.setItem(SESSION_STORAGE_KEY, 'true');
+            // Dispatch event to notify other modules
+            window.dispatchEvent(new CustomEvent('secret-login-verified'));
         }
         
         function clearVerifiedState() {
             sessionStorage.removeItem(SESSION_STORAGE_KEY);
+            // Dispatch event to notify other modules
+            window.dispatchEvent(new CustomEvent('secret-login-logout'));
         }
         
         // Check verified state on page load

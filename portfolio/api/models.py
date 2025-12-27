@@ -23,13 +23,12 @@ class Project(models.Model):
     """Portfolio project model"""
     title = models.CharField(max_length=200)
     description = models.TextField()
-    technologies = models.CharField(max_length=500, help_text="Comma-separated list of technologies")
-    start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField(null=True, blank=True)
-    project_link = models.URLField(max_length=500, blank=True, null=True)
-    github_link = models.URLField(max_length=500, blank=True, null=True)
     image = models.ImageField(upload_to='projects/', blank=True, null=True)
-    featured = models.BooleanField(default=False)
+    skills = models.ManyToManyField(
+        'Skills',
+        related_name='projects',
+        help_text="Select or create skills used in this project (required)"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -42,32 +41,35 @@ class Project(models.Model):
 
 class Book(models.Model):
     """Books read (Library)"""
-    project = models.ForeignKey(
-        Project,
-        on_delete=models.SET_NULL,
-        related_name='books',
-        null=True,
-        blank=True
-    )
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)
-    isbn = models.CharField(max_length=20, blank=True)
-    read_date = models.DateField(null=True, blank=True)
     rating = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)],
         null=True,
         blank=True,
         help_text="Rating from 1-5"
     )
-    review = models.TextField(blank=True)
     cover_image = models.ImageField(upload_to='books/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-read_date', '-created_at']
+        ordering = ['-created_at']
 
     def __str__(self):
         return f"{self.title} by {self.author}"
+
+
+class Photo(models.Model):
+    """Photos in the library"""
+    title = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='photos/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
 
 
 class Hobby(models.Model):
@@ -93,35 +95,25 @@ class Hobby(models.Model):
         return self.name
 
 
-class SpokenLanguage(models.Model):
-    """Languages spoken"""
-    PROFICIENCY_LEVELS = [
-        ('native', 'Native'),
-        ('fluent', 'Fluent'),
-        ('conversational', 'Conversational'),
-        ('basic', 'Basic'),
-    ]
-
-    name = models.CharField(max_length=50, unique=True)
-    proficiency_level = models.CharField(max_length=20, choices=PROFICIENCY_LEVELS)
-    is_native = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['-is_native', 'name']
-
-    def __str__(self):
-        native_str = " (Native)" if self.is_native else ""
-        return f"{self.name} - {self.get_proficiency_level_display()}{native_str}"
-
-
 class Skills(models.Model):
     """General skills and competencies"""
+    
+    CATEGORY_CHOICES = [
+        ('Programming Languages', 'Programming Languages'),
+        ('Packages', 'Packages'),
+        ('Soft', 'Soft'),
+        ('Hard', 'Hard'),
+        ('Spoken Languages', 'Spoken Languages'),
+    ]
 
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
-    category = models.CharField(max_length=50, blank=True)
-    icon = models.CharField(max_length=100, blank=True, help_text="Icon class or name")
+    category = models.CharField(
+        max_length=50, 
+        choices=CATEGORY_CHOICES, 
+        blank=True,
+        help_text="Select the category for this skill"
+    )
     
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -134,31 +126,3 @@ class Skills(models.Model):
         return self.name
 
 
-class Post(models.Model):
-    """Blog posts or portfolio posts"""
-    STATUS_CHOICES = [
-        ('draft', 'Draft'),
-        ('published', 'Published'),
-    ]
-
-    title = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=200, unique=True)
-    content = models.TextField()
-    excerpt = models.TextField(max_length=500, blank=True, help_text="Short summary")
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
-    featured_image = models.ImageField(upload_to='posts/', blank=True, null=True)
-    published_date = models.DateTimeField(null=True, blank=True)
-    tags = models.CharField(max_length=200, blank=True, help_text="Comma-separated tags")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ['-published_date', '-created_at']
-
-    def __str__(self):
-        return self.title
-
-    def save(self, *args, **kwargs):
-        if self.status == 'published' and not self.published_date:
-            self.published_date = timezone.now()
-        super().save(*args, **kwargs)

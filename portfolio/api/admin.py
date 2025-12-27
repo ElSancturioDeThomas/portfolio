@@ -1,8 +1,20 @@
 from django.contrib import admin
+from django import forms
 from .models import (
     Country, Project, Book, Hobby,
-    SpokenLanguage, Skills, Post
+    Skills, Photo
 )
+
+
+class ProjectAdminForm(forms.ModelForm):
+    """Custom form to make skills required"""
+    class Meta:
+        model = Project
+        fields = '__all__'
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['skills'].required = True
 
 
 @admin.register(Country)
@@ -14,20 +26,29 @@ class CountryAdmin(admin.ModelAdmin):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ['title', 'featured', 'start_date', 'end_date', 'created_at']
-    list_filter = ['featured', 'start_date', 'created_at']
-    search_fields = ['title', 'description', 'technologies']
+    form = ProjectAdminForm
+    list_display = ['title', 'created_at']
+    list_filter = ['created_at', 'skills']
+    search_fields = ['title', 'description']
+    filter_horizontal = ['skills']  # Better UI for ManyToMany
     date_hierarchy = 'created_at'
     prepopulated_fields = {}
 
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ['title', 'author', 'project', 'read_date', 'rating', 'created_at']
-    list_filter = ['rating', 'read_date', 'created_at']
-    search_fields = ['title', 'author', 'isbn']
-    raw_id_fields = ['project']
-    date_hierarchy = 'read_date'
+    list_display = ['title', 'author', 'rating', 'created_at']
+    list_filter = ['rating', 'created_at']
+    search_fields = ['title', 'author']
+    date_hierarchy = 'created_at'
+
+
+@admin.register(Photo)
+class PhotoAdmin(admin.ModelAdmin):
+    list_display = ['title', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['title']
+    date_hierarchy = 'created_at'
 
 
 @admin.register(Hobby)
@@ -37,13 +58,6 @@ class HobbyAdmin(admin.ModelAdmin):
     search_fields = ['name', 'reason', 'category']
 
 
-@admin.register(SpokenLanguage)
-class SpokenLanguageAdmin(admin.ModelAdmin):
-    list_display = ['name', 'proficiency_level', 'is_native', 'created_at']
-    list_filter = ['proficiency_level', 'is_native', 'created_at']
-    search_fields = ['name']
-
-
 @admin.register(Skills)
 class SkillsAdmin(admin.ModelAdmin):
     list_display = ['name', 'category', 'created_at']
@@ -51,10 +65,3 @@ class SkillsAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description']
 
 
-@admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'status', 'published_date', 'created_at', 'updated_at']
-    list_filter = ['status', 'published_date', 'created_at']
-    search_fields = ['title', 'content', 'tags']
-    prepopulated_fields = {'slug': ('title',)}
-    date_hierarchy = 'published_date'

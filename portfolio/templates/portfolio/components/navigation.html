@@ -1,11 +1,43 @@
 {% load static %}
 <nav class="main-navigation">
     <div class="nav-container">
+        <!-- Left Navigation Section Wrapper -->
+        <div class="nav-sections-left-wrapper">
+            <div class="nav-section-left">
+                <a href="https://www.roots.gov.sg/stories-landing/stories/the-singapore-story-through-60-objects/colonial/boschbrand/story" target="_blank" rel="noopener noreferrer" class="nav-link nav-link-with-tooltip">
+                    Boschbrand | 1849
+                    <span class="nav-link-tooltip">Link to the artist</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Original Navigation Section (Center) -->
+        <div class="nav-section-center">
             <ul class="nav-menu">
                 <li><a href="{% url 'library' %}" class="nav-link">Library</a></li>
                 <li><a href="{% url 'index' %}" class="nav-link">Home</a></li>
                 <li><a href="{% url 'skills' %}" class="nav-link">Skills</a></li>
             </ul>
+        </div>
+        
+        <!-- Right Navigation Sections Wrapper -->
+        <div class="nav-sections-right-wrapper">
+            <!-- GitHub Navigation Section -->
+            <div class="nav-section-right nav-section-github">
+                <a href="https://github.com/ElSancturioDeThomas" target="_blank" rel="noopener noreferrer" class="nav-link nav-link-icon nav-link-with-tooltip" aria-label="GitHub">
+                    <i class="fab fa-github social-icon"></i>
+                    <span class="nav-link-tooltip">GitHub</span>
+                </a>
+            </div>
+            
+            <!-- LinkedIn Navigation Section -->
+            <div class="nav-section-right nav-section-linkedin">
+                <a href="https://www.linkedin.com/in/thomas-heal-019198280/" target="_blank" rel="noopener noreferrer" class="nav-link nav-link-icon nav-link-with-tooltip" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin social-icon"></i>
+                    <span class="nav-link-tooltip">LinkedIn</span>
+                </a>
+            </div>
+        </div>
     </div>
 </nav>
 

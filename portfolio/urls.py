@@ -19,14 +19,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from api import views
+from portfolio.api import views
 
 urlpatterns = [
     path("", views.index, name="index"),
     path("library/", views.library_view, name="library"),
     path("skills/", views.skills_view, name="skills"),
     path("admin/", admin.site.urls),
-    path("api/", include("api.urls")),
+    path("api/", include("portfolio.api.urls")),
 ]
 
 # WhiteNoise will serve static files in production (Vercel)

@@ -20,43 +20,23 @@
             return;
         }
         
-        // Check authentication state
-        const SESSION_STORAGE_KEY = 'secret_login_verified';
-        
-        function checkAuthAndShowButton() {
-            const isVerified = sessionStorage.getItem(SESSION_STORAGE_KEY) === 'true';
-            if (isVerified && addBtn) {
-                addBtn.style.display = 'flex';
-            } else if (addBtn) {
-                addBtn.style.display = 'none';
-            }
-        }
-        
-        // Check auth state on load and listen for changes
-        checkAuthAndShowButton();
-        
-        // Listen for storage changes (when user logs in/out)
-        window.addEventListener('storage', checkAuthAndShowButton);
-        
-        // Also check periodically in case sessionStorage was set in same window
-        setInterval(checkAuthAndShowButton, 500);
-        
-        // Also listen for custom event from secret-login.js when user logs in
-        window.addEventListener('hobby-auth-changed', checkAuthAndShowButton);
+        // Note: Button visibility is now handled by add-button-auth.js
         
         function togglePanel() {
             const isActive = addPanel.classList.contains('active');
+            const icon = addBtn ? addBtn.querySelector('i') : null;
+            
             if (isActive) {
                 addPanel.classList.remove('active');
-                // Change button back to +
-                if (addBtn) {
-                    addBtn.textContent = '+';
+                // Change icon back to plus
+                if (icon) {
+                    icon.className = 'fas fa-plus';
                 }
             } else {
                 addPanel.classList.add('active');
-                // Change button to ×
-                if (addBtn) {
-                    addBtn.textContent = '×';
+                // Change icon to times
+                if (icon) {
+                    icon.className = 'fas fa-times';
                 }
                 // Focus the first input when opening
                 const firstInput = countryForm ? countryForm.querySelector('.country-input') : null;
@@ -81,9 +61,10 @@
                 e.preventDefault();
                 e.stopPropagation();
                 addPanel.classList.remove('active');
-                // Change button back to +
-                if (addBtn) {
-                    addBtn.textContent = '+';
+                // Change icon back to plus
+                const icon = addBtn ? addBtn.querySelector('i') : null;
+                if (icon) {
+                    icon.className = 'fas fa-plus';
                 }
             });
         }
@@ -247,9 +228,10 @@
                                     statusContainer.style.display = 'none';
                                 }
                                 addPanel.classList.remove('active');
-                                // Change button back to +
-                                if (addBtn) {
-                                    addBtn.textContent = '+';
+                                // Change icon back to plus
+                                const icon = addBtn ? addBtn.querySelector('i') : null;
+                                if (icon) {
+                                    icon.className = 'fas fa-plus';
                                 }
                             }, 2000);
                         }, 1500);

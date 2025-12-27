@@ -1,0 +1,118 @@
+{% load static %}
+
+{% if section == 'projects' %}
+    <h2 class="library-section-title">
+        Projects
+        {% if user.is_authenticated %}
+            <button class="add-button add-button-right" id="projects-add-btn" title="Add Project">
+                <i class="fas fa-plus"></i>
+            </button>
+        {% endif %}
+    </h2>
+    {% if projects %}
+        <div class="projects-grid">
+            {% for project in projects %}
+                <div class="project-card">
+                    {% if project.image %}
+                        <div class="project-image">
+                            <img src="{{ project.image.url }}" alt="{{ project.title }}">
+                        </div>
+                    {% endif %}
+                    <div class="project-content">
+                        <h3>{{ project.title }}</h3>
+                        <p class="project-description">{{ project.description }}</p>
+                        {% if project.skills.all %}
+                            <div class="project-skills">
+                                <strong>Skills:</strong>
+                                <div class="project-skills-list">
+                                    {% for skill in project.skills.all %}
+                                        <span class="project-skill-tag">{{ skill.name }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>No projects in the library yet. Check back soon!</p>
+        </div>
+    {% endif %}
+
+{% elif section == 'books' %}
+    <h2 class="library-section-title">
+        Books
+        {% if user.is_authenticated %}
+            <button class="add-button add-button-right" id="books-add-btn" title="Add Book">
+                <i class="fas fa-plus"></i>
+            </button>
+        {% endif %}
+    </h2>
+    {% if books %}
+        <div class="projects-grid">
+            {% for book in books %}
+                <div class="project-card">
+                    {% if book.cover_image %}
+                        <div class="project-image">
+                            <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                        </div>
+                    {% endif %}
+                    <div class="project-content">
+                        <div class="book-title-row">
+                            <h3>{{ book.title }}</h3>
+                            {% if book.rating %}
+                                <div class="book-rating-stars">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= book.rating %}
+                                            <span class="star filled">★</span>
+                                        {% else %}
+                                            <span class="star">★</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <p class="project-description">by {{ book.author }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>No books in the library yet. Check back soon!</p>
+        </div>
+    {% endif %}
+
+{% elif section == 'photos' %}
+    <h2 class="library-section-title">
+        Photos
+        {% if user.is_authenticated %}
+            <button class="add-button add-button-right" id="photos-add-btn" title="Add Photo">
+                <i class="fas fa-plus"></i>
+            </button>
+        {% endif %}
+    </h2>
+    {% if photos %}
+        <div class="projects-grid">
+            {% for photo in photos %}
+                <div class="project-card">
+                    {% if photo.image %}
+                        <div class="project-image">
+                            <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+                        </div>
+                    {% endif %}
+                    <div class="project-content">
+                        <h3>{{ photo.title }}</h3>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>No photos in the library yet. Check back soon!</p>
+        </div>
+    {% endif %}
+{% endif %}
+

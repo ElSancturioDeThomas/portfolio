@@ -18,10 +18,24 @@
             <div class="library-sidebar-left">
                 <nav class="library-sidebar-nav">
                     <ul class="library-sidebar-menu">
-                        <li><button class="library-sidebar-btn active" data-section="projects">Projects</button></li>
-                        <li><button class="library-sidebar-btn" data-section="books">Books</button></li>
-                        <li><button class="library-sidebar-btn" data-section="photos">Photos</button></li>
-                        <li><button class="library-sidebar-btn" data-section="posts">Posts</button></li>
+                        <li>
+                            <button class="library-sidebar-btn {% if active_section == 'projects' %}active{% endif %}" data-section="projects">
+                                <i class="fas fa-project-diagram library-sidebar-icon"></i>
+                                <span class="library-sidebar-label">Projects</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="library-sidebar-btn {% if active_section == 'books' %}active{% endif %}" data-section="books">
+                                <i class="fas fa-book library-sidebar-icon"></i>
+                                <span class="library-sidebar-label">Books</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="library-sidebar-btn {% if active_section == 'photos' %}active{% endif %}" data-section="photos">
+                                <i class="fas fa-images library-sidebar-icon"></i>
+                                <span class="library-sidebar-label">Photos</span>
+                            </button>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -31,9 +45,16 @@
                 <!-- Main Glass Container -->
                 <div class="library-glass-container">
                 <!-- Projects Section -->
-                {% if projects %}
-                    <div class="library-section active" id="projects-section" data-section="projects">
-                        <h2 class="library-section-title">Projects</h2>
+                <div class="library-section {% if active_section == 'projects' %}active{% endif %}" id="projects-section" data-section="projects">
+                    <h2 class="library-section-title">
+                        Projects
+                        {% if user.is_authenticated %}
+                            <button class="add-button add-button-right" id="projects-add-btn" title="Add Project">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        {% endif %}
+                    </h2>
+                    {% if projects %}
                         <div class="projects-grid">
                             {% for project in projects %}
                                 <div class="project-card">
@@ -45,75 +66,65 @@
                                     <div class="project-content">
                                         <h3>{{ project.title }}</h3>
                                         <p class="project-description">{{ project.description }}</p>
-                                        {% if project.technologies %}
-                                            <div class="project-technologies">
-                                                <strong>Technologies:</strong>
-                                                <span>{{ project.technologies }}</span>
+                                        {% if project.skills.all %}
+                                            <div class="project-skills">
+                                                <strong>Skills:</strong>
+                                                <div class="project-skills-list">
+                                                    {% for skill in project.skills.all %}
+                                                        <span class="project-skill-tag">{{ skill.name }}</span>
+                                                    {% endfor %}
+                                                </div>
                                             </div>
-                                        {% endif %}
-                                        <div class="project-links">
-                                            {% if project.project_link %}
-                                                <a href="{{ project.project_link }}" target="_blank" class="btn btn-primary">View Project</a>
-                                            {% endif %}
-                                            {% if project.github_link %}
-                                                <a href="{{ project.github_link }}" target="_blank" class="btn btn-secondary">GitHub</a>
-                                            {% endif %}
-                                        </div>
-                                        {% if project.featured %}
-                                            <span class="featured-badge">Featured</span>
                                         {% endif %}
                                     </div>
                                 </div>
                             {% endfor %}
                         </div>
-                    </div>
-                {% endif %}
+                    {% else %}
+                        <div class="empty-state">
+                            <p>No projects in the library yet. Check back soon!</p>
+                        </div>
+                    {% endif %}
+                </div>
 
                 <!-- Books Section -->
-                <div class="library-section" id="books-section" data-section="books" style="display: none;">
-                    <h2 class="library-section-title">Books</h2>
+                <div class="library-section {% if active_section == 'books' %}active{% endif %}" id="books-section" data-section="books">
+                    <h2 class="library-section-title">
+                        Books
+                        {% if user.is_authenticated %}
+                            <button class="add-button add-button-right" id="books-add-btn" title="Add Book">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        {% endif %}
+                    </h2>
                     {% if books %}
-                        <div class="books-table-container">
-                            <div class="books-table">
-                                <div class="books-table-header">
-                                    <div class="books-header-cell">Title</div>
-                                    <div class="books-header-cell">Author</div>
-                                    <div class="books-header-cell">Rating</div>
-                                    <div class="books-header-cell">Read Date</div>
-                                </div>
-                                <div class="books-table-body">
-                                    {% for book in books %}
-                                        <div class="books-table-row">
-                                            <div class="books-table-cell">
-                                                <strong>{{ book.title }}</strong>
-                                            </div>
-                                            <div class="books-table-cell">{{ book.author }}</div>
-                                            <div class="books-table-cell">
-                                                {% if book.rating %}
-                                                    <div class="book-rating-stars">
-                                                        {% for i in "12345" %}
-                                                            {% if forloop.counter <= book.rating %}
-                                                                <span class="star filled">★</span>
-                                                            {% else %}
-                                                                <span class="star">★</span>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </div>
-                                                {% else %}
-                                                    —
-                                                {% endif %}
-                                            </div>
-                                            <div class="books-table-cell">
-                                                {% if book.read_date %}
-                                                    {{ book.read_date|date:"F Y" }}
-                                                {% else %}
-                                                    —
-                                                {% endif %}
-                                            </div>
+                        <div class="projects-grid">
+                            {% for book in books %}
+                                <div class="project-card">
+                                    {% if book.cover_image %}
+                                        <div class="project-image">
+                                            <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
                                         </div>
-                                    {% endfor %}
+                                    {% endif %}
+                                    <div class="project-content">
+                                        <div class="book-title-row">
+                                            <h3>{{ book.title }}</h3>
+                                            {% if book.rating %}
+                                                <div class="book-rating-stars">
+                                                    {% for i in "12345" %}
+                                                        {% if forloop.counter <= book.rating %}
+                                                            <span class="star filled">★</span>
+                                                        {% else %}
+                                                            <span class="star">★</span>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <p class="project-description">by {{ book.author }}</p>
+                                    </div>
                                 </div>
-                            </div>
+                            {% endfor %}
                         </div>
                     {% else %}
                         <div class="empty-state">
@@ -123,113 +134,168 @@
                 </div>
 
                 <!-- Photos Section -->
-                {% if project_photos %}
-                    <div class="library-section" id="photos-section" data-section="photos" style="display: none;">
-                        <h2 class="library-section-title">Photos</h2>
-                        <div class="photos-grid">
-                            {% for project in project_photos %}
-                                <div class="photo-card">
-                                    <div class="photo-image">
-                                        <img src="{{ project.image.url }}" alt="{{ project.title }}">
-                                    </div>
-                                    <div class="photo-info">
-                                        <h3>{{ project.title }}</h3>
-                                        {% if project.description %}
-                                            <p class="photo-description">{{ project.description|truncatewords:20 }}</p>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% endif %}
-
-                <!-- Posts Section -->
-                <div class="library-section" id="posts-section" data-section="posts" style="display: none;">
-                    <h2 class="library-section-title">My Recent Posts</h2>
-                    {% if posts %}
-                        <div class="posts-grid" id="posts-grid">
-                            {% for post in posts|slice:":3" %}
-                                <div class="post-card">
-                                    {% if post.featured_image %}
-                                        <div class="post-image">
-                                            <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                <div class="library-section {% if active_section == 'photos' %}active{% endif %}" id="photos-section" data-section="photos">
+                    <h2 class="library-section-title">
+                        Photos
+                        {% if user.is_authenticated %}
+                            <button class="add-button add-button-right" id="photos-add-btn" title="Add Photo">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        {% endif %}
+                    </h2>
+                    {% if photos %}
+                        <div class="projects-grid">
+                            {% for photo in photos %}
+                                <div class="project-card">
+                                    {% if photo.image %}
+                                        <div class="project-image">
+                                            <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
                                         </div>
                                     {% endif %}
-                                    <div class="post-content">
-                                        <h3>{{ post.title }}</h3>
-                                        {% if post.excerpt %}
-                                            <p class="post-excerpt">{{ post.excerpt|truncatewords:30 }}</p>
-                                        {% else %}
-                                            <p class="post-excerpt">{{ post.content|truncatewords:30|striptags }}</p>
-                                        {% endif %}
-                                        {% if post.published_date %}
-                                            <p class="post-date">{{ post.published_date|date:"F d, Y" }}</p>
-                                        {% endif %}
-                                        {% if post.tags %}
-                                            <div class="post-tags">
-                                                <span class="post-tag">{{ post.tags }}</span>
-                                            </div>
-                                        {% endif %}
+                                    <div class="project-content">
+                                        <h3>{{ photo.title }}</h3>
                                     </div>
                                 </div>
                             {% endfor %}
-                            {% if posts|length > 3 %}
-                                {% for post in posts|slice:"3:" %}
-                                    <div class="post-card post-card-hidden">
-                                        {% if post.featured_image %}
-                                            <div class="post-image">
-                                                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
-                                            </div>
-                                        {% endif %}
-                                        <div class="post-content">
-                                            <h3>{{ post.title }}</h3>
-                                            {% if post.excerpt %}
-                                                <p class="post-excerpt">{{ post.excerpt|truncatewords:30 }}</p>
-                                            {% else %}
-                                                <p class="post-excerpt">{{ post.content|truncatewords:30|striptags }}</p>
-                                            {% endif %}
-                                            {% if post.published_date %}
-                                                <p class="post-date">{{ post.published_date|date:"F d, Y" }}</p>
-                                            {% endif %}
-                                            {% if post.tags %}
-                                                <div class="post-tags">
-                                                    <span class="post-tag">{{ post.tags }}</span>
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
                         </div>
-                        {% if posts|length > 3 %}
-                            <div class="posts-load-more-container">
-                                <button class="posts-load-more-btn" id="posts-load-more-btn">
-                                    <span class="load-more-text">More</span>
-                                    <span class="load-more-arrow">▼</span>
-                                </button>
-                            </div>
-                        {% endif %}
                     {% else %}
                         <div class="empty-state">
-                            <p>No posts available yet. Check back soon!</p>
+                            <p>No photos in the library yet. Check back soon!</p>
                         </div>
                     {% endif %}
                 </div>
 
-                {% if not projects and not books and not project_photos and not posts %}
-                    <div class="empty-state">
-                        <p>No content in the library yet. Check back soon!</p>
-                    </div>
-                {% endif %}
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Add Project Popup Panel -->
+    <div class="skill-add-panel project-add-panel" id="project-add-panel">
+        <div class="skill-add-content">
+            <div class="skill-add-header">
+                <span class="skill-add-title">add_project.sh</span>
+                <button class="skill-add-close-btn" id="project-add-close-btn">×</button>
+            </div>
+            <form class="skill-add-form" id="project-add-form" enctype="multipart/form-data">
+                <div class="skill-form-group">
+                    <label for="project-title">Title *</label>
+                    <input type="text" id="project-title" name="title" class="skill-input" value="" required>
+                </div>
+                <div class="skill-form-group">
+                    <label for="project-description">Description *</label>
+                    <textarea id="project-description" name="description" class="skill-input skill-textarea" rows="4" required></textarea>
+                </div>
+                <div class="skill-form-group">
+                    <label for="project-image">Image</label>
+                    <input type="file" id="project-image" name="image" class="skill-input" accept="image/*">
+                </div>
+                <div class="skill-form-group">
+                    <label for="project-skills">Skills *</label>
+                    <select id="project-skills" name="skills" class="skill-input" multiple required style="min-height: 100px;">
+                        {% for skill in skills %}
+                            <option value="{{ skill.id }}">{{ skill.name }} ({{ skill.category }})</option>
+                        {% endfor %}
+                    </select>
+                    <small style="color: rgba(255, 224, 20, 0.6); font-size: 0.8rem; margin-top: 0.25rem;">Hold Ctrl/Cmd to select multiple</small>
+                </div>
+                <button type="submit" class="skill-submit-btn">Submit</button>
+            </form>
+            <div class="skill-add-status" id="project-add-status" style="display: none;">
+                <div class="skill-loading" id="project-loading">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Submitting...</p>
+                </div>
+                <div class="skill-submitted" id="project-submitted" style="display: none;">
+                    <div class="verified-icon">✓</div>
+                    <p class="verified-text">Submitted</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Book Popup Panel -->
+    <div class="skill-add-panel book-add-panel" id="book-add-panel">
+        <div class="skill-add-content">
+            <div class="skill-add-header">
+                <span class="skill-add-title">add_book.sh</span>
+                <button class="skill-add-close-btn" id="book-add-close-btn">×</button>
+            </div>
+            <form class="skill-add-form" id="book-add-form" enctype="multipart/form-data">
+                <div class="skill-form-group">
+                    <label for="book-title">Title *</label>
+                    <input type="text" id="book-title" name="title" class="skill-input" value="" required>
+                </div>
+                <div class="skill-form-group">
+                    <label for="book-author">Author *</label>
+                    <input type="text" id="book-author" name="author" class="skill-input" value="" required>
+                </div>
+                <div class="skill-form-group">
+                    <label for="book-rating">Rating</label>
+                    <select id="book-rating" name="rating" class="skill-input">
+                        <option value="">No rating</option>
+                        <option value="1">1 Star</option>
+                        <option value="2">2 Stars</option>
+                        <option value="3">3 Stars</option>
+                        <option value="4">4 Stars</option>
+                        <option value="5">5 Stars</option>
+                    </select>
+                </div>
+                <div class="skill-form-group">
+                    <label for="book-cover-image">Cover Image</label>
+                    <input type="file" id="book-cover-image" name="cover_image" class="skill-input" accept="image/*">
+                </div>
+                <button type="submit" class="skill-submit-btn">Submit</button>
+            </form>
+            <div class="skill-add-status" id="book-add-status" style="display: none;">
+                <div class="skill-loading" id="book-loading">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Submitting...</p>
+                </div>
+                <div class="skill-submitted" id="book-submitted" style="display: none;">
+                    <div class="verified-icon">✓</div>
+                    <p class="verified-text">Submitted</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Photo Popup Panel -->
+    <div class="skill-add-panel photo-add-panel" id="photo-add-panel">
+        <div class="skill-add-content">
+            <div class="skill-add-header">
+                <span class="skill-add-title">add_photo.sh</span>
+                <button class="skill-add-close-btn" id="photo-add-close-btn">×</button>
+            </div>
+            <form class="skill-add-form" id="photo-add-form" enctype="multipart/form-data">
+                <div class="skill-form-group">
+                    <label for="photo-title">Title *</label>
+                    <input type="text" id="photo-title" name="title" class="skill-input" value="" required>
+                </div>
+                <div class="skill-form-group">
+                    <label for="photo-image">Image *</label>
+                    <input type="file" id="photo-image" name="image" class="skill-input" accept="image/*" required>
+                </div>
+                <button type="submit" class="skill-submit-btn">Submit</button>
+            </form>
+            <div class="skill-add-status" id="photo-add-status" style="display: none;">
+                <div class="skill-loading" id="photo-loading">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Submitting...</p>
+                </div>
+                <div class="skill-submitted" id="photo-submitted" style="display: none;">
+                    <div class="verified-icon">✓</div>
+                    <p class="verified-text">Submitted</p>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'portfolio/js/posts.js' %}"></script>
     <script src="{% static 'portfolio/js/library-sidebar.js' %}"></script>
+    <script src="{% static 'portfolio/js/project-add.js' %}"></script>
+    <script src="{% static 'portfolio/js/book-add.js' %}"></script>
+    <script src="{% static 'portfolio/js/photo-add.js' %}"></script>
 {% endblock %}
 
