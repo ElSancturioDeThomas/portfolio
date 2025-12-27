@@ -7,6 +7,8 @@ import sys
 from pathlib import Path
 
 # Add project root to Python path
+# vercel.py is at portfolio/api/vercel.py
+# BASE_DIR should be portfolio/ (parent of api/)
 BASE_DIR = Path(__file__).resolve().parent.parent
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
@@ -18,7 +20,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "portfolio.settings")
 os.environ["VERCEL"] = "1"
 
 # Import Django WSGI application
-# Vercel's @vercel/python runtime expects 'app' variable for WSGI applications
+# The wsgi.py file is at portfolio/wsgi.py
+# When Python path includes portfolio/, we import portfolio.wsgi
 from portfolio.wsgi import application
 
+# Vercel's @vercel/python runtime expects 'app' variable for WSGI applications
 app = application
