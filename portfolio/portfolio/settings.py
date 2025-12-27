@@ -56,7 +56,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # Add WhiteNoise for static files
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Add WhiteNoise for static files (must be after SecurityMiddleware)
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -64,6 +64,16 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+# WhiteNoise configuration - allow serving from STATICFILES_DIRS
+# This enables WhiteNoise to serve files even if collectstatic hasn't run
+try:
+    import whitenoise
+    # Configure WhiteNoise to add files from STATICFILES_DIRS to its list
+    # This allows serving files directly from source directories
+    WHITENOISE_USE_FINDERS = True  # Enable finding files in STATICFILES_DIRS
+except ImportError:
+    pass
 
 ROOT_URLCONF = "portfolio.urls"
 
