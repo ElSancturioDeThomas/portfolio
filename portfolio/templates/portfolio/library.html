@@ -171,42 +171,42 @@
     </section>
 
     <!-- Add Project Popup Panel -->
-    <div class="skill-add-panel project-add-panel" id="project-add-panel">
-        <div class="skill-add-content">
-            <div class="skill-add-header">
-                <span class="skill-add-title">add_project.sh</span>
-                <button class="skill-add-close-btn" id="project-add-close-btn">×</button>
+    <div class="skill-add-panel project-add-panel admin-panel admin-panel--center" id="project-add-panel">
+        <div class="skill-add-content admin-panel-content">
+            <div class="skill-add-header admin-panel-header">
+                <span class="skill-add-title admin-panel-title">add_project.sh</span>
+                <button class="skill-add-close-btn admin-panel-close-btn" id="project-add-close-btn">×</button>
             </div>
-            <form class="skill-add-form" id="project-add-form" enctype="multipart/form-data">
-                <div class="skill-form-group">
+            <form class="skill-add-form admin-panel-form" id="project-add-form" enctype="multipart/form-data">
+                <div class="skill-form-group admin-form-group">
                     <label for="project-title">Title *</label>
-                    <input type="text" id="project-title" name="title" class="skill-input" value="" required>
+                    <input type="text" id="project-title" name="title" class="skill-input admin-input" value="" required>
                 </div>
-                <div class="skill-form-group">
+                <div class="skill-form-group admin-form-group">
                     <label for="project-description">Description *</label>
-                    <textarea id="project-description" name="description" class="skill-input skill-textarea" rows="4" required></textarea>
+                    <textarea id="project-description" name="description" class="skill-input skill-textarea admin-input admin-textarea" rows="4" required></textarea>
                 </div>
-                <div class="skill-form-group">
+                <div class="skill-form-group admin-form-group">
                     <label for="project-image">Image</label>
-                    <input type="file" id="project-image" name="image" class="skill-input" accept="image/*">
+                    <input type="file" id="project-image" name="image" class="skill-input admin-input" accept="image/*">
                 </div>
-                <div class="skill-form-group">
+                <div class="skill-form-group admin-form-group">
                     <label for="project-skills">Skills *</label>
-                    <select id="project-skills" name="skills" class="skill-input" multiple required style="min-height: 100px;">
+                    <select id="project-skills" name="skills" class="skill-input admin-input" multiple required style="min-height: 100px;">
                         {% for skill in skills %}
                             <option value="{{ skill.id }}">{{ skill.name }} ({{ skill.category }})</option>
                         {% endfor %}
                     </select>
                     <small style="color: rgba(255, 224, 20, 0.6); font-size: 0.8rem; margin-top: 0.25rem;">Hold Ctrl/Cmd to select multiple</small>
                 </div>
-                <button type="submit" class="skill-submit-btn">Submit</button>
+                <button type="submit" class="skill-submit-btn admin-submit-btn">Submit</button>
             </form>
-            <div class="skill-add-status" id="project-add-status" style="display: none;">
-                <div class="skill-loading" id="project-loading">
+            <div class="skill-add-status admin-panel-status" id="project-add-status" style="display: none;">
+                <div class="skill-loading admin-loading" id="project-loading">
                     <div class="loading-spinner"></div>
                     <p class="loading-text">Submitting...</p>
                 </div>
-                <div class="skill-submitted" id="project-submitted" style="display: none;">
+                <div class="skill-submitted admin-submitted" id="project-submitted" style="display: none;">
                     <div class="verified-icon">✓</div>
                     <p class="verified-text">Submitted</p>
                 </div>
@@ -215,24 +215,24 @@
     </div>
 
     <!-- Add Book Popup Panel -->
-    <div class="skill-add-panel book-add-panel" id="book-add-panel">
-        <div class="skill-add-content">
-            <div class="skill-add-header">
-                <span class="skill-add-title">add_book.sh</span>
-                <button class="skill-add-close-btn" id="book-add-close-btn">×</button>
+    <div class="skill-add-panel book-add-panel admin-panel admin-panel--center" id="book-add-panel">
+        <div class="skill-add-content admin-panel-content">
+            <div class="skill-add-header admin-panel-header">
+                <span class="skill-add-title admin-panel-title">add_book.sh</span>
+                <button class="skill-add-close-btn admin-panel-close-btn" id="book-add-close-btn">×</button>
             </div>
-            <form class="skill-add-form" id="book-add-form" enctype="multipart/form-data">
-                <div class="skill-form-group">
+            <form class="skill-add-form admin-panel-form" id="book-add-form" enctype="multipart/form-data">
+                <div class="skill-form-group admin-form-group">
                     <label for="book-title">Title *</label>
-                    <input type="text" id="book-title" name="title" class="skill-input" value="" required>
+                    <input type="text" id="book-title" name="title" class="skill-input admin-input" value="" required>
                 </div>
-                <div class="skill-form-group">
+                <div class="skill-form-group admin-form-group">
                     <label for="book-author">Author *</label>
-                    <input type="text" id="book-author" name="author" class="skill-input" value="" required>
+                    <input type="text" id="book-author" name="author" class="skill-input admin-input" value="" required>
                 </div>
-                <div class="skill-form-group">
+                <div class="skill-form-group admin-form-group">
                     <label for="book-rating">Rating</label>
-                    <select id="book-rating" name="rating" class="skill-input">
+                    <select id="book-rating" name="rating" class="skill-input admin-input">
                         <option value="">No rating</option>
                         <option value="1">1 Star</option>
                         <option value="2">2 Stars</option>
@@ -241,18 +241,18 @@
                         <option value="5">5 Stars</option>
                     </select>
                 </div>
-                <div class="skill-form-group">
+                <div class="skill-form-group admin-form-group">
                     <label for="book-cover-image">Cover Image</label>
-                    <input type="file" id="book-cover-image" name="cover_image" class="skill-input" accept="image/*">
+                    <input type="file" id="book-cover-image" name="cover_image" class="skill-input admin-input" accept="image/*">
                 </div>
-                <button type="submit" class="skill-submit-btn">Submit</button>
+                <button type="submit" class="skill-submit-btn admin-submit-btn">Submit</button>
             </form>
-            <div class="skill-add-status" id="book-add-status" style="display: none;">
-                <div class="skill-loading" id="book-loading">
+            <div class="skill-add-status admin-panel-status" id="book-add-status" style="display: none;">
+                <div class="skill-loading admin-loading" id="book-loading">
                     <div class="loading-spinner"></div>
                     <p class="loading-text">Submitting...</p>
                 </div>
-                <div class="skill-submitted" id="book-submitted" style="display: none;">
+                <div class="skill-submitted admin-submitted" id="book-submitted" style="display: none;">
                     <div class="verified-icon">✓</div>
                     <p class="verified-text">Submitted</p>
                 </div>
@@ -261,29 +261,29 @@
     </div>
 
     <!-- Add Photo Popup Panel -->
-    <div class="skill-add-panel photo-add-panel" id="photo-add-panel">
-        <div class="skill-add-content">
-            <div class="skill-add-header">
-                <span class="skill-add-title">add_photo.sh</span>
-                <button class="skill-add-close-btn" id="photo-add-close-btn">×</button>
+    <div class="skill-add-panel photo-add-panel admin-panel admin-panel--center" id="photo-add-panel">
+        <div class="skill-add-content admin-panel-content">
+            <div class="skill-add-header admin-panel-header">
+                <span class="skill-add-title admin-panel-title">add_photo.sh</span>
+                <button class="skill-add-close-btn admin-panel-close-btn" id="photo-add-close-btn">×</button>
             </div>
-            <form class="skill-add-form" id="photo-add-form" enctype="multipart/form-data">
-                <div class="skill-form-group">
+            <form class="skill-add-form admin-panel-form" id="photo-add-form" enctype="multipart/form-data">
+                <div class="skill-form-group admin-form-group">
                     <label for="photo-title">Title *</label>
-                    <input type="text" id="photo-title" name="title" class="skill-input" value="" required>
+                    <input type="text" id="photo-title" name="title" class="skill-input admin-input" value="" required>
                 </div>
-                <div class="skill-form-group">
+                <div class="skill-form-group admin-form-group">
                     <label for="photo-image">Image *</label>
-                    <input type="file" id="photo-image" name="image" class="skill-input" accept="image/*" required>
+                    <input type="file" id="photo-image" name="image" class="skill-input admin-input" accept="image/*" required>
                 </div>
-                <button type="submit" class="skill-submit-btn">Submit</button>
+                <button type="submit" class="skill-submit-btn admin-submit-btn">Submit</button>
             </form>
-            <div class="skill-add-status" id="photo-add-status" style="display: none;">
-                <div class="skill-loading" id="photo-loading">
+            <div class="skill-add-status admin-panel-status" id="photo-add-status" style="display: none;">
+                <div class="skill-loading admin-loading" id="photo-loading">
                     <div class="loading-spinner"></div>
                     <p class="loading-text">Submitting...</p>
                 </div>
-                <div class="skill-submitted" id="photo-submitted" style="display: none;">
+                <div class="skill-submitted admin-submitted" id="photo-submitted" style="display: none;">
                     <div class="verified-icon">✓</div>
                     <p class="verified-text">Submitted</p>
                 </div>
