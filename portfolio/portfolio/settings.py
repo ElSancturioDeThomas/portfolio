@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Add WhiteNoise for static files
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -63,15 +64,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
-# Add WhiteNoise middleware for production (Vercel)
-# Only add if not in DEBUG mode or if WhiteNoise is installed
-if not DEBUG:
-    try:
-        import whitenoise
-        MIDDLEWARE.insert(2, "whitenoise.middleware.WhiteNoiseMiddleware")
-    except ImportError:
-        pass  # WhiteNoise not installed, skip (for local dev without it)
 
 ROOT_URLCONF = "portfolio.urls"
 
