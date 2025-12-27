@@ -40,7 +40,8 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '.vercel.app',
-    'heal.enterprises',
+    'heal.industries',
+    'www.heal.industries',
 ] + custom_hosts
 
 # Use X-Forwarded-Host header (Vercel sets this for custom domains)
