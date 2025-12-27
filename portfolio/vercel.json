@@ -1,20 +1,13 @@
 {
   "version": 2,
-  "buildCommand": "pip install -r requirements.txt && python manage.py collectstatic --noinput",
-  "builds": [
+  "buildCommand": "pip install -r requirements.txt",
+  "outputDirectory": ".",
+  "installCommand": "pip install -r requirements.txt",
+  "framework": null,
+  "rewrites": [
     {
-      "src": "portfolio/api/vercel.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "15mb",
-        "runtime": "python3.11"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "portfolio/api/vercel.py"
+      "source": "/(.*)",
+      "destination": "/api/vercel.py"
     }
   ]
 }

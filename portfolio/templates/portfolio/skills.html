@@ -23,26 +23,14 @@
                 {% for category, skills_list in skills_by_category %}
                     <div class="skill-category-group">
                         <h3 class="skill-category-heading">{{ category }}</h3>
-                        {% if category == "Programming Languages" %}
-                            <div class="skills-grid skills-grid-programming">
-                        {% elif category == "Spoken Languages" %}
-                            <div class="skills-grid skills-grid-spoken">
-                        {% elif category == "Soft" %}
-                            <div class="skills-grid skills-grid-soft">
-                        {% elif category == "Hard" %}
-                            <div class="skills-grid skills-grid-hard">
-                        {% else %}
-                            <div class="skills-grid skills-grid-uncategorized">
-                        {% endif %}
+                        <div class="skills-grid">
                             {% for skill in skills_list %}
-                                <div class="skill-card glass-card">
+                                <div class="skill-card glass-card glass-effect">
                                     <div class="skill-card-content">
-                                        {% if skill.icon %}
-                                            <div class="skill-card-icon-wrapper">
-                                                <img src="{{ skill.icon.url }}" alt="{{ skill.name }}" class="skill-card-icon-image">
-                                            </div>
-                                        {% endif %}
                                         <h4 class="skill-card-title">{{ skill.name }}</h4>
+                                        {% if skill.description %}
+                                            <p class="skill-card-description">{{ skill.description }}</p>
+                                        {% endif %}
                                     </div>
                                 </div>
                             {% empty %}
@@ -59,44 +47,40 @@
     </section>
 
     <!-- Add Skill Popup Panel -->
-    <div class="skill-add-panel" id="skill-add-panel">
-        <div class="skill-add-content">
-            <div class="skill-add-header">
-                <span class="skill-add-title">add_skill.sh</span>
-                <button class="skill-add-close-btn" id="skill-add-close-btn">×</button>
+    <div class="skill-add-panel admin-panel admin-panel--center" id="skill-add-panel">
+        <div class="skill-add-content admin-panel-content">
+            <div class="skill-add-header admin-panel-header">
+                <span class="skill-add-title admin-panel-title">add_skill.sh</span>
+                <button class="skill-add-close-btn admin-panel-close-btn" id="skill-add-close-btn">×</button>
             </div>
-            <form class="skill-add-form" id="skill-add-form" enctype="multipart/form-data">
-                <div class="skill-form-group">
+            <form class="skill-add-form admin-panel-form" id="skill-add-form">
+                <div class="skill-form-group admin-form-group">
                     <label for="skill-name">Name *</label>
-                    <input type="text" id="skill-name" name="name" class="skill-input" value="" required>
+                    <input type="text" id="skill-name" name="name" class="skill-input admin-input" value="" required>
                 </div>
-                <div class="skill-form-group">
+                <div class="skill-form-group admin-form-group">
                     <label for="skill-description">Description</label>
-                    <textarea id="skill-description" name="description" class="skill-input skill-textarea" rows="3" placeholder="Brief description of the skill..."></textarea>
+                    <textarea id="skill-description" name="description" class="skill-input skill-textarea admin-input admin-textarea" rows="3" placeholder="Brief description of the skill..."></textarea>
                 </div>
-                <div class="skill-form-group">
-                    <label for="skill-icon">Icon (Optional)</label>
-                    <input type="file" id="skill-icon" name="icon" class="skill-input" accept="image/*">
-                    <small style="color: rgba(255, 224, 20, 0.6); font-size: 0.8rem; margin-top: 0.25rem; display: block;">Recommended: Square image, 64x64px or larger</small>
-                </div>
-                <div class="skill-form-group">
+                <div class="skill-form-group admin-form-group">
                     <label for="skill-category">Category</label>
-                    <select id="skill-category" name="category" class="skill-input">
+                    <select id="skill-category" name="category" class="skill-input admin-input">
                         <option value="">Select a category</option>
                         <option value="Programming Languages">Programming Languages</option>
+                        <option value="Packages">Packages</option>
                         <option value="Soft">Soft</option>
                         <option value="Hard">Hard</option>
                         <option value="Spoken Languages">Spoken Languages</option>
                     </select>
                 </div>
-                <button type="submit" class="skill-submit-btn">Submit</button>
+                <button type="submit" class="skill-submit-btn admin-submit-btn">Submit</button>
             </form>
-            <div class="skill-add-status" id="skill-add-status" style="display: none;">
-                <div class="skill-loading" id="skill-loading">
+            <div class="skill-add-status admin-panel-status" id="skill-add-status" style="display: none;">
+                <div class="skill-loading admin-loading" id="skill-loading">
                     <div class="loading-spinner"></div>
                     <p class="loading-text">Submitting...</p>
                 </div>
-                <div class="skill-submitted" id="skill-submitted" style="display: none;">
+                <div class="skill-submitted admin-submitted" id="skill-submitted" style="display: none;">
                     <div class="verified-icon">✓</div>
                     <p class="verified-text">Submitted</p>
                 </div>
