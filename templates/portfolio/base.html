@@ -5,6 +5,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Portfolio{% endblock %}</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'portfolio/assets/TigerFavicon32x32.png' %}">
+    <link rel="icon" type="image/svg+xml" href="{% static 'portfolio/assets/TigerSVG.svg' %}">
+    <link rel="apple-touch-icon" sizes="100x100" href="{% static 'portfolio/assets/Tiger-Icon100x100.png' %}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:title" content="{% block og_title %}Portfolio{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Personal portfolio showcasing projects, skills, and experiences{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'portfolio/assets/Tiger-Icon100x100.png' %}{% endblock %}">
+    <meta property="og:image:width" content="100">
+    <meta property="og:image:height" content="100">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:url" content="{{ request.build_absolute_uri }}">
+    <meta name="twitter:title" content="{% block twitter_title %}Portfolio{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Personal portfolio showcasing projects, skills, and experiences{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'portfolio/assets/Tiger-Icon100x100.png' %}{% endblock %}">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="description" content="{% block meta_description %}Personal portfolio showcasing projects, skills, and experiences{% endblock %}">
+    <meta name="theme-color" content="#ffe014">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
