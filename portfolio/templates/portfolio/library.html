@@ -66,16 +66,6 @@
                                     <div class="project-content">
                                         <h3>{{ project.title }}</h3>
                                         <p class="project-description">{{ project.description }}</p>
-                                        {% if project.skills.all %}
-                                            <div class="project-skills">
-                                                <strong>Skills:</strong>
-                                                <div class="project-skills-list">
-                                                    {% for skill in project.skills.all %}
-                                                        <span class="project-skill-tag">{{ skill.name }}</span>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                        {% endif %}
                                     </div>
                                 </div>
                             {% endfor %}
@@ -189,15 +179,6 @@
                 <div class="skill-form-group">
                     <label for="project-image">Image</label>
                     <input type="file" id="project-image" name="image" class="skill-input" accept="image/*">
-                </div>
-                <div class="skill-form-group">
-                    <label for="project-skills">Skills *</label>
-                    <select id="project-skills" name="skills" class="skill-input" multiple required style="min-height: 100px;">
-                        {% for skill in skills %}
-                            <option value="{{ skill.id }}">{{ skill.name }} ({{ skill.category }})</option>
-                        {% endfor %}
-                    </select>
-                    <small style="color: rgba(255, 224, 20, 0.6); font-size: 0.8rem; margin-top: 0.25rem;">Hold Ctrl/Cmd to select multiple</small>
                 </div>
                 <button type="submit" class="skill-submit-btn">Submit</button>
             </form>

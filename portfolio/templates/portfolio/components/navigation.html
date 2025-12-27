@@ -1,6 +1,6 @@
 {% load static %}
 <nav class="main-navigation">
-    <div class="nav-container">
+    <div class="nav-container-desktop">
         <!-- Left Navigation Section Wrapper -->
         <div class="nav-sections-left-wrapper">
             <div class="nav-section-left">
@@ -37,6 +37,39 @@
                     <span class="nav-link-tooltip">LinkedIn</span>
                 </a>
             </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Navigation Tab - Outside nav-container-desktop so it can be shown when nav-container-desktop is hidden -->
+    <button class="mobile-nav-tab" aria-label="Toggle mobile menu" aria-expanded="false">
+        Navigation
+    </button>
+    
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay">
+        <div class="mobile-menu-content">
+            <ul class="mobile-nav-menu">
+                <li><a href="{% url 'library' %}" class="mobile-nav-link">Library</a></li>
+                <li><a href="{% url 'index' %}" class="mobile-nav-link">Home</a></li>
+                <li><a href="{% url 'skills' %}" class="mobile-nav-link">Skills</a></li>
+                <li>
+                    <a href="https://www.roots.gov.sg/stories-landing/stories/the-singapore-story-through-60-objects/colonial/boschbrand/story" target="_blank" rel="noopener noreferrer" class="mobile-nav-link">
+                        Boschbrand | 1849
+                    </a>
+                </li>
+                <li class="mobile-nav-social">
+                    <a href="https://github.com/ElSancturioDeThomas" target="_blank" rel="noopener noreferrer" class="mobile-nav-link mobile-nav-link-icon" aria-label="GitHub">
+                        <i class="fab fa-github social-icon"></i>
+                        <span>GitHub</span>
+                    </a>
+                </li>
+                <li class="mobile-nav-social">
+                    <a href="https://www.linkedin.com/in/thomas-heal-019198280/" target="_blank" rel="noopener noreferrer" class="mobile-nav-link mobile-nav-link-icon" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin social-icon"></i>
+                        <span>LinkedIn</span>
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>

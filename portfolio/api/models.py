@@ -23,12 +23,7 @@ class Project(models.Model):
     """Portfolio project model"""
     title = models.CharField(max_length=200)
     description = models.TextField()
-    image = models.ImageField(upload_to='projects/', blank=True, null=True)
-    skills = models.ManyToManyField(
-        'Skills',
-        related_name='projects',
-        help_text="Select or create skills used in this project (required)"
-    )
+    image = models.ImageField(upload_to='projects/', help_text="Project image (required)")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -49,7 +44,7 @@ class Book(models.Model):
         blank=True,
         help_text="Rating from 1-5"
     )
-    cover_image = models.ImageField(upload_to='books/', blank=True, null=True)
+    cover_image = models.ImageField(upload_to='books/', help_text="Book cover image (required)")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -62,7 +57,7 @@ class Book(models.Model):
 class Photo(models.Model):
     """Photos in the library"""
     title = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='photos/', blank=True, null=True)
+    image = models.ImageField(upload_to='photos/', help_text="Photo image (required)")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -100,14 +95,13 @@ class Skills(models.Model):
     
     CATEGORY_CHOICES = [
         ('Programming Languages', 'Programming Languages'),
-        ('Packages', 'Packages'),
         ('Soft', 'Soft'),
         ('Hard', 'Hard'),
         ('Spoken Languages', 'Spoken Languages'),
     ]
 
     name = models.CharField(max_length=100, unique=True)
-    description = models.TextField(blank=True)
+    icon = models.ImageField(upload_to='skills/icons/', blank=True, null=True, help_text="Icon/image for this skill")
     category = models.CharField(
         max_length=50, 
         choices=CATEGORY_CHOICES, 

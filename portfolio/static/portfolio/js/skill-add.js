@@ -110,18 +110,14 @@
                 const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
                                  document.cookie.match(/csrftoken=([^;]+)/)?.[1];
                 
-                // Submit via AJAX
+                // Submit via AJAX (using FormData for file upload support)
                 fetch('/api/skills/create/', {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': csrftoken,
-                        'Content-Type': 'application/json',
+                        // Don't set Content-Type - let browser set it with boundary for FormData
                     },
-                    body: JSON.stringify({
-                        name: formData.get('name'),
-                        description: formData.get('description'),
-                        category: formData.get('category'),
-                    }),
+                    body: formData,
                     credentials: 'same-origin'
                 })
                 .then(function(response) {

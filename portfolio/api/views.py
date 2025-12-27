@@ -175,7 +175,6 @@ def skills_view(request):
     # Define the order of categories
     category_order = [
         'Programming Languages',
-        'Packages',
         'Soft',
         'Hard',
         'Spoken Languages'
@@ -216,14 +215,12 @@ def library_view(request):
     projects = Project.objects.all().order_by('-created_at')
     books = Book.objects.all().order_by('-created_at')
     photos = Photo.objects.all().order_by('-created_at')
-    skills = Skills.objects.all().order_by('category', 'name')
     
     context = {
         'timestamp': int(time.time()),
         'projects': projects,
         'books': books,
         'photos': photos,
-        'skills': skills,
         'active_section': section,  # Pass active section to template
     }
     
@@ -235,7 +232,6 @@ def library_view(request):
             'projects': projects,
             'books': books,
             'photos': photos,
-            'skills': skills,
             'user': request.user,
         })
         return JsonResponse({'html': section_html})
@@ -367,7 +363,6 @@ def create_project(request):
     try:
         title = request.POST.get('title', '').strip()
         description = request.POST.get('description', '').strip()
-        skills_ids = request.POST.getlist('skills')
         image = request.FILES.get('image', None)
         
         if not title:
@@ -376,8 +371,8 @@ def create_project(request):
         if not description:
             return JsonResponse({'success': False, 'error': 'Description is required'}, status=400)
         
-        if not skills_ids:
-            return JsonResponse({'success': False, 'error': 'At least one skill is required'}, status=400)
+        if not image:
+            return JsonResponse({'success': False, 'error': 'Image is required'}, status=400)
         
         # Create project
         project = Project.objects.create(
@@ -385,10 +380,6 @@ def create_project(request):
             description=description,
             image=image
         )
-        
-        # Add skills
-        skills = Skills.objects.filter(id__in=skills_ids)
-        project.skills.set(skills)
         
         return JsonResponse({
             'success': True,
@@ -424,6 +415,9 @@ def create_book(request):
         
         if not author:
             return JsonResponse({'success': False, 'error': 'Author is required'}, status=400)
+        
+        if not cover_image:
+            return JsonResponse({'success': False, 'error': 'Cover image is required'}, status=400)
         
         # Create book
         book = Book.objects.create(
@@ -496,20 +490,29 @@ def create_skill(request):
         return JsonResponse({'success': False, 'error': 'Authentication required'}, status=401)
     
     try:
-        data = json.loads(request.body)
-        name = data.get('name', '').strip()
+        # Handle both JSON (legacy) and FormData (with file upload)
+        if request.content_type and 'application/json' in request.content_type:
+            data = json.loads(request.body)
+            name = data.get('name', '').strip()
+            category = data.get('category', '')
+            icon = None
+        else:
+            # FormData with file upload
+            name = request.POST.get('name', '').strip()
+            category = request.POST.get('category', '')
+            icon = request.FILES.get('icon', None)
         
         if not name:
             return JsonResponse({'success': False, 'error': 'Name is required'}, status=400)
         
-        # Check if skill with same name already exists
-        if Skills.objects.filter(name=name).exists():
+        # Check if skill with same name already exists (case-insensitive)
+        if Skills.objects.filter(name__iexact=name).exists():
             return JsonResponse({'success': False, 'error': 'Skill with this name already exists'}, status=400)
         
         skill = Skills.objects.create(
             name=name,
-            description=data.get('description', ''),
-            category=data.get('category', '')
+            category=category,
+            icon=icon
         )
         
         return JsonResponse({
@@ -518,8 +521,8 @@ def create_skill(request):
             'skill': {
                 'id': skill.id,
                 'name': skill.name,
-                'description': skill.description,
-                'category': skill.category
+                'category': skill.category,
+                'has_icon': bool(skill.icon)
             }
         })
     except json.JSONDecodeError:

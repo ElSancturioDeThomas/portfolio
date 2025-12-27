@@ -21,16 +21,6 @@
                     <div class="project-content">
                         <h3>{{ project.title }}</h3>
                         <p class="project-description">{{ project.description }}</p>
-                        {% if project.skills.all %}
-                            <div class="project-skills">
-                                <strong>Skills:</strong>
-                                <div class="project-skills-list">
-                                    {% for skill in project.skills.all %}
-                                        <span class="project-skill-tag">{{ skill.name }}</span>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
