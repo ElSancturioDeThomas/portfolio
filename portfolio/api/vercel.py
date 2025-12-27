@@ -25,25 +25,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "portfolio.settings")
 try:
     from portfolio.wsgi import application
     
-    # After Django is loaded, check if we need to run collectstatic
-    # This runs once when the function is initialized
-    try:
-        from django.conf import settings
-        static_root = Path(settings.STATIC_ROOT)
-        # Only run collectstatic if staticfiles directory doesn't exist or is empty
-        if os.environ.get('VERCEL') and (not static_root.exists() or not any(static_root.iterdir())):
-            try:
-                from django.core.management import call_command
-                print("Running collectstatic programmatically...", file=sys.stderr)
-                call_command('collectstatic', '--noinput', verbosity=1)
-                print("collectstatic completed", file=sys.stderr)
-            except Exception as collect_error:
-                # Don't fail if collectstatic fails - WhiteNoise can serve from STATICFILES_DIRS
-                print(f"Note: collectstatic not run (will use STATICFILES_DIRS): {collect_error}", file=sys.stderr)
-    except Exception as static_error:
-        # Ignore static file collection errors - not critical
-        print(f"Note: Could not check/run collectstatic: {static_error}", file=sys.stderr)
-    
     # Test database connection if configured
     try:
         from django.db import connection

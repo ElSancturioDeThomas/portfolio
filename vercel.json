@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "bash portfolio/build.sh",
+  "buildCommand": "cd portfolio && pip install -r requirements.txt && python manage.py collectstatic --noinput",
   "builds": [
     {
       "src": "portfolio/api/vercel.py",

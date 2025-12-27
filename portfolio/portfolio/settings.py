@@ -197,21 +197,12 @@ STATICFILES_DIRS = [
 ]
 
 # WhiteNoise configuration for serving static files on Vercel
-# Only use WhiteNoise storage if not in DEBUG and WhiteNoise is available
+# Use CompressedStaticFilesStorage (without manifest) for easier debugging
+# Manifest storage can cause issues if files aren't found
 if not DEBUG:
     try:
         import whitenoise
-        # Use CompressedManifestStaticFilesStorage if collectstatic ran
-        # Otherwise fall back to serving from STATICFILES_DIRS directly
-        import os
-        static_root = BASE_DIR.parent / "staticfiles"
-        if static_root.exists() and any(static_root.iterdir()):
-            # collectstatic ran, use compressed storage
-            STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-        else:
-            # collectstatic didn't run, serve directly from STATICFILES_DIRS
-            STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-            # WhiteNoise will serve from STATICFILES_DIRS if STATIC_ROOT doesn't exist
+        STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
     except ImportError:
         pass  # WhiteNoise not installed, use default storage
 
