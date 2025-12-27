@@ -4,13 +4,15 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.contrib.staticfiles import finders
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Project, Skills, Book, Country, Hobby, Photo
 import requests
 import json
+import os
 
 
 def get_github_contributions():
@@ -131,6 +133,15 @@ def get_github_contributions():
     except Exception as e:
         logger.exception(f"Unexpected error fetching GitHub contributions: {e}")
         return {'weeks': [], 'total_contributions': 0}
+
+
+def favicon_view(request):
+    """Serve favicon at root path for browser compatibility"""
+    favicon_path = finders.find('portfolio/assets/TigerFavicon32x32.png')
+    if favicon_path:
+        with open(favicon_path, 'rb') as f:
+            return HttpResponse(f.read(), content_type='image/png')
+    return HttpResponse(status=404)
 
 
 def index(request):

@@ -1,75 +1,91 @@
 {% load static %}
-<!-- Desktop Navigation -->
-<nav class="main-navigation">
-    <div class="nav-container-desktop">
-        <!-- Left Navigation Section Wrapper -->
-        <div class="nav-sections-left-wrapper">
-            <div class="nav-section-left">
-                <a href="https://www.roots.gov.sg/stories-landing/stories/the-singapore-story-through-60-objects/colonial/boschbrand/story" target="_blank" rel="noopener noreferrer" class="nav-link nav-link-with-tooltip">
-                    Boschbrand | 1849
-                    <span class="nav-link-tooltip">Link to the artist</span>
-                </a>
-            </div>
-        </div>
-        
-        <!-- Original Navigation Section (Center) -->
-        <div class="nav-section-center">
-            <ul class="nav-menu">
-                <li><a href="{% url 'library' %}" class="nav-link">Library</a></li>
-                <li><a href="{% url 'index' %}" class="nav-link">Home</a></li>
-                <li><a href="{% url 'skills' %}" class="nav-link">Skills</a></li>
-            </ul>
-        </div>
-        
-        <!-- Right Navigation Sections Wrapper -->
-        <div class="nav-sections-right-wrapper">
-            <!-- GitHub Navigation Section -->
-            <div class="nav-section-right nav-section-github">
-                <a href="https://github.com/ElSancturioDeThomas" target="_blank" rel="noopener noreferrer" class="nav-link nav-link-icon nav-link-with-tooltip" aria-label="GitHub">
-                    <i class="fab fa-github social-icon"></i>
-                    <span class="nav-link-tooltip">GitHub</span>
-                </a>
+<!-- Navigation Wrapper - Contains both desktop and mobile navs -->
+<div class="desktop-view-active">
+    <!-- Desktop Navigation -->
+    <nav class="main-navigation-desktop">
+        <div class="nav-container-desktop">
+            <!-- Left Navigation Section Wrapper -->
+            <div class="nav-sections-left-wrapper-desktop">
+                <div class="nav-section-left-desktop">
+                    <a href="https://www.roots.gov.sg/stories-landing/stories/the-singapore-story-through-60-objects/colonial/boschbrand/story" target="_blank" rel="noopener noreferrer" class="nav-link-desktop nav-link-with-tooltip-desktop">
+                        Boschbrand | 1849
+                        <span class="nav-link-tooltip-desktop">Link to the artist</span>
+                    </a>
+                </div>
             </div>
             
-            <!-- LinkedIn Navigation Section -->
-            <div class="nav-section-right nav-section-linkedin">
-                <a href="https://www.linkedin.com/in/thomas-heal-019198280/" target="_blank" rel="noopener noreferrer" class="nav-link nav-link-icon nav-link-with-tooltip" aria-label="LinkedIn">
-                    <i class="fab fa-linkedin social-icon"></i>
-                    <span class="nav-link-tooltip">LinkedIn</span>
-                </a>
+            <!-- Original Navigation Section (Center) -->
+            <div class="nav-section-center-desktop">
+                <ul class="nav-menu-desktop">
+                    <li><a href="{% url 'library' %}" class="nav-link-desktop">Library</a></li>
+                    <li><a href="{% url 'index' %}" class="nav-link-desktop">Home</a></li>
+                    <li><a href="{% url 'skills' %}" class="nav-link-desktop">Skills</a></li>
+                </ul>
             </div>
-        </div>
-    </div>
-</nav>
-
-<!-- Mobile Navigation -->
-<nav class="mobile-navigation">
-    <div class="mobile-nav-container">
-        <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation menu">
-            <span class="mobile-nav-icon"></span>
-            <span class="mobile-nav-icon"></span>
-            <span class="mobile-nav-icon"></span>
-        </button>
-        <div class="mobile-nav-menu" id="mobile-nav-menu">
-            <ul class="mobile-nav-links">
-                <li><a href="{% url 'library' %}" class="mobile-nav-link">Library</a></li>
-                <li><a href="{% url 'index' %}" class="mobile-nav-link">Home</a></li>
-                <li><a href="{% url 'skills' %}" class="mobile-nav-link">Skills</a></li>
-                <li>
-                    <a href="https://www.roots.gov.sg/stories-landing/stories/the-singapore-story-through-60-objects/colonial/boschbrand/story" target="_blank" rel="noopener noreferrer" class="mobile-nav-link">
-                        Boschbrand | 1849
+            
+            <!-- Right Navigation Sections Wrapper -->
+            <div class="nav-sections-right-wrapper-desktop">
+                <!-- GitHub Navigation Section -->
+                <div class="nav-section-right-desktop nav-section-github-desktop">
+                    <a href="https://github.com/ElSancturioDeThomas" target="_blank" rel="noopener noreferrer" class="nav-link-desktop nav-link-icon-desktop nav-link-with-tooltip-desktop" aria-label="GitHub">
+                        <i class="fab fa-github social-icon-desktop"></i>
+                        <span class="nav-link-tooltip-desktop">GitHub</span>
                     </a>
-                </li>
-            </ul>
-            <div class="mobile-nav-social">
-                <a href="https://github.com/ElSancturioDeThomas" target="_blank" rel="noopener noreferrer" class="mobile-nav-social-link" aria-label="GitHub">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a href="https://www.linkedin.com/in/thomas-heal-019198280/" target="_blank" rel="noopener noreferrer" class="mobile-nav-social-link" aria-label="LinkedIn">
-                    <i class="fab fa-linkedin"></i>
-                </a>
+                </div>
+                
+                <!-- LinkedIn Navigation Section -->
+                <div class="nav-section-right-desktop nav-section-linkedin-desktop">
+                    <a href="https://www.linkedin.com/in/thomas-heal-019198280/" target="_blank" rel="noopener noreferrer" class="nav-link-desktop nav-link-icon-desktop nav-link-with-tooltip-desktop" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin social-icon-desktop"></i>
+                        <span class="nav-link-tooltip-desktop">LinkedIn</span>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
+</div>
+<div class="mobile-view-active" style="display: none;">
+    <!-- Mobile Navigation -->
+    <nav class="main-navigation-mobile">
+        <div class="nav-container-mobile">
+            <!-- Left Navigation Section Wrapper -->
+            <div class="nav-sections-left-wrapper-mobile">
+                <div class="nav-section-left-mobile">
+                    <a href="https://www.roots.gov.sg/stories-landing/stories/the-singapore-story-through-60-objects/colonial/boschbrand/story" target="_blank" rel="noopener noreferrer" class="nav-link-mobile nav-link-with-tooltip-mobile">
+                        Boschbrand | 1849
+                        <span class="nav-link-tooltip-mobile">Link to the artist</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Original Navigation Section (Center) -->
+            <div class="nav-section-center-mobile">
+                <ul class="nav-menu-mobile">
+                    <li><a href="{% url 'library' %}" class="nav-link-mobile">Library</a></li>
+                    <li><a href="{% url 'index' %}" class="nav-link-mobile">Home</a></li>
+                    <li><a href="{% url 'skills' %}" class="nav-link-mobile">Skills</a></li>
+                </ul>
+            </div>
+            
+            <!-- Right Navigation Sections Wrapper -->
+            <div class="nav-sections-right-wrapper-mobile">
+                <!-- GitHub Navigation Section -->
+                <div class="nav-section-right-mobile nav-section-github-mobile">
+                    <a href="https://github.com/ElSancturioDeThomas" target="_blank" rel="noopener noreferrer" class="nav-link-mobile nav-link-icon-mobile nav-link-with-tooltip-mobile" aria-label="GitHub">
+                        <i class="fab fa-github social-icon-mobile"></i>
+                        <span class="nav-link-tooltip-mobile">GitHub</span>
+                    </a>
+                </div>
+                
+                <!-- LinkedIn Navigation Section -->
+                <div class="nav-section-right-mobile nav-section-linkedin-mobile">
+                    <a href="https://www.linkedin.com/in/thomas-heal-019198280/" target="_blank" rel="noopener noreferrer" class="nav-link-mobile nav-link-icon-mobile nav-link-with-tooltip-mobile" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin social-icon-mobile"></i>
+                        <span class="nav-link-tooltip-mobile">LinkedIn</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
 

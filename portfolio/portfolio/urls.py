@@ -27,6 +27,8 @@ urlpatterns = [
     path("skills/", views.skills_view, name="skills"),
     path("admin/", admin.site.urls),
     path("api/", include("api.urls")),
+    # Serve favicon at root path for browser compatibility
+    path("favicon.ico", views.favicon_view, name="favicon"),
 ]
 
 # WhiteNoise will serve static files in production (Vercel)
