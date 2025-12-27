@@ -120,16 +120,19 @@ def skills_view(request):
 
 
 def library_view(request):
-    """Library page view - combines Projects, Books, and Photos"""
+    """Library page view - combines Projects, Books, Photos, and Posts"""
     import time
     projects = Project.objects.all().order_by('-created_at')
     books = Book.objects.all().order_by('-read_date', '-created_at')
     project_photos = Project.objects.exclude(image='').order_by('-created_at')
+    # Get published posts, ordered by published date
+    posts = Post.objects.filter(status='published').order_by('-published_date', '-created_at')
     context = {
         'timestamp': int(time.time()),
         'projects': projects,
         'books': books,
-        'project_photos': project_photos
+        'project_photos': project_photos,
+        'posts': posts
     }
     return render(request, 'portfolio/library.html', context)
 

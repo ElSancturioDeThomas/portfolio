@@ -129,32 +129,32 @@
         }, { passive: true });
     }
     
-    function zoomToGreenfields() {
+    function zoomToPinjarra() {
         // Ensure map is initialized before zooming
         if (!locationMap) {
             initLocationMap();
             // Wait a moment for map to render before zooming
             setTimeout(() => {
                 if (locationMap) {
-                    // Coordinates for Greenfields, Western Australia
-                    // Greenfields is a suburb of Mandurah, approximately -32.54, 115.76
-                    locationMap.flyTo([-32.54, 115.76], 13, {
+                    // Coordinates for Pinjarra, Western Australia
+                    // Pinjarra is a town in Western Australia, approximately -32.63, 115.87
+                    locationMap.flyTo([-32.63, 115.87], 13, {
                         animate: true,
                         duration: 3 // Duration in seconds
                     });
                 }
             }, 100);
         } else {
-            // Coordinates for Greenfields, Western Australia
-            locationMap.flyTo([-32.54, 115.76], 13, {
+            // Coordinates for Pinjarra, Western Australia
+            locationMap.flyTo([-32.63, 115.87], 13, {
                 animate: true,
                 duration: 3 // Duration in seconds
             });
         }
     }
     
-    // Make zoomToGreenfields available globally for onclick handler
-    window.zoomToGreenfields = zoomToGreenfields;
+    // Make zoomToPinjarra available globally for onclick handler
+    window.zoomToPinjarra = zoomToPinjarra;
     
     // Initialize map when page loads
     document.addEventListener('DOMContentLoaded', function() {

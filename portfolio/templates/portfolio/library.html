@@ -5,14 +5,34 @@
 {% block title %}Library - Portfolio{% endblock %}
 
 {% block content %}
+    <!-- Background Section -->
     <section class="page-hero-section library-hero-section">
-        <img src="{% static 'portfolio/assets/TokyoYellow.png' %}?v={{ timestamp|default:'' }}" alt="Background" class="page-hero-image">
+        <img src="{% static 'portfolio/assets/TigersOnFire.png' %}?v={{ timestamp|default:'' }}" alt="Background" class="page-hero-image">
         <div class="page-hero-overlay"></div>
-        <div class="container">
-            <div class="content">
+    </section>
+
+    <!-- Main Library Content Section -->
+    <section class="library-main-section">
+        <div class="library-layout-container">
+            <!-- Left Sidebar Navigation (1/5) -->
+            <div class="library-sidebar-left">
+                <nav class="library-sidebar-nav">
+                    <ul class="library-sidebar-menu">
+                        <li><button class="library-sidebar-btn active" data-section="projects">Projects</button></li>
+                        <li><button class="library-sidebar-btn" data-section="books">Books</button></li>
+                        <li><button class="library-sidebar-btn" data-section="photos">Photos</button></li>
+                        <li><button class="library-sidebar-btn" data-section="posts">Posts</button></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Main Content Area (4/5) -->
+            <div class="library-content-main">
+                <!-- Main Glass Container -->
+                <div class="library-glass-container">
                 <!-- Projects Section -->
                 {% if projects %}
-                    <div class="library-section">
+                    <div class="library-section active" id="projects-section" data-section="projects">
                         <h2 class="library-section-title">Projects</h2>
                         <div class="projects-grid">
                             {% for project in projects %}
@@ -50,7 +70,7 @@
                 {% endif %}
 
                 <!-- Books Section -->
-                <div class="library-section">
+                <div class="library-section" id="books-section" data-section="books" style="display: none;">
                     <h2 class="library-section-title">Books</h2>
                     {% if books %}
                         <div class="books-table-container">
@@ -104,7 +124,7 @@
 
                 <!-- Photos Section -->
                 {% if project_photos %}
-                    <div class="library-section">
+                    <div class="library-section" id="photos-section" data-section="photos" style="display: none;">
                         <h2 class="library-section-title">Photos</h2>
                         <div class="photos-grid">
                             {% for project in project_photos %}
@@ -124,13 +144,92 @@
                     </div>
                 {% endif %}
 
-                {% if not projects and not books and not project_photos %}
+                <!-- Posts Section -->
+                <div class="library-section" id="posts-section" data-section="posts" style="display: none;">
+                    <h2 class="library-section-title">My Recent Posts</h2>
+                    {% if posts %}
+                        <div class="posts-grid" id="posts-grid">
+                            {% for post in posts|slice:":3" %}
+                                <div class="post-card">
+                                    {% if post.featured_image %}
+                                        <div class="post-image">
+                                            <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                                        </div>
+                                    {% endif %}
+                                    <div class="post-content">
+                                        <h3>{{ post.title }}</h3>
+                                        {% if post.excerpt %}
+                                            <p class="post-excerpt">{{ post.excerpt|truncatewords:30 }}</p>
+                                        {% else %}
+                                            <p class="post-excerpt">{{ post.content|truncatewords:30|striptags }}</p>
+                                        {% endif %}
+                                        {% if post.published_date %}
+                                            <p class="post-date">{{ post.published_date|date:"F d, Y" }}</p>
+                                        {% endif %}
+                                        {% if post.tags %}
+                                            <div class="post-tags">
+                                                <span class="post-tag">{{ post.tags }}</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% if posts|length > 3 %}
+                                {% for post in posts|slice:"3:" %}
+                                    <div class="post-card post-card-hidden">
+                                        {% if post.featured_image %}
+                                            <div class="post-image">
+                                                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                                            </div>
+                                        {% endif %}
+                                        <div class="post-content">
+                                            <h3>{{ post.title }}</h3>
+                                            {% if post.excerpt %}
+                                                <p class="post-excerpt">{{ post.excerpt|truncatewords:30 }}</p>
+                                            {% else %}
+                                                <p class="post-excerpt">{{ post.content|truncatewords:30|striptags }}</p>
+                                            {% endif %}
+                                            {% if post.published_date %}
+                                                <p class="post-date">{{ post.published_date|date:"F d, Y" }}</p>
+                                            {% endif %}
+                                            {% if post.tags %}
+                                                <div class="post-tags">
+                                                    <span class="post-tag">{{ post.tags }}</span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        {% if posts|length > 3 %}
+                            <div class="posts-load-more-container">
+                                <button class="posts-load-more-btn" id="posts-load-more-btn">
+                                    <span class="load-more-text">More</span>
+                                    <span class="load-more-arrow">▼</span>
+                                </button>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="empty-state">
+                            <p>No posts available yet. Check back soon!</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if not projects and not books and not project_photos and not posts %}
                     <div class="empty-state">
                         <p>No content in the library yet. Check back soon!</p>
                     </div>
                 {% endif %}
+                </div>
             </div>
         </div>
     </section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'portfolio/js/posts.js' %}"></script>
+    <script src="{% static 'portfolio/js/library-sidebar.js' %}"></script>
 {% endblock %}
 

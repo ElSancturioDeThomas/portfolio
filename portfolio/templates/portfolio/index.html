@@ -393,84 +393,7 @@
                 </div>
                 
                 <div id="location-map"></div>
-                <button class="location-zoom-btn" onclick="zoomToGreenfields()">My Origin</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Posts Section -->
-    <section class="posts-section content-section">
-        <div class="container">
-            <div class="content">
-                <h2>My Recent Posts</h2>
-                {% if posts %}
-                    <div class="posts-grid" id="posts-grid">
-                        {% for post in posts|slice:":3" %}
-                            <div class="post-card">
-                                {% if post.featured_image %}
-                                    <div class="post-image">
-                                        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
-                                    </div>
-                                {% endif %}
-                                <div class="post-content">
-                                    <h3>{{ post.title }}</h3>
-                                    {% if post.excerpt %}
-                                        <p class="post-excerpt">{{ post.excerpt|truncatewords:30 }}</p>
-                                    {% else %}
-                                        <p class="post-excerpt">{{ post.content|truncatewords:30|striptags }}</p>
-                                    {% endif %}
-                                    {% if post.published_date %}
-                                        <p class="post-date">{{ post.published_date|date:"F d, Y" }}</p>
-                                    {% endif %}
-                                    {% if post.tags %}
-                                        <div class="post-tags">
-                                            <span class="post-tag">{{ post.tags }}</span>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        {% endfor %}
-                        {% if posts|length > 3 %}
-                            {% for post in posts|slice:"3:" %}
-                                <div class="post-card post-card-hidden">
-                                    {% if post.featured_image %}
-                                        <div class="post-image">
-                                            <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
-                                        </div>
-                                    {% endif %}
-                                    <div class="post-content">
-                                        <h3>{{ post.title }}</h3>
-                                        {% if post.excerpt %}
-                                            <p class="post-excerpt">{{ post.excerpt|truncatewords:30 }}</p>
-                                        {% else %}
-                                            <p class="post-excerpt">{{ post.content|truncatewords:30|striptags }}</p>
-                                        {% endif %}
-                                        {% if post.published_date %}
-                                            <p class="post-date">{{ post.published_date|date:"F d, Y" }}</p>
-                                        {% endif %}
-                                        {% if post.tags %}
-                                            <div class="post-tags">
-                                                <span class="post-tag">{{ post.tags }}</span>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    {% if posts|length > 3 %}
-                        <div class="posts-load-more-container">
-                            <button class="posts-load-more-btn" id="posts-load-more-btn">
-                                <span class="load-more-text">More</span>
-                                <span class="load-more-arrow">▼</span>
-                            </button>
-                        </div>
-                    {% endif %}
-                {% else %}
-                    <div class="empty-state">
-                        <p>No posts available yet. Check back soon!</p>
-                    </div>
-                {% endif %}
+                <button class="location-zoom-btn" onclick="zoomToPinjarra()">My Origin</button>
             </div>
         </div>
     </section>
@@ -481,7 +404,6 @@
     <script src="{% static 'portfolio/js/hero-scroll.js' %}"></script>
     <script src="{% static 'portfolio/js/secret-login.js' %}"></script>
     <script src="{% static 'portfolio/js/location-map.js' %}"></script>
-    <script src="{% static 'portfolio/js/posts.js' %}"></script>
     <script src="{% static 'portfolio/js/json-editor.js' %}"></script>
     <script src="{% static 'portfolio/js/hobby-add.js' %}"></script>
     <script src="{% static 'portfolio/js/countries-add.js' %}"></script>
