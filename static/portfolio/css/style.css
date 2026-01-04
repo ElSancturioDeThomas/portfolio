@@ -323,547 +323,455 @@ body {
    END REUSABLE BASE CLASSES
    ============================================ */
 
-/* Navigation Styles - Apple Glass Style */
 /* ============================================
-   NAVIGATION - Base Styles
+   NAVIGATION - Single Responsive Component
+   Mobile-First Approach
    ============================================ */
 
-/* Desktop and Mobile view wrapper containers */
-.desktop-view-active,
-.mobile-view-active {
+/* Main Navigation Container */
+.main-nav {
     position: fixed;
-    top: 1.5rem;
+    top: 1rem;
     left: 0;
     right: 0;
     width: 100%;
-    z-index: 1001 !important; /* Higher than library-main-section (1000) */
-    padding: 0 2.5vw; /* Add padding to prevent edge touching */
-    pointer-events: none; /* Allow clicks to pass through container */
-    overflow: visible; /* Allow tooltips to overflow */
-    isolation: isolate; /* Create new stacking context for tooltips */
+    z-index: 1001;
+    padding: 0 1rem;
+    pointer-events: none; /* Allow clicks through container */
+    overflow: visible;
+    isolation: isolate;
 }
 
-/* Desktop view active - show on desktop, hide on mobile */
-.desktop-view-active {
-    display: block; /* Visible on desktop by default */
-}
-
-/* Mobile view active - hide on desktop, show on mobile */
-.mobile-view-active {
-    display: none; /* Hidden on desktop by default */
-}
-
-/* Base navigation styles - shared by both desktop and mobile */
-.main-navigation-desktop,
-.main-navigation-mobile {
-    width: 100%;
-    pointer-events: none; /* Allow clicks to pass through container */
-    overflow: visible; /* Allow tooltips to overflow */
-}
-
-/* Re-enable pointer events on nav sections */
-.main-navigation-desktop .nav-section-left-desktop,
-.main-navigation-desktop .nav-section-center-desktop,
-.main-navigation-desktop .nav-section-right-desktop,
-.main-navigation-mobile .nav-section-left-mobile,
-.main-navigation-mobile .nav-section-center-mobile,
-.main-navigation-mobile .nav-section-right-mobile {
-    pointer-events: auto; /* Re-enable clicks on sections */
-}
-
-/* ============================================
-   NAVIGATION - Desktop Section Styles
-   ============================================ */
-
-/* Desktop glass styling for all navigation sections */
-.nav-section-left-desktop,
-.nav-section-center-desktop,
-.nav-section-right-desktop {
-    background: rgba(42, 42, 42, 0.458);
-    backdrop-filter: blur(5px) saturate(180%);
-    -webkit-backdrop-filter: blur(10px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 0.5rem 1.5rem;
-    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
-                0 4px 20px rgba(0, 0, 0, 0.1);
+/* Navigation Inner Container */
+.nav-container {
     display: flex;
-    align-items: center;
-    height: 40px; /* Fixed uniform height for all sections */
-    overflow: visible; /* Allow tooltips to overflow */
-    pointer-events: auto; /* Re-enable clicks on sections */
-    position: relative; /* Create stacking context for tooltips */
-    z-index: 1001; /* Match parent navigation z-index */
-}
-
-/* Desktop left sections wrapper - groups left section, mirrors right wrapper */
-.nav-sections-left-wrapper-desktop {
-    flex: 1 1 0; /* Can grow and shrink */
-    display: flex;
-    justify-content: flex-end; /* Align section to right edge (toward center) */
-    align-items: center;
-    min-width: 0;
-    max-width: calc(50% - 250px); /* Prevent overlap with center */
-    margin-right: auto; /* Push to left */
-}
-
-/* Desktop left navigation section - sized to fit content */
-.nav-section-left-desktop {
-    flex: 0 0 auto; /* Don't grow or shrink, maintain natural width */
-    display: flex;
-    justify-content: flex-end; /* Align content to right edge (toward center) */
-    align-items: center; /* Center vertically */
-}
-
-/* Desktop nav links in left section - allow flexible width for longer text */
-.nav-section-left-desktop .nav-link-desktop {
-    width: auto; /* Allow natural width for longer text */
-    min-width: 0; /* Allow shrinking if needed */
-    padding: 0.25rem 1rem; /* Add horizontal padding */
-    white-space: nowrap; /* Prevent text wrapping */
-}
-
-/* Ensure desktop tooltip links in left section work properly */
-.nav-section-left-desktop .nav-link-with-tooltip-desktop {
-    position: relative;
-}
-
-/* Desktop center navigation section - fixed in the exact center of the page */
-.nav-section-center-desktop {
-    position: absolute; /* Position absolutely to center on page */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Offset by half its width to truly center */
-    flex: 0 0 auto; /* Don't grow or shrink, maintain natural width */
-    z-index: 1002; /* Above left/right sections but below tooltips */
-    white-space: nowrap; /* Prevent wrapping */
-    /* Center section width is determined by content (Library, Home, Skills + padding) */
-}
-
-/* Desktop right sections wrapper - groups GitHub and LinkedIn together */
-.nav-sections-right-wrapper-desktop {
-    flex: 1 1 0; /* Can grow and shrink */
-    display: flex;
-    justify-content: flex-start; /* Align sections to left edge (toward center) */
-    align-items: center;
-    gap: 1rem; /* Space between GitHub and LinkedIn sections - background visible here */
-    min-width: 0;
-    max-width: calc(50% - 250px); /* Prevent overlap with center */
-    margin-left: auto; /* Push to right */
-}
-
-/* Desktop right navigation sections - individual icon sections (circular) */
-.nav-section-right-desktop {
-    flex: 0 0 auto; /* Don't grow/shrink, maintain natural width for icon sections */
-    display: flex;
-    justify-content: center; /* Center icon within section */
-    align-items: center; /* Center icon vertically */
-    min-width: 0; /* Allow shrinking */
-    width: 40px; /* Match height to create circle */
-    height: 40px; /* Fixed height */
-    padding: 0; /* Remove padding for perfect circle */
-    border-radius: 50%; /* Perfect circle */
-}
-
-/* ============================================
-   NAVIGATION - Mobile Section Styles
-   ============================================ */
-
-/* Mobile glass styling for all navigation sections */
-.nav-section-left-mobile,
-.nav-section-center-mobile,
-.nav-section-right-mobile {
-    background: rgba(42, 42, 42, 0.458);
-    backdrop-filter: blur(5px) saturate(180%);
-    -webkit-backdrop-filter: blur(10px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 0.5rem 1.5rem;
-    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
-                0 4px 20px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    height: 40px; /* Fixed uniform height for all sections */
-    overflow: visible; /* Allow tooltips to overflow */
-    pointer-events: auto; /* Re-enable clicks on sections */
-    position: relative; /* Create stacking context for tooltips */
-    z-index: 1001; /* Match parent navigation z-index */
-}
-
-/* Mobile left sections wrapper */
-.nav-sections-left-wrapper-mobile {
-    display: flex;
-    justify-content: center; /* Center content on mobile */
-    align-items: center;
-    width: 100%;
-    position: relative;
-}
-
-/* Mobile left navigation section */
-.nav-section-left-mobile {
-    display: flex;
-    justify-content: center; /* Center content on mobile */
-    align-items: center;
-}
-
-/* Mobile nav links in left section */
-.nav-section-left-mobile .nav-link-mobile {
-    width: auto;
-    min-width: 0;
-    padding: 0.25rem 1rem;
-    white-space: nowrap;
-}
-
-/* Mobile tooltip links in left section */
-.nav-section-left-mobile .nav-link-with-tooltip-mobile {
-    position: relative;
-}
-
-/* Mobile center navigation section */
-.nav-section-center-mobile {
-    position: relative; /* Relative positioning on mobile */
-    width: 100%;
-    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-}
-
-/* Mobile right sections wrapper */
-.nav-sections-right-wrapper-mobile {
-    display: flex;
-    justify-content: center; /* Center icon sections on mobile */
     align-items: center;
     gap: 0.75rem;
     width: 100%;
-}
-
-/* Mobile right navigation sections - individual icon sections (circular) */
-.nav-section-right-mobile {
-    flex: 0 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    border-radius: 50%;
-}
-
-/* ============================================
-   NAVIGATION - Desktop Link Styles
-   ============================================ */
-
-/* Desktop navigation menu list */
-.nav-menu-desktop {
-    list-style-type: none; /* Remove bullet points */
-    margin: 0;
-    padding: 0;
-    display: flex; /* Use Flexbox for the list container */
-    justify-content: center; /* Center the items horizontally */
-    align-items: center; /* Center the items vertically */
-    gap: 1.5rem;
-    height: 100%; /* Match section height */
-}
-
-/* Nav menu styles are handled by their parent nav visibility */
-
-/* Desktop base navigation link styles */
-.nav-link-desktop {
-    color: rgba(255, 255, 255, 0.9);
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 500;
-    transition: color 0.3s ease, transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    max-width: 1600px;
+    margin: 0 auto;
     position: relative;
-    padding: 0.25rem 0;
-    border-radius: 50px;
-    border: 1px solid transparent;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-    display: block;
-    width: 130px;
-    text-align: center;
-    white-space: nowrap;
-}
-
-.nav-link-desktop::after {
-    display: none;
-}
-
-.nav-link-desktop:hover {
-    color: #ffe014;
-    background: rgba(255, 224, 20, 0.1);
-    transform: translateY(0);
-    border-color: #ffe014;
-    box-shadow: 0 0 15px rgba(255, 224, 20, 0.4),
-                inset 0 0 10px rgba(255, 224, 20, 0.1);
-}
-
-/* Desktop navigation link with tooltip - allow relative positioning */
-.nav-link-with-tooltip-desktop {
-    position: relative;
-}
-
-/* Desktop navigation link tooltip - matches name-tooltip style */
-.nav-link-tooltip-desktop {
-    position: absolute;
-    top: calc(100% + 15px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(42, 42, 42, 0.458);
-    backdrop-filter: blur(5px) saturate(180%);
-    -webkit-backdrop-filter: blur(10px) saturate(180%);
-    color: #ffffff;
-    padding: 0.8rem 1.2rem;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 0.85rem;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    font-weight: 400;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 20px rgba(255, 224, 20, 0.4), 0 2px 10px rgba(255, 224, 20, 0.3),
-                0 1px 0 0 rgba(255, 255, 255, 0.05) inset;
-    z-index: 10003 !important; /* Higher than nav sections and library content */
     pointer-events: none;
-    overflow: visible;
 }
 
-.nav-link-tooltip-desktop::after {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 8px solid transparent;
-    border-bottom-color: rgba(42, 42, 42, 0.458);
-}
-
-.nav-link-with-tooltip-desktop:hover .nav-link-tooltip-desktop {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(5px);
-}
-
-/* Desktop icon navigation links */
-.nav-link-icon-desktop {
-    width: 100%; /* Fill the circular section */
-    height: 100%; /* Fill the circular section */
-    padding: 0; /* No padding for perfect circle */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%; /* Perfect circle to match section */
-    border: 1px solid transparent; /* Match text link border */
-}
-
-.social-icon-desktop {
-    font-size: 1.1rem; /* Size to match visual appearance */
-    color: rgba(255, 255, 255, 0.9);
-    transition: color 0.3s ease, transform 0.3s ease;
-    display: inline-block; /* Allow proper centering */
-    vertical-align: middle; /* Center vertically */
-    transform: translateY(1px); /* Lower icon slightly for better visual alignment */
-}
-
-.nav-link-icon-desktop:hover .social-icon-desktop {
-    color: #ffe014;
-    transform: translateY(1px) scale(1.1); /* Maintain slight downward offset on hover */
-}
-
-.nav-link-icon-desktop:hover {
-    color: #ffe014;
-    background: rgba(255, 224, 20, 0.1);
-    transform: translateY(0); /* Match text link hover */
-    border-color: #ffe014;
-    box-shadow: 0 0 15px rgba(255, 224, 20, 0.4),
-                inset 0 0 10px rgba(255, 224, 20, 0.1);
+/* Glass Effect Mixin - Applied to nav elements */
+.nav-brand,
+.nav-menu-wrapper,
+.nav-social,
+.nav-link--icon {
+    background: rgba(42, 42, 42, 0.6);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
+        0 4px 20px rgba(0, 0, 0, 0.15);
+    pointer-events: auto;
 }
 
 /* ============================================
-   NAVIGATION - Mobile Link Styles
+   NAVIGATION - Brand Section (Left)
    ============================================ */
 
-/* Mobile navigation menu list */
-.nav-menu-mobile {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+.nav-brand {
+    border-radius: 20px;
+    height: 44px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 1rem;
+    order: 1;
+}
+
+.nav-link--brand {
+    display: flex;
+    align-items: center;
+    padding: 0 1.25rem;
     height: 100%;
-}
-
-/* Mobile base navigation link styles */
-.nav-link-mobile {
     color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: color 0.3s ease, transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    padding: 0.25rem 0;
-    border-radius: 50px;
-    border: 1px solid transparent;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-    display: block;
-    width: 130px;
-    text-align: center;
-    white-space: nowrap;
-}
-
-.nav-link-mobile::after {
-    display: none;
-}
-
-.nav-link-mobile:hover {
-    color: #ffe014;
-    background: rgba(255, 224, 20, 0.1);
-    transform: translateY(0);
-    border-color: #ffe014;
-    box-shadow: 0 0 15px rgba(255, 224, 20, 0.4),
-                inset 0 0 10px rgba(255, 224, 20, 0.1);
-}
-
-/* Mobile navigation link with tooltip */
-.nav-link-with-tooltip-mobile {
-    position: relative;
-}
-
-/* Mobile navigation link tooltip */
-.nav-link-tooltip-mobile {
-    position: absolute;
-    top: calc(100% + 15px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(42, 42, 42, 0.458);
-    backdrop-filter: blur(5px) saturate(180%);
-    -webkit-backdrop-filter: blur(10px) saturate(180%);
-    color: #ffffff;
-    padding: 0.8rem 1.2rem;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 0.85rem;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    font-weight: 400;
+    font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
     white-space: nowrap;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.nav-link--brand:hover {
+    color: #ffe014;
+}
+
+.brand-text {
+    display: inline;
+}
+
+/* ============================================
+   NAVIGATION - Mobile Toggle (Hamburger)
+   ============================================ */
+
+.nav-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: rgba(42, 42, 42, 0.6);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    cursor: pointer;
+    pointer-events: auto;
+    order: 3;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
+        0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.nav-toggle:hover {
+    border-color: #ffe014;
+    box-shadow: 0 0 15px rgba(255, 224, 20, 0.3);
+}
+
+.nav-toggle__bar {
+    width: 20px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+/* Hamburger Animation - Active State */
+.nav-toggle.is-active .nav-toggle__bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+    background: #ffe014;
+}
+
+.nav-toggle.is-active .nav-toggle__bar:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.nav-toggle.is-active .nav-toggle__bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+    background: #ffe014;
+}
+
+/* ============================================
+   NAVIGATION - Menu Wrapper & Links
+   ============================================ */
+
+.nav-menu-wrapper {
+    position: fixed;
+    top: 70px;
+    left: 1rem;
+    right: 1rem;
+    border-radius: 16px;
+    padding: 1.5rem;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 20px rgba(255, 224, 20, 0.4), 0 2px 10px rgba(255, 224, 20, 0.3),
-                0 1px 0 0 rgba(255, 255, 255, 0.05) inset;
-    z-index: 10003 !important;
-    pointer-events: none;
-    overflow: visible;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    order: 4;
+    z-index: 1000;
 }
 
-.nav-link-tooltip-mobile::after {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 8px solid transparent;
-    border-bottom-color: rgba(42, 42, 42, 0.458);
-}
-
-.nav-link-with-tooltip-mobile:hover .nav-link-tooltip-mobile {
+.nav-menu-wrapper.is-open {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(5px);
+    transform: translateY(0);
 }
 
-/* Mobile icon navigation links */
-.nav-link-icon-mobile {
+.nav-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.nav-menu__item {
     width: 100%;
-    height: 100%;
-    padding: 0;
+}
+
+.nav-link {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+    text-align: center;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: #ffe014;
+    background: rgba(255, 224, 20, 0.1);
+    border-color: rgba(255, 224, 20, 0.3);
+    box-shadow: 0 0 15px rgba(255, 224, 20, 0.2);
+}
+
+/* ============================================
+   NAVIGATION - Social Links (Right)
+   ============================================ */
+
+.nav-social {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem;
+    border-radius: 24px;
+    order: 2;
+}
+
+.nav-link--icon {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
     border: 1px solid transparent;
 }
 
-.social-icon-mobile {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.9);
-    transition: color 0.3s ease, transform 0.3s ease;
-    display: inline-block;
-    vertical-align: middle;
-    transform: translateY(1px);
+.nav-link--icon i {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
 }
 
-.nav-link-icon-mobile:hover .social-icon-mobile {
+.nav-link--icon:hover {
     color: #ffe014;
-    transform: translateY(1px) scale(1.1);
-}
-
-.nav-link-icon-mobile:hover {
-    color: #ffe014;
-    background: rgba(255, 224, 20, 0.1);
-    transform: translateY(0);
+    background: rgba(255, 224, 20, 0.15);
     border-color: #ffe014;
-    box-shadow: 0 0 15px rgba(255, 224, 20, 0.4),
-                inset 0 0 10px rgba(255, 224, 20, 0.1);
+    box-shadow: 0 0 15px rgba(255, 224, 20, 0.4);
 }
 
-/* Navigation animations - only on home page */
-body.home-page .desktop-view-active,
-body.home-page .mobile-view-active {
-    animation: slideDown 0.6s ease-out 0.5s both;
+.nav-link--icon:hover i {
+    transform: scale(1.1);
 }
 
-body.home-page.navbar-animated .desktop-view-active,
-body.home-page.navbar-animated .mobile-view-active {
+/* ============================================
+   NAVIGATION - Tooltips
+   ============================================ */
+
+.nav-tooltip {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(42, 42, 42, 0.95);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    color: #ffffff;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.8rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 400;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 4px 20px rgba(255, 224, 20, 0.3),
+        0 1px 0 0 rgba(255, 255, 255, 0.05) inset;
+    z-index: 10003;
+    pointer-events: none;
+}
+
+.nav-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-bottom-color: rgba(42, 42, 42, 0.95);
+}
+
+.nav-link--brand:hover .nav-tooltip,
+.nav-link--icon:hover .nav-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(4px);
+}
+
+/* Hide tooltips on touch devices */
+@media (hover: none) {
+    .nav-tooltip {
+        display: none;
+    }
+}
+
+/* ============================================
+   NAVIGATION - Animations
+   ============================================ */
+
+/* Slide down animation for home page */
+body.home-page .main-nav {
+    animation: navSlideDown 0.6s ease-out 0.5s both;
+}
+
+body.home-page.navbar-animated .main-nav {
     animation: none;
     opacity: 1;
-    top: 1.5rem;
+    top: 1rem;
 }
 
-@keyframes slideDown {
+@keyframes navSlideDown {
     from {
-        top: -10rem;
+        top: -6rem;
         opacity: 0;
     }
     to {
-        top: 1.5rem;
+        top: 1rem;
         opacity: 1;
     }
 }
 
 /* ============================================
-   NAVIGATION - Container Styles
+   NAVIGATION - Tablet Breakpoint (768px+)
    ============================================ */
 
-/* Desktop navigation container */
-.nav-container-desktop {
-    margin: 0;
-    padding: 0;
-    display: flex; /* Use Flexbox for the container */
-    align-items: center; /* Center items vertically */
-    height: 100%;
-    width: 100%;
-    max-width: 1600px; /* Maximum width constraint */
-    margin-left: auto;
-    margin-right: auto;
-    position: relative; /* For absolute positioning of center section */
-    overflow: visible; /* Allow tooltips to overflow */
+@media (min-width: 768px) {
+    .main-nav {
+        top: 1.5rem;
+        padding: 0 2.5vw;
+    }
+    
+    .nav-container {
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    
+    /* Hide hamburger on tablet+ */
+    .nav-toggle {
+        display: none;
+    }
+    
+    /* Show menu inline */
+    .nav-menu-wrapper {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 20px;
+        order: 2;
+        flex: 0 0 auto;
+    }
+    
+    .nav-menu {
+        flex-direction: row;
+        gap: 0.5rem;
+    }
+    
+    .nav-menu__item {
+        width: auto;
+    }
+    
+    .nav-link {
+        padding: 0.5rem 1.5rem;
+        font-size: 0.85rem;
+        border-radius: 50px;
+    }
+    
+    /* Reorder elements for desktop layout */
+    .nav-brand {
+        order: 1;
+        flex: 0 0 auto;
+    }
+    
+    .nav-menu-wrapper {
+        order: 2;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .nav-social {
+        order: 3;
+        flex: 0 0 auto;
+        padding: 0;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        gap: 0.75rem;
+    }
+    
+    .nav-link--icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .nav-link--icon i {
+        font-size: 1.1rem;
+    }
+    
+    /* Animation adjustment */
+    body.home-page .main-nav {
+        animation-name: navSlideDownDesktop;
+    }
+    
+    @keyframes navSlideDownDesktop {
+        from {
+            top: -10rem;
+            opacity: 0;
+        }
+        to {
+            top: 1.5rem;
+            opacity: 1;
+        }
+    }
 }
 
-/* Mobile navigation container */
-.nav-container-mobile {
-    margin: 0;
-    padding: 0;
-    display: flex; /* Use Flexbox for the container */
-    flex-direction: column; /* Stack items vertically on mobile */
-    align-items: center; /* Center items */
-    gap: 0.75rem; /* Space between sections */
-    width: 100%;
-    max-width: 100%;
-    position: relative;
-    overflow: visible;
+/* ============================================
+   NAVIGATION - Desktop Breakpoint (1024px+)
+   ============================================ */
+
+@media (min-width: 1024px) {
+    .nav-container {
+        gap: 2rem;
+    }
+    
+    .nav-link {
+        padding: 0.5rem 2rem;
+    }
+    
+    .nav-social {
+        gap: 1rem;
+    }
+}
+
+/* ============================================
+   LEGACY CLASSES - Kept for Backward Compatibility
+   These can be removed once all references are updated
+   ============================================ */
+
+/* Old wrapper classes - redirect to new nav */
+.desktop-view-active,
+.mobile-view-active {
+    display: none !important;
 }
 
 
@@ -1594,55 +1502,7 @@ body.home-page.navbar-animated .mobile-view-active {
     display: block;
 }
 
-/* ============================================
-   NAVIGATION - Responsive Styles
-   ============================================ */
-
-@media (max-width: 767px) {
-    /* Switch to mobile view on small screens */
-    .desktop-view-active {
-        display: none !important; /* Hide desktop nav wrapper on mobile */
-    }
-    
-    .mobile-view-active {
-        display: block !important; /* Show mobile nav wrapper on mobile */
-        padding: 0 1rem; /* Reduced padding on mobile */
-    }
-    
-    /* Mobile container styles */
-    .nav-container-mobile {
-        flex-direction: column;
-        gap: 0.75rem;
-        padding: 0;
-    }
-    
-    /* Mobile navigation section ordering */
-    .nav-section-center-mobile {
-        order: 2; /* Center section in middle */
-    }
-    
-    .nav-sections-left-wrapper-mobile {
-        order: 1; /* Left sections wrapper first */
-    }
-    
-    .nav-sections-right-wrapper-mobile {
-        order: 3; /* Right sections wrapper last */
-        gap: 0.75rem; /* Reduced gap on mobile */
-    }
-    
-    .nav-section-right-mobile {
-        padding: 0.4rem 1rem;
-        flex: 0 0 auto; /* Maintain natural width */
-    }
-
-    .nav-menu-mobile {
-        gap: 1rem;
-    }
-
-    .nav-link-mobile {
-        font-size: 0.9rem;
-    }
-}
+/* Old navigation responsive styles removed - now handled in main navigation section */
 
 /* Responsive styles */
 @media (max-width: 768px) {
@@ -1664,36 +1524,7 @@ body.home-page.navbar-animated .mobile-view-active {
         font-size: 1.2rem;
     }
 
-    /* Mobile navigation adjustments for small screens */
-    .mobile-view-active {
-        padding: 0 0.75rem; /* Further reduced padding on small mobile */
-    }
-    
-    .mobile-view-active .main-navigation-mobile {
-        padding: 0; /* Remove padding from nav itself, handled by wrapper */
-    }
-    
-    .nav-container-mobile {
-        gap: 0.5rem; /* Reduced gap on small mobile */
-    }
-    
-    .nav-sections-right-wrapper-mobile {
-        gap: 0.5rem; /* Reduced gap on small mobile */
-    }
-    
-    .nav-section-right-mobile {
-        padding: 0.4rem 0.75rem;
-    }
-
-    .nav-menu-mobile {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.5rem;
-    }
-    
-    .social-icon-mobile {
-        font-size: 0.9rem; /* Slightly smaller icons on small mobile */
-    }
+    /* Old mobile navigation styles removed - handled in main nav section */
 }
 
 /* Shared Section Styles */

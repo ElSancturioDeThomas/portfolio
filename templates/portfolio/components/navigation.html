@@ -1,91 +1,87 @@
 {% load static %}
-<!-- Navigation Wrapper - Contains both desktop and mobile navs -->
-<div class="desktop-view-active">
-    <!-- Desktop Navigation -->
-    <nav class="main-navigation-desktop">
-        <div class="nav-container-desktop">
-            <!-- Left Navigation Section Wrapper -->
-            <div class="nav-sections-left-wrapper-desktop">
-                <div class="nav-section-left-desktop">
-                    <a href="https://www.roots.gov.sg/stories-landing/stories/the-singapore-story-through-60-objects/colonial/boschbrand/story" target="_blank" rel="noopener noreferrer" class="nav-link-desktop nav-link-with-tooltip-desktop">
-                        Boschbrand | 1849
-                        <span class="nav-link-tooltip-desktop">Link to the artist</span>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Original Navigation Section (Center) -->
-            <div class="nav-section-center-desktop">
-                <ul class="nav-menu-desktop">
-                    <li><a href="{% url 'library' %}" class="nav-link-desktop">Library</a></li>
-                    <li><a href="{% url 'index' %}" class="nav-link-desktop">Home</a></li>
-                    <li><a href="{% url 'skills' %}" class="nav-link-desktop">Skills</a></li>
-                </ul>
-            </div>
-            
-            <!-- Right Navigation Sections Wrapper -->
-            <div class="nav-sections-right-wrapper-desktop">
-                <!-- GitHub Navigation Section -->
-                <div class="nav-section-right-desktop nav-section-github-desktop">
-                    <a href="https://github.com/ElSancturioDeThomas" target="_blank" rel="noopener noreferrer" class="nav-link-desktop nav-link-icon-desktop nav-link-with-tooltip-desktop" aria-label="GitHub">
-                        <i class="fab fa-github social-icon-desktop"></i>
-                        <span class="nav-link-tooltip-desktop">GitHub</span>
-                    </a>
-                </div>
-                
-                <!-- LinkedIn Navigation Section -->
-                <div class="nav-section-right-desktop nav-section-linkedin-desktop">
-                    <a href="https://www.linkedin.com/in/thomas-heal-019198280/" target="_blank" rel="noopener noreferrer" class="nav-link-desktop nav-link-icon-desktop nav-link-with-tooltip-desktop" aria-label="LinkedIn">
-                        <i class="fab fa-linkedin social-icon-desktop"></i>
-                        <span class="nav-link-tooltip-desktop">LinkedIn</span>
-                    </a>
-                </div>
-            </div>
+<!-- Single Responsive Navigation -->
+<nav class="main-nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-container">
+        <!-- Brand/Left Section -->
+        <div class="nav-brand">
+            <a href="https://www.roots.gov.sg/stories-landing/stories/the-singapore-story-through-60-objects/colonial/boschbrand/story" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="nav-link nav-link--brand"
+               aria-label="Boschbrand 1849 - Link to the artist">
+                <span class="brand-text">Boschbrand | 1849</span>
+                <span class="nav-tooltip">Link to the artist</span>
+            </a>
         </div>
-    </nav>
-</div>
-<div class="mobile-view-active" style="display: none;">
-    <!-- Mobile Navigation -->
-    <nav class="main-navigation-mobile">
-        <div class="nav-container-mobile">
-            <!-- Left Navigation Section Wrapper -->
-            <div class="nav-sections-left-wrapper-mobile">
-                <div class="nav-section-left-mobile">
-                    <a href="https://www.roots.gov.sg/stories-landing/stories/the-singapore-story-through-60-objects/colonial/boschbrand/story" target="_blank" rel="noopener noreferrer" class="nav-link-mobile nav-link-with-tooltip-mobile">
-                        Boschbrand | 1849
-                        <span class="nav-link-tooltip-mobile">Link to the artist</span>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Original Navigation Section (Center) -->
-            <div class="nav-section-center-mobile">
-                <ul class="nav-menu-mobile">
-                    <li><a href="{% url 'library' %}" class="nav-link-mobile">Library</a></li>
-                    <li><a href="{% url 'index' %}" class="nav-link-mobile">Home</a></li>
-                    <li><a href="{% url 'skills' %}" class="nav-link-mobile">Skills</a></li>
-                </ul>
-            </div>
-            
-            <!-- Right Navigation Sections Wrapper -->
-            <div class="nav-sections-right-wrapper-mobile">
-                <!-- GitHub Navigation Section -->
-                <div class="nav-section-right-mobile nav-section-github-mobile">
-                    <a href="https://github.com/ElSancturioDeThomas" target="_blank" rel="noopener noreferrer" class="nav-link-mobile nav-link-icon-mobile nav-link-with-tooltip-mobile" aria-label="GitHub">
-                        <i class="fab fa-github social-icon-mobile"></i>
-                        <span class="nav-link-tooltip-mobile">GitHub</span>
-                    </a>
-                </div>
-                
-                <!-- LinkedIn Navigation Section -->
-                <div class="nav-section-right-mobile nav-section-linkedin-mobile">
-                    <a href="https://www.linkedin.com/in/thomas-heal-019198280/" target="_blank" rel="noopener noreferrer" class="nav-link-mobile nav-link-icon-mobile nav-link-with-tooltip-mobile" aria-label="LinkedIn">
-                        <i class="fab fa-linkedin social-icon-mobile"></i>
-                        <span class="nav-link-tooltip-mobile">LinkedIn</span>
-                    </a>
-                </div>
-            </div>
+        
+        <!-- Mobile Menu Toggle -->
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+            <span class="nav-toggle__bar"></span>
+            <span class="nav-toggle__bar"></span>
+            <span class="nav-toggle__bar"></span>
+        </button>
+        
+        <!-- Main Menu (Center) -->
+        <div class="nav-menu-wrapper" id="nav-menu">
+            <ul class="nav-menu">
+                <li class="nav-menu__item">
+                    <a href="{% url 'library' %}" class="nav-link">Library</a>
+                </li>
+                <li class="nav-menu__item">
+                    <a href="{% url 'index' %}" class="nav-link">Home</a>
+                </li>
+                <li class="nav-menu__item">
+                    <a href="{% url 'skills' %}" class="nav-link">Skills</a>
+                </li>
+            </ul>
         </div>
-    </nav>
-</div>
+        
+        <!-- Social Links (Right) -->
+        <div class="nav-social">
+            <a href="https://github.com/ElSancturioDeThomas" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="nav-link nav-link--icon"
+               aria-label="GitHub Profile">
+                <i class="fab fa-github" aria-hidden="true"></i>
+                <span class="nav-tooltip">GitHub</span>
+            </a>
+            <a href="https://www.linkedin.com/in/thomas-heal-019198280/" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="nav-link nav-link--icon"
+               aria-label="LinkedIn Profile">
+                <i class="fab fa-linkedin" aria-hidden="true"></i>
+                <span class="nav-tooltip">LinkedIn</span>
+            </a>
+        </div>
+    </div>
+</nav>
 
+<script>
+// Simple vanilla JS for mobile menu toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            navToggle.setAttribute('aria-expanded', !isExpanded);
+            navToggle.classList.toggle('is-active');
+            navMenu.classList.toggle('is-open');
+        });
+        
+        // Close menu when clicking a link (for mobile)
+        navMenu.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 768) {
+                    navToggle.setAttribute('aria-expanded', 'false');
+                    navToggle.classList.remove('is-active');
+                    navMenu.classList.remove('is-open');
+                }
+            });
+        });
+    }
+});
+</script>
