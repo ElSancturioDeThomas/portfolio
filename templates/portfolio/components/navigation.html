@@ -2,7 +2,7 @@
 <!-- Single Responsive Navigation -->
 <nav class="main-nav" role="navigation" aria-label="Main navigation">
     <div class="nav-container">
-        <!-- Brand/Left Section -->
+        <!-- Brand/Left Section (Desktop only) -->
         <div class="nav-brand">
             <a href="https://www.roots.gov.sg/stories-landing/stories/the-singapore-story-through-60-objects/colonial/boschbrand/story" 
                target="_blank" 
@@ -14,14 +14,57 @@
             </a>
         </div>
         
-        <!-- Mobile Menu Toggle -->
-        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
-            <span class="nav-toggle__bar"></span>
-            <span class="nav-toggle__bar"></span>
-            <span class="nav-toggle__bar"></span>
-        </button>
+        <!-- Mobile Navigation Button -->
+        <div class="nav-mobile-wrapper">
+            <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span class="nav-mobile-toggle__text">Navigation</span>
+                <span class="nav-mobile-toggle__icon">
+                    <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                </span>
+            </button>
+            
+            <!-- Mobile Dropdown Menu -->
+            <div class="nav-mobile-dropdown" id="nav-mobile-dropdown">
+                <a href="{% url 'library' %}" class="nav-mobile-link">
+                    <i class="fas fa-book" aria-hidden="true"></i>
+                    <span>Library</span>
+                </a>
+                <a href="{% url 'index' %}" class="nav-mobile-link">
+                    <i class="fas fa-home" aria-hidden="true"></i>
+                    <span>Home</span>
+                </a>
+                <a href="{% url 'skills' %}" class="nav-mobile-link">
+                    <i class="fas fa-code" aria-hidden="true"></i>
+                    <span>Skills</span>
+                </a>
+                <div class="nav-mobile-divider"></div>
+                <a href="https://www.roots.gov.sg/stories-landing/stories/the-singapore-story-through-60-objects/colonial/boschbrand/story" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="nav-mobile-link nav-mobile-link--external">
+                    <i class="fas fa-palette" aria-hidden="true"></i>
+                    <span>Boschbrand | 1849</span>
+                </a>
+                <div class="nav-mobile-social">
+                    <a href="https://github.com/ElSancturioDeThomas" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="nav-mobile-social-link"
+                       aria-label="GitHub Profile">
+                        <i class="fab fa-github" aria-hidden="true"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/thomas-heal-019198280/" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="nav-mobile-social-link"
+                       aria-label="LinkedIn Profile">
+                        <i class="fab fa-linkedin" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
         
-        <!-- Main Menu (Center) -->
+        <!-- Main Menu (Center - Desktop) -->
         <div class="nav-menu-wrapper" id="nav-menu">
             <ul class="nav-menu">
                 <li class="nav-menu__item">
@@ -36,7 +79,7 @@
             </ul>
         </div>
         
-        <!-- Social Links (Right) -->
+        <!-- Social Links (Right - Desktop) -->
         <div class="nav-social">
             <a href="https://github.com/ElSancturioDeThomas" 
                target="_blank" 
@@ -59,27 +102,35 @@
 </nav>
 
 <script>
-// Simple vanilla JS for mobile menu toggle
+// Mobile navigation dropdown toggle
 document.addEventListener('DOMContentLoaded', function() {
     const navToggle = document.getElementById('nav-toggle');
-    const navMenu = document.getElementById('nav-menu');
+    const navDropdown = document.getElementById('nav-mobile-dropdown');
     
-    if (navToggle && navMenu) {
-        navToggle.addEventListener('click', function() {
+    if (navToggle && navDropdown) {
+        navToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
             const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
             navToggle.setAttribute('aria-expanded', !isExpanded);
             navToggle.classList.toggle('is-active');
-            navMenu.classList.toggle('is-open');
+            navDropdown.classList.toggle('is-open');
         });
         
-        // Close menu when clicking a link (for mobile)
-        navMenu.querySelectorAll('.nav-link').forEach(link => {
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!navToggle.contains(e.target) && !navDropdown.contains(e.target)) {
+                navToggle.setAttribute('aria-expanded', 'false');
+                navToggle.classList.remove('is-active');
+                navDropdown.classList.remove('is-open');
+            }
+        });
+        
+        // Close dropdown when clicking a link
+        navDropdown.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', function() {
-                if (window.innerWidth < 768) {
-                    navToggle.setAttribute('aria-expanded', 'false');
-                    navToggle.classList.remove('is-active');
-                    navMenu.classList.remove('is-open');
-                }
+                navToggle.setAttribute('aria-expanded', 'false');
+                navToggle.classList.remove('is-active');
+                navDropdown.classList.remove('is-open');
             });
         });
     }
