@@ -5037,6 +5037,17 @@ body.home-page.navbar-animated .main-nav {
         font-size: 0.5rem;
     }
     
+    /* Show only every 3rd month on small mobile */
+    .contribution-months span:nth-child(3n+2),
+    .contribution-months span:nth-child(3n) {
+        display: none;
+    }
+    
+    /* Re-show first month that was hidden by tablet rule */
+    .contribution-months span:nth-child(3n+1) {
+        display: inline;
+    }
+    
     .contribution-footer {
         gap: 0.25rem;
     }
