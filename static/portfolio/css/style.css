@@ -470,15 +470,22 @@ body {
     pointer-events: auto;
 }
 
+/* Consistent height for all nav containers */
+.nav-brand,
+.nav-menu-wrapper,
+.nav-social {
+    height: 44px;
+}
+
 /* ============================================
    NAVIGATION - Brand Section (Left)
    ============================================ */
 
 .nav-brand {
     border-radius: 20px;
-    height: 44px;
     display: flex;
     align-items: center;
+    justify-content: center;
     order: 1;
 }
 
@@ -708,6 +715,9 @@ body {
     padding: 0.5rem 1.5rem;
     order: 2;
     z-index: var(--z-fixed);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .nav-menu {
@@ -716,6 +726,7 @@ body {
     padding: 0;
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 0.5rem;
 }
 
@@ -752,8 +763,9 @@ body {
 .nav-social {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
-    padding: 0.25rem;
+    padding: 0 0.5rem;
     border-radius: 24px;
     order: 2;
 }
@@ -1860,30 +1872,8 @@ body.home-page.navbar-animated .main-nav {
     transform: translateX(-50%) translateY(5px);
 }
 
-/* Responsive Photo Grid */
-@media (max-width: 768px) {
-    .photo-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-    }
-    
-    .photo-grid-section {
-        margin-top: -10vh;
-        margin-bottom: -5vh;
-    }
-}
-
-@media (max-width: 480px) {
-    .photo-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .photo-grid-section {
-        margin-top: -5vh;
-        margin-bottom: -3vh;
-    }
-}
+/* Responsive Photo Grid - Now handled in mobile desktop-like layout section */
+/* Keeping 3 columns on all screen sizes */
 
 /* Posts Section */
 .posts-section {
@@ -2280,67 +2270,8 @@ body.home-page.navbar-animated .main-nav {
     padding: 2rem;
 }
 
-@media (max-width: 768px) {
-    .countries-title-container {
-        gap: 0.75rem;
-    }
-    
-    .countries-title {
-        font-size: 2rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .countries-add-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.3rem;
-    }
-    
-    .countries-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-        padding: 1.5rem;
-    }
-    
-    .country-card {
-        width: 100px;
-        height: 100px;
-    }
-    
-    .country-flag {
-        font-size: 3rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .countries-title-container {
-        gap: 0.5rem;
-    }
-    
-    .countries-title {
-        font-size: 1.5rem;
-    }
-    
-    .countries-add-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 1.2rem;
-    }
-    
-    .countries-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-    }
-    
-    .country-card {
-        width: 80px;
-        height: 80px;
-    }
-    
-    .country-flag {
-        font-size: 2.5rem;
-    }
-}
+/* Countries responsive - Now handled in mobile desktop-like layout section */
+/* Keeping 3 columns on smallest screens */
 
 #location-map {
     width: 100%;
@@ -3086,38 +3017,8 @@ body.home-page.navbar-animated .main-nav {
     }
 }
 
-@media (max-width: 768px) {
-    .hobbies-table-header,
-    .hobbies-table-row {
-        grid-template-columns: 1fr;
-    }
-    
-    .hobbies-header-cell,
-    .hobbies-table-cell {
-        border-right: none;
-        border-bottom: 1px solid rgba(255, 224, 20, 0.2);
-        padding: 0.75rem;
-    }
-    
-    .hobbies-header-cell:last-child,
-    .hobbies-table-cell:last-child {
-        border-bottom: none;
-    }
-    
-    .hobbies-header-cell::before {
-        content: attr(data-label);
-        font-weight: 700;
-        margin-right: 0.5rem;
-    }
-    
-    .hobbies-table-cell::before {
-        content: attr(data-label);
-        font-weight: 700;
-        color: #ffe014;
-        margin-right: 0.5rem;
-        min-width: 100px;
-    }
-}
+/* Hobbies table mobile - Now handled in mobile desktop-like layout section */
+/* Keeping table grid layout on all screen sizes */
 
 /* Leaflet Map Control Styling */
 /* Make the copyright text tiny and transparent */
@@ -3967,7 +3868,7 @@ body.home-page.navbar-animated .main-nav {
 .skills-container {
     max-width: 1600px;
     margin: 0 auto;
-    padding: 1rem 1rem 2rem 0; /* Reduced top/bottom padding, reduced left padding, keep right padding */
+    padding: 0.5rem 0.5rem 1rem 0; /* Compact padding for tighter layout */
     position: relative;
     z-index: 2;
     text-align: left; /* Left align content */
@@ -3975,7 +3876,7 @@ body.home-page.navbar-animated .main-nav {
 
 .skills-section,
 .languages-section {
-    margin-bottom: 2rem; /* Reduced bottom margin */
+    margin-bottom: 1rem; /* Compact bottom margin */
     margin-top: 0; /* Remove top margin */
     position: relative;
     z-index: 2;
@@ -3986,7 +3887,7 @@ body.home-page.navbar-animated .main-nav {
 .languages-section h2 {
     color: #ffe014;
     font-size: 2rem;
-    margin-bottom: 1.5rem; /* Reduced bottom margin */
+    margin-bottom: 1rem; /* Compact bottom margin */
     margin-top: 0; /* Remove top margin */
     font-family: 'Cinzel', serif;
     text-align: left; /* Left align headings */
@@ -3998,13 +3899,13 @@ body.home-page.navbar-animated .main-nav {
 
 /* Skill Category Group */
 .skill-category-group {
-    margin-bottom: 3rem;
+    margin-bottom: 1.5rem; /* Compact group spacing */
 }
 
 .skill-category-heading {
     color: #ffe014;
     font-size: 1.75rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem; /* Compact heading margin */
     margin-top: 0;
     font-family: 'Cinzel', serif;
     text-align: left;
@@ -4039,8 +3940,8 @@ body.home-page.navbar-animated .main-nav {
 .skills-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 1rem; /* Reduced gap for 7 columns */
-    margin-bottom: 2rem;
+    gap: 0.75rem; /* Tighter gap for compact layout */
+    margin-bottom: 1rem; /* Compact bottom margin */
     position: relative;
     z-index: 2;
 }
@@ -4184,69 +4085,111 @@ body.home-page.navbar-animated .main-nav {
     }
 }
 
+@media (max-width: 992px) {
+    .skills-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns on tablets */
+    }
+}
+
 @media (max-width: 768px) {
     .skills-container {
-        padding: 1.5rem 1rem 1.5rem 0; /* Reduced top/bottom padding on mobile */
+        padding: 0.5rem 0.5rem 1rem 0; /* Compact padding on mobile */
+    }
+    
+    .skills-hero-section {
+        padding-top: 12vh; /* Reduce top padding on mobile */
+        padding-bottom: 8vh;
     }
     
     .skills-grid {
-        grid-template-columns: repeat(3, 1fr); /* 3 columns on tablets */
-        gap: 1rem;
+        grid-template-columns: repeat(3, 1fr) !important; /* Force 3 columns on tablets */
+        gap: 0.5rem;
     }
     
     .languages-grid {
         grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
-        gap: 1rem;
-    }
-    
-    .skills-section h2,
-    .languages-section h2 {
-        font-size: 1.75rem;
-    }
-    
-    .skill-category-heading {
-        font-size: 1.5rem;
-    }
-    
-    .glass-card {
-        padding: 1.25rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .skills-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
-        gap: 0.75rem;
-    }
-    
-    .languages-grid {
-        grid-template-columns: 1fr; /* 1 column on mobile */
         gap: 0.75rem;
     }
     
     .skills-section h2,
     .languages-section h2 {
         font-size: 1.5rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 0.75rem;
     }
     
     .skill-category-heading {
         font-size: 1.25rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
     }
     
     .skill-category-group {
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
     }
     
     .glass-card {
-        padding: 1rem;
-        min-height: 100px;
+        padding: 0.75rem;
+        border-radius: 12px;
+    }
+    
+    .skill-card {
+        min-height: 80px; /* Smaller cards on mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .skills-container {
+        padding: 0.25rem 0.25rem 0.5rem 0; /* Even more compact on small mobile */
+    }
+    
+    .skills-hero-section {
+        padding-top: 10vh; /* Further reduce top padding on small mobile */
+        padding-bottom: 5vh;
+    }
+    
+    .skills-grid {
+        grid-template-columns: repeat(3, 1fr) !important; /* Force 3 columns on mobile */
+        gap: 0.4rem;
+    }
+    
+    .languages-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
+        gap: 0.5rem;
+    }
+    
+    .skills-section h2,
+    .languages-section h2 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .skill-category-heading {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.25rem;
+    }
+    
+    .skill-category-group {
+        margin-bottom: 0.75rem;
+    }
+    
+    .glass-card {
+        padding: 0.5rem;
+        min-height: auto;
+        border-radius: 10px;
+    }
+    
+    .skill-card {
+        min-height: 60px; /* Compact cards on small mobile */
     }
     
     .skill-card-title,
     .language-card-title {
-        font-size: 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .skill-card-description {
+        font-size: 0.7rem;
+        line-height: 1.2;
     }
 }
 
@@ -4534,10 +4477,11 @@ body.home-page.navbar-animated .main-nav {
         grid-template-columns: repeat(2, 1fr);
     }
     
-    .languages-grid,
-    .skills-grid {
+    .languages-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+    
+    /* Skills grid handled in Skills page responsive section above */
 }
 
 /* Mobile styles for projects grid */
@@ -4545,23 +4489,22 @@ body.home-page.navbar-animated .main-nav {
     .projects-grid,
     .books-grid,
     .photos-grid,
-    .posts-grid,
-    .languages-grid,
-    .skills-grid {
+    .posts-grid {
         grid-template-columns: 1fr;
     }
 
-    .languages-grid,
-    .skills-grid {
-        grid-template-columns: 1fr;
+    .languages-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
+    
+    /* Skills grid: 3 columns enforced in Skills page responsive section above */
 
     .about-text {
-        text-align: center;
+        text-align: left;
     }
     
     .additional-text {
-        text-align: center;
+        text-align: left;
     }
 
 }
@@ -4622,7 +4565,8 @@ body.home-page.navbar-animated .main-nav {
 }
 
 .contributions-container {
-    max-width: 1000px;
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
     padding: 2rem;
     background: rgba(42, 42, 42, 0.458);
@@ -4633,8 +4577,7 @@ body.home-page.navbar-animated .main-nav {
     box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
                 0 4px 20px rgba(0, 0, 0, 0.1),
                 0 0 30px rgba(255, 224, 20, 0.3);
-    overflow-x: visible;
-    overflow-y: visible;
+    overflow: hidden; /* Clip any overflow */
     width: 100%;
     box-sizing: border-box;
 }
@@ -4643,65 +4586,67 @@ body.home-page.navbar-animated .main-nav {
     margin-bottom: 1.5rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: 100%;
-    max-width: 100%;
-    min-width: 0;
     box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 .contribution-months {
-    position: relative;
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 8px;
-    padding-left: 30px;
+    padding-left: 35px;
+    padding-right: 35px;
     height: 20px;
     font-size: 0.75rem;
     color: #8b949e;
-    width: calc(100% - 30px);
-    min-width: 0;
+    width: 100%;
     box-sizing: border-box;
 }
 
 .contribution-months span {
-    position: absolute;
     white-space: nowrap;
-    transform: translateX(-50%);
+    flex-shrink: 0;
 }
 
 .contribution-graph-inner {
     display: flex;
-    gap: 8px;
+    gap: 3px;
     width: 100%;
-    min-width: 0;
-    justify-content: flex-start;
     align-items: flex-start;
     box-sizing: border-box;
-    margin: 0 auto;
 }
 
 .contribution-days {
     display: grid;
-    grid-template-rows: repeat(7, 12px);
-    gap: 4px;
-    padding-top: 2px;
+    grid-template-rows: repeat(7, 1fr);
+    gap: 3px;
     flex-shrink: 0;
     width: 30px;
+    height: 100%;
 }
 
 .contribution-days-left .day-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: #8b949e;
-    line-height: 12px;
+    line-height: 1;
     text-align: right;
-    padding-right: 8px;
+    padding-right: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .contribution-days-right .day-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: #8b949e;
-    line-height: 12px;
+    line-height: 1;
     text-align: left;
-    padding-left: 8px;
+    padding-left: 6px;
+    display: flex;
+    align-items: center;
 }
 
 .contribution-days-left .day-label:nth-child(1),
@@ -4713,25 +4658,26 @@ body.home-page.navbar-animated .main-nav {
 
 .contribution-graph {
     display: flex;
-    gap: 4px;
-    flex: 1 1 auto;
-    min-width: 0;
-    width: 100%;
-    justify-content: flex-start;
+    gap: 3px;
+    flex: 1;
+    justify-content: space-between;
     box-sizing: border-box;
+    flex-wrap: nowrap;
 }
 
 .week {
     display: grid;
-    grid-template-rows: repeat(7, 12px);
-    gap: 4px;
-    flex-shrink: 0;
+    grid-template-rows: repeat(7, 1fr);
+    gap: 3px;
+    flex: 1;
+    max-width: 14px;
+    min-width: 8px;
 }
 
 .day {
-    width: 12px;
-    height: 12px;
-    border-radius: 3px;
+    aspect-ratio: 1;
+    width: 100%;
+    border-radius: 2px;
     cursor: pointer;
     position: relative;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -4777,15 +4723,15 @@ body.home-page.navbar-animated .main-nav {
     justify-content: space-between;
     align-items: center;
     margin-top: 1rem;
-    flex-wrap: wrap;
-    gap: 1rem;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
 }
 
 .contribution-legend {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    flex: 1;
+    flex-shrink: 0;
 }
 
 .contribution-link {
@@ -4794,6 +4740,8 @@ body.home-page.navbar-animated .main-nav {
     text-decoration: none;
     font-style: italic;
     transition: color 0.3s ease;
+    text-align: right;
+    flex: 1;
 }
 
 .contribution-link:hover {
@@ -4848,17 +4796,14 @@ body.home-page.navbar-animated .main-nav {
 /* GitHub Contributions - Responsive */
 @media (max-width: 768px) {
     .contributions-section {
-        padding: 0.5rem 0;
-        overflow: hidden; /* Prevent horizontal overflow */
+        padding: 1rem 0;
     }
     
     .contributions-container {
         padding: 1rem;
         margin: 0 1rem;
         width: calc(100% - 2rem);
-        overflow-x: auto; /* Allow horizontal scroll within container */
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        box-sizing: border-box;
     }
     
     .contributions-title {
@@ -4874,47 +4819,71 @@ body.home-page.navbar-animated .main-nav {
     }
     
     .contribution-graph-wrapper {
-        min-width: 700px; /* Ensure graph doesn't compress too much */
+        width: 100%;
         margin-bottom: 1rem;
     }
     
-    .contribution-footer {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.75rem;
-        min-width: 0;
-    }
-    
-    .contribution-legend {
-        flex-wrap: wrap;
-        width: 100%;
-    }
-    
-    .contribution-link {
-        font-size: 0.8rem;
-    }
-    
-    /* Hide day labels on mobile to save space */
-    .contribution-days-left,
-    .contribution-days-right {
-        display: none;
-    }
-    
     .contribution-graph-inner {
-        gap: 3px;
+        gap: 2px;
     }
     
     .contribution-graph {
-        gap: 3px;
+        gap: 2px;
     }
     
     .week {
-        gap: 3px;
+        gap: 2px;
+        max-width: 10px;
+        min-width: 6px;
     }
     
-    .day {
-        width: 10px;
-        height: 10px;
+    .contribution-days-left,
+    .contribution-days-right {
+        width: 24px;
+    }
+    
+    .contribution-days-left .day-label,
+    .contribution-days-right .day-label {
+        font-size: 0.55rem;
+    }
+    
+    .contribution-footer {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .contribution-legend {
+        flex-shrink: 0;
+        gap: 0.35rem;
+    }
+    
+    .contribution-link {
+        font-size: 0.7rem;
+        text-align: right;
+    }
+    
+    .legend-label {
+        font-size: 0.7rem;
+    }
+    
+    .legend-day {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .contribution-months {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+    
+    .contribution-months span {
+        font-size: 0.6rem;
+    }
+    
+    .legend-day {
+        width: 8px;
+        height: 8px;
     }
 }
 
@@ -4933,13 +4902,54 @@ body.home-page.navbar-animated .main-nav {
         font-size: 0.9rem;
     }
     
-    .day {
-        width: 8px;
-        height: 8px;
+    .week {
+        gap: 1px;
+        max-width: 8px;
+        min-width: 5px;
     }
     
-    .contribution-graph-wrapper {
-        min-width: 600px;
+    .contribution-graph {
+        gap: 1px;
+    }
+    
+    .contribution-graph-inner {
+        gap: 1px;
+    }
+    
+    /* Hide day labels on very small screens */
+    .contribution-days-left,
+    .contribution-days-right {
+        display: none;
+    }
+    
+    .contribution-months {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    .contribution-months span {
+        font-size: 0.5rem;
+    }
+    
+    .contribution-footer {
+        gap: 0.25rem;
+    }
+    
+    .contribution-legend {
+        gap: 0.25rem;
+    }
+    
+    .legend-label {
+        font-size: 0.6rem;
+    }
+    
+    .legend-day {
+        width: 6px;
+        height: 6px;
+    }
+    
+    .contribution-link {
+        font-size: 0.6rem;
     }
 }
 
@@ -4967,51 +4977,532 @@ body.home-page.navbar-animated .main-nav {
 
 @media (max-width: 768px) {
     .library-main-section {
-        left: 1rem;
-        right: 1rem;
+        left: 0.5rem;
+        right: 0.5rem;
         top: 5.5rem;
-        bottom: 1rem;
+        bottom: 0.5rem;
     }
     
     .library-layout-container {
-        flex-direction: column;
+        flex-direction: row; /* Keep side-by-side layout on mobile */
+        gap: 0.5rem;
     }
     
+    /* Thin icon-only sidebar on mobile */
     .library-sidebar-left {
-        width: 100%;
-        height: auto;
-        margin-bottom: 1rem;
-        padding: 1rem;
+        width: 60px; /* Thin sidebar */
+        min-width: 60px;
+        height: 100%;
+        padding: 0.5rem;
+        flex-shrink: 0;
     }
     
     .library-sidebar-nav {
         padding-top: 0;
+        height: 100%;
+        width: 100%;
     }
     
     .library-sidebar-menu {
-        flex-direction: column; /* Keep column layout on mobile */
-        gap: 0.75rem;
-        height: auto; /* Allow natural height on mobile */
+        flex-direction: column;
+        gap: 0.5rem;
+        height: 100%; /* Full height of container */
+        justify-content: stretch;
+        padding: 0;
+    }
+    
+    .library-sidebar-menu li {
+        flex: 1 1 0; /* Each li takes equal space (1/3) */
+        display: flex;
+        min-height: 0;
     }
     
     .library-sidebar-btn {
-        padding: 1rem;
-        flex: 0 1 auto; /* Don't expand on mobile, use natural size */
-        min-height: 80px; /* Minimum height for mobile */
+        padding: 0.5rem;
+        flex: 1; /* Fill the entire li */
+        min-height: 0;
+        flex-direction: column;
+        gap: 0.25rem;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
     }
     
     .library-sidebar-icon {
-        font-size: 1.75rem; /* Smaller icons on mobile */
+        font-size: 1.5rem; /* Compact icons on mobile */
     }
     
+    /* Hide labels on mobile - icons only */
     .library-sidebar-label {
-        font-size: 0.8rem; /* Smaller text on mobile */
+        display: none;
     }
     
     .library-content-main {
-        width: 100%;
-        height: auto;
+        width: calc(100% - 60px - 0.5rem); /* Fill remaining space */
+        height: 100%;
         flex: 1;
+    }
+    
+    .library-glass-container {
+        padding: 1rem;
+    }
+    
+    .library-section-title {
+        font-size: 1.5rem;
+    }
+    
+    .projects-grid {
+        grid-template-columns: 1fr; /* Single column on mobile */
+        gap: 1rem;
+    }
+}
+
+/* ============================================
+   MOBILE DESKTOP-LIKE LAYOUT OVERRIDES
+   Keep mobile display similar to desktop
+   ============================================ */
+
+/* Navigation - Wider on mobile, closer to full width */
+@media (max-width: 767px) {
+    .main-nav {
+        padding: 0 2.5% !important;
+        width: 100% !important;
+    }
+    
+    .nav-container {
+        width: 100% !important;
+        max-width: none !important;
+        padding: 0 !important;
+    }
+    
+    .nav-mobile-wrapper {
+        width: 100% !important;
+        max-width: none !important;
+    }
+    
+    .nav-mobile-toggle {
+        width: 100% !important;
+        padding: 0.75rem 1.25rem !important;
+        justify-content: space-between !important;
+    }
+    
+    .nav-mobile-dropdown {
+        width: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        transform: translateX(0) translateY(-10px) !important;
+        min-width: unset !important;
+    }
+    
+    .nav-mobile-dropdown.is-open {
+        transform: translateX(0) translateY(0) !important;
+    }
+}
+
+/* Library Sidebar - Extra small screens */
+@media (max-width: 480px) {
+    .library-main-section {
+        left: 0.25rem;
+        right: 0.25rem;
+        top: 5rem;
+        bottom: 0.25rem;
+    }
+    
+    .library-layout-container {
+        gap: 0.25rem;
+    }
+    
+    .library-sidebar-left {
+        width: 50px;
+        min-width: 50px;
+        padding: 0.25rem;
+    }
+    
+    .library-sidebar-menu {
+        gap: 0.25rem;
+        padding: 0;
+    }
+    
+    .library-sidebar-btn {
+        padding: 0.25rem;
+        border-radius: 8px;
+    }
+    
+    .library-sidebar-icon {
+        font-size: 1.25rem;
+    }
+    
+    .library-content-main {
+        width: calc(100% - 50px - 0.25rem);
+    }
+    
+    .library-glass-container {
+        padding: 0.75rem;
+    }
+    
+    .library-section-title {
+        font-size: 1.25rem;
+    }
+    
+    .project-card {
+        border-radius: 12px;
+    }
+    
+    .project-content h3 {
+        font-size: 1rem;
+    }
+    
+    .project-description {
+        font-size: 0.8rem;
+    }
+}
+
+/* Photo Grid - Keep 3 columns on mobile */
+@media (max-width: 768px) {
+    .photo-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1rem;
+    }
+    
+    .photo-grid-section {
+        margin-top: -12vh;
+        margin-bottom: -8vh;
+    }
+    
+    .photo-grid-container {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .photo-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.75rem;
+    }
+    
+    .photo-grid-section {
+        margin-top: -10vh;
+        margin-bottom: -6vh;
+    }
+    
+    .photo-box {
+        border-width: 2px;
+    }
+}
+
+/* About Me Section - Compact text for more information */
+@media (max-width: 768px) {
+    .about-section .content {
+        padding: 1.5rem;
+    }
+    
+    .about-content {
+        text-align: left !important;
+    }
+    
+    .about-content h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        text-align: left !important;
+    }
+    
+    .about-text {
+        text-align: left !important;
+    }
+    
+    .about-text p {
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: 0.75rem;
+        text-align: left !important;
+    }
+    
+    .glass-container.glass-effect,
+    .glass-container {
+        padding: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-section .content {
+        padding: 1rem;
+    }
+    
+    .about-content {
+        text-align: left !important;
+    }
+    
+    .about-content h2 {
+        font-size: 1.35rem;
+        margin-bottom: 0.75rem;
+        text-align: left !important;
+    }
+    
+    .about-text {
+        text-align: left !important;
+    }
+    
+    .about-text p {
+        font-size: 0.8rem;
+        line-height: 1.45;
+        margin-bottom: 0.6rem;
+        text-align: left !important;
+    }
+    
+    .glass-container.glass-effect,
+    .glass-container {
+        padding: 1rem;
+        border-radius: 12px;
+    }
+}
+
+/* Hobbies Section - Keep desktop table layout on mobile */
+@media (max-width: 768px) {
+    .hobbies-table-header,
+    .hobbies-table-row {
+        grid-template-columns: 0.6fr 1.2fr 1.8fr 0.8fr 0.8fr !important;
+    }
+    
+    .hobbies-header-cell,
+    .hobbies-table-cell {
+        padding: 0.6rem 0.5rem !important;
+        font-size: 0.75rem !important;
+        border-right: 1px solid rgba(255, 224, 20, 0.2) !important;
+        border-bottom: none !important;
+    }
+    
+    .hobbies-header-cell:last-child,
+    .hobbies-table-cell:last-child {
+        border-right: none !important;
+    }
+    
+    .hobbies-table-cell::before {
+        display: none !important;
+    }
+    
+    .hobbies-title {
+        font-size: 1.5rem;
+    }
+    
+    .hobby-icon {
+        font-size: 1rem;
+    }
+    
+    .hobby-category {
+        font-size: 0.7rem;
+        padding: 0.1rem 0.3rem;
+    }
+    
+    .social-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hobbies-table-header,
+    .hobbies-table-row {
+        grid-template-columns: 0.5fr 1fr 1.5fr 0.7fr 0.7fr !important;
+    }
+    
+    .hobbies-header-cell,
+    .hobbies-table-cell {
+        padding: 0.5rem 0.35rem !important;
+        font-size: 0.65rem !important;
+    }
+    
+    .hobbies-title {
+        font-size: 1.3rem;
+    }
+    
+    .hobby-icon {
+        font-size: 0.9rem;
+    }
+    
+    .hobby-category {
+        font-size: 0.6rem;
+        padding: 0.1rem 0.25rem;
+    }
+    
+    .social-badge {
+        font-size: 0.6rem;
+        padding: 0.15rem 0.4rem;
+    }
+    
+    .hobbies-database-container {
+        margin-top: 1rem;
+    }
+}
+
+/* Technology Passion Section - Compact text */
+@media (max-width: 768px) {
+    .technology-passion-content {
+        padding: 1.25rem;
+    }
+    
+    .technology-passion-text p {
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .technology-passion-content {
+        padding: 1rem;
+    }
+    
+    .technology-passion-text p {
+        font-size: 0.8rem;
+        line-height: 1.45;
+        margin-bottom: 0.6rem;
+    }
+}
+
+/* Additional Text / My Journey Section - Compact text */
+@media (max-width: 768px) {
+    .additional-text-content {
+        padding: 1.25rem;
+        text-align: left !important;
+    }
+    
+    .additional-text-content h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        text-align: left !important;
+    }
+    
+    .additional-text {
+        text-align: left !important;
+    }
+    
+    .additional-text p {
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: 0.75rem;
+        text-align: left !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .additional-text-content {
+        padding: 1rem;
+        text-align: left !important;
+    }
+    
+    .additional-text-content h2 {
+        font-size: 1.35rem;
+        margin-bottom: 0.75rem;
+        text-align: left !important;
+    }
+    
+    .additional-text {
+        text-align: left !important;
+    }
+    
+    .additional-text p {
+        font-size: 0.8rem;
+        line-height: 1.45;
+        margin-bottom: 0.6rem;
+        text-align: left !important;
+    }
+}
+
+/* Countries Grid - Keep 3 columns on mobile */
+@media (max-width: 768px) {
+    .countries-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1rem;
+        padding: 1.5rem 1rem;
+    }
+    
+    .country-card {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .country-flag {
+        font-size: 2.75rem;
+    }
+    
+    .countries-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .countries-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.75rem;
+        padding: 1rem 0.5rem;
+    }
+    
+    .country-card {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .country-flag {
+        font-size: 2.5rem;
+    }
+    
+    .countries-title {
+        font-size: 1.3rem;
+    }
+}
+
+/* GitHub Contributions - Compact on mobile */
+@media (max-width: 768px) {
+    .contributions-title {
+        font-size: 1.5rem;
+    }
+    
+    .contributions-count {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .contributions-title {
+        font-size: 1.3rem;
+    }
+    
+    .contributions-count {
+        font-size: 0.8rem;
+    }
+}
+
+/* Content sections - Reduce padding on mobile */
+@media (max-width: 768px) {
+    .content-section .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .content {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-section .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+    
+    .content {
+        padding: 1rem;
+    }
+}
+
+/* Location map - Maintain good size on mobile */
+@media (max-width: 480px) {
+    #location-map {
+        height: 350px;
+    }
+    
+    .location-content {
+        padding: 0 0.75rem;
     }
 }
 
